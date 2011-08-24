@@ -20,7 +20,13 @@ RANLIB ?= ranlib
 all: $(PROGS) $(BUILD_LIBRARIES)
 
 check: all
-	@for prog in $(PROGS); do ./$$prog; done
+	@for prog in $(PROGS); do \
+	  if ! ./$$prog; then       \
+	    echo ./$$prog  FAIL;  \
+	  else \
+	    echo ./$$prog  ok;    \
+	  fi; \
+	done
 
 clean:
 	$(RM) $(ALL_OBJS)
