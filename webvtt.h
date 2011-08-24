@@ -19,6 +19,12 @@ struct webvtt_cue {
 /* context structure for our parser */
 typedef struct webvtt_parser webvtt_parser;
 
+/* allocate and initialize a parser context */
+webvtt_parser *webvtt_parser_new(void);
+
+/* shut down and release a parser context */
+void webvtt_parser_free(webvtt_parser *ctx);
+
 /* read a webvtt file from an open file */
 struct webvtt_cue *
 webvtt_parse_file(webvtt_parser *ctx, FILE *in);

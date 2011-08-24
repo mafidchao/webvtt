@@ -8,13 +8,35 @@
 
 #include "webvtt.h"
 
+#define BUFSIZE 4096
+
 struct webvtt_parser {
   int state;
   char *buffer;
   long offset, length;
 };
 
-#define BUFSIZE 4096
+webvtt_parser *
+webvtt_parser_new(void)
+{
+  webvtt_parser *ctx = malloc(sizeof(*ctx));
+  if (ctx) {
+  }
+  return ctx;
+}
+
+void
+webvtt_parser_free(webvtt_parser *ctx)
+{
+  if (ctx) {
+    ctx->state = 0;
+    if (ctx->buffer)
+      free(ctx->buffer);
+      ctx->buffer = NULL;
+    }
+    ctx->offset = 0;
+    ctx->length = 0;
+}
 
 struct webvtt_cue *
 webvtt_parse_file(webvtt_parser *ctx, FILE *in)
