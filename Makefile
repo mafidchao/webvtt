@@ -12,6 +12,8 @@ webvtt_HDRS := webvtt.h
 
 test_webvtt_SRCS := test_webvtt.c libwebvtt.a
 
+EXTRA_DIST := LICENSE
+
 ## below this point is boilerplate
 
 BUILD_LIBRARIES := $(LIBRARIES:%=lib%.a)
@@ -57,7 +59,7 @@ VERSION ?= $(firstword $(git describe --tags) dev)
 dist: $(PACKAGE)-$(VERSION).tar.gz
 	@echo $(ALL_SRCS)
 
-$(PACKAGE)-$(VERSION).tar.gz: Makefile $(ALL_SRCS)
+$(PACKAGE)-$(VERSION).tar.gz: Makefile $(ALL_SRCS) $(EXTRA_DIST)
 	-$(RM) -r $(PACKAGE)-$(VERSION)
 	mkdir $(PACKAGE)-$(VERSION)
 	cp $^ $(PACKAGE)-$(VERSION)/
