@@ -33,29 +33,41 @@ clean:
 	$(RM) $(BUILD_LIBRARIES)
 	$(RM) $(PROGS)
 
-dist:
-	@echo $@ target not implemented
-
-distcheck: dist
-	@echo $@ target not implemented
-
-.PHONEY: all check clean dist distcheck
-
+# templates generate per-target rules
 define library_template
  $(1)_OBJS := $$($(1)_SRCS:.c=.o)
  ALL_OBJS += $$($(1)_OBJS)
+ ALL_SRCS += $$(filter-out .a,$$($(1)_SRCS) $$($(1)_HDRS))
  lib$(1).a: $$($(1)_OBJS)
 	$$(AR) cr $$@ $$^
 	$$(RANLIB) $$@
 endef
-
 define program_template
  $(1)_OBJS := $$($(1)_SRCS:.c=.o)
  ALL_OBJS += $$($(1)_OBJS)
+ ALL_SRCS += $$(filter-out %.a,$$($(1)_SRCS) $$($(1)_HDRS))
  $(1): $$($(1)_OBJS)
 	$(CC) $$(LDFLAGS) -o $$@ $$^ $$($(1)_LIBS:%=-l%)
 endef
-
 $(foreach lib,$(LIBRARIES),$(eval $(call library_template,$(lib))))
 $(foreach prog,$(PROGS),$(eval $(call program_template,$(prog))))
 
+VERSION ?= $(firstword $(git describe --tags) dev)
+
+dist: $(PACKAGE)-$(VERSION).tar.gz
+	@echo $(ALL_SRCS)
+
+$(PACKAGE)-$(VERSION).tar.gz: Makefile $(ALL_SRCS)
+	-$(RM) -r $(PACKAGE)-$(VERSION)
+	mkdir $(PACKAGE)-$(VERSION)
+	cp $^ $(PACKAGE)-$(VERSION)/
+	tar cvzf $(PACKAGE)-$(VERSION).tar.gz $(PACKAGE)-$(VERSION)/
+	$(RM) -r $(PACKAGE)-$(VERSION)
+
+distcheck: dist
+	tar xvf $(PACKAGE)-$(VERSION).tar.gz
+	make -C $(PACKAGE)-$(VERSION) check
+	$(RM) -r $(PACKAGE)-$(VERSION)
+	@echo $(PACKAGE)-$(VERSION).tar.gz ready to distribute
+
+.PHONEY: all check clean dist distcheck
