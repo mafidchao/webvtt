@@ -19,6 +19,13 @@ int main(int argc, char *argv[])
   if (ctx == NULL)
     FAIL("Couldnt' allocate parser context");
 
+  if (argc > 1) {
+    webvtt_cue *cue = webvtt_parse_filename(ctx, argv[1]);
+    if (cue == NULL)
+      FAIL("No cues returned");
+    free(cue);
+  }
+
   webvtt_parser_free(ctx);
 
   return 0;

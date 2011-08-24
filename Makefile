@@ -38,6 +38,7 @@ clean:
 # templates generate per-target rules
 define library_template
  $(1)_OBJS := $$($(1)_SRCS:.c=.o)
+ $(1)_OBJS : $$($(1)_HDRS)
  ALL_OBJS += $$($(1)_OBJS)
  ALL_SRCS += $$(filter-out .a,$$($(1)_SRCS) $$($(1)_HDRS))
  lib$(1).a: $$($(1)_OBJS)
@@ -46,6 +47,7 @@ define library_template
 endef
 define program_template
  $(1)_OBJS := $$($(1)_SRCS:.c=.o)
+ $(1)_OBJS : $$($(1)_HDRS)
  ALL_OBJS += $$($(1)_OBJS)
  ALL_SRCS += $$(filter-out %.a,$$($(1)_SRCS) $$($(1)_HDRS))
  $(1): $$($(1)_OBJS)

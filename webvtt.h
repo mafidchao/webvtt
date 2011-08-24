@@ -15,6 +15,8 @@ struct webvtt_cue {
   long start, end;
   struct cue *next;
 };
+typedef struct webvtt_cue webvtt_cue;
+
 
 /* context structure for our parser */
 typedef struct webvtt_parser webvtt_parser;

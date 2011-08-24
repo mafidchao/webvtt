@@ -8,7 +8,7 @@
 
 #include "webvtt.h"
 
-#define BUFSIZE 4096
+#define BUFFER_SIZE 4096
 
 struct webvtt_parser {
   int state;
@@ -21,6 +21,14 @@ webvtt_parser_new(void)
 {
   webvtt_parser *ctx = malloc(sizeof(*ctx));
   if (ctx) {
+    ctx->state = 0;
+    ctx->buffer = malloc(BUFFER_SIZE);
+    if (ctx->buffer == NULL) {
+      free(ctx);
+      return NULL;
+    }
+    ctx->offset = 0;
+    ctx->length = 0;
   }
   return ctx;
 }
@@ -44,7 +52,7 @@ webvtt_parse_file(webvtt_parser *ctx, FILE *in)
   struct webvtt_cue *cue = NULL;
   char *p;
 
-  ctx->length = fread(ctx->buffer, 1, BUFSIZE, in);
+  ctx->length = fread(ctx->buffer, 1, BUFFER_SIZE, in);
   ctx->offset = 0;
 
   p = ctx->buffer;
@@ -57,11 +65,17 @@ webvtt_parse_file(webvtt_parser *ctx, FILE *in)
   if (p[0] == (char)0xef && p[1] == (char)0xbb && p[2] == (char)0xbf) {
     fprintf(stderr, "Byte order mark\n");
     p += 3;
+    if (ctx->length < 9) {
+      fprintf(stderr, "Too short. Not a webvtt file\n");
+      return NULL;
+    }
   }
   if (memcmp(p, "WEBVTT", 6)) {
     fprintf(stderr, "Bad magic. Not a webvtt file?\n");
     return NULL;
   }
+
+  fprintf(stderr, "Found signature\n");
 
   return cue;
 }
