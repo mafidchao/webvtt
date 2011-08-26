@@ -10,12 +10,12 @@
    and some text content (which my be marked up)
    there may be other attributes, but we ignore them
    we store these in a linked list */
+typedef struct webvtt_cue webvtt_cue;
 struct webvtt_cue {
   char *text;       /** text value of the cue */
   long start, end;  /** timestamps in milliseconds */
-  struct cue *next; /** pointer to the next cue */
+  webvtt_cue *next; /** pointer to the next cue */
 };
-typedef struct webvtt_cue webvtt_cue;
 
 
 /* context structure for our parser */
