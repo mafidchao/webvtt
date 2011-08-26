@@ -121,8 +121,9 @@ webvtt_parse_cue(webvtt_parser *ctx)
   cue->start = start_time * 1e3;
   cue->end = end_time * 1e3;
   cue->text = text;
+  cue->next = NULL;
 
-  ctx->offset = ctx->buffer - e;
+  ctx->offset = e - ctx->buffer;
 
   return cue;
 }
@@ -167,8 +168,21 @@ webvtt_parse_file(webvtt_parser *ctx, FILE *in)
   ctx->offset = p - ctx->buffer;
 
   cue = webvtt_parse_cue(ctx);
-  if (cue)
-    webvtt_print_cue(stderr, cue);
+  if (cue) {
+    webvtt_cue *head = cue;
+    webvtt_cue *next;
+    do {
+      next = webvtt_parse_cue(ctx);
+      head->next = next;
+      head = next;
+    } while (next != NULL);
+  }
+
+  webvtt_cue *head = cue;
+  while (head != NULL) {
+    webvtt_print_cue(stderr, head);
+    head = head->next;
+  }
 
   return cue;
 }
