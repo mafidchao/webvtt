@@ -47,6 +47,20 @@ webvtt_parser_free(webvtt_parser *ctx)
     ctx->length = 0;
 }
 
+int
+webvtt_print_cue(FILE *out, webvtt_cue *cue)
+{
+  int err;
+
+  if (out == NULL || cue == NULL)
+    return -1;
+
+  err = fprintf(out, "%.3lf --> %.3lf\n", cue->start*1e-3, cue->end*1e-3);
+  err = fprintf(out, "%s\n\n", cue->text);
+
+  return err;
+}
+
 struct webvtt_cue *
 webvtt_parse_file(webvtt_parser *ctx, FILE *in)
 {
@@ -124,8 +138,7 @@ webvtt_parse_file(webvtt_parser *ctx, FILE *in)
   cue->end = end_time * 1e3;
   cue->text = text;
 
-  fprintf(stderr, "cue %.3lf -> %.3lf\n", 1e-3*cue->start, 1e-3*cue->end);
-  fprintf(stderr, "%s\n", cue->text);
+  webvtt_print_cue(stderr, cue);
 
   return cue;
 }
