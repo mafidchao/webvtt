@@ -92,14 +92,18 @@ webvtt_parse_cue(webvtt_parser *ctx)
   p++;
   char *e = p;
   while (e - ctx->buffer + 4 < ctx->length) {
-    if (!memcmp(e, "\r\n\r\n", 4))
-      break;
     if (!memcmp(e, "\n\n", 2))
+      break;
+    if (!memcmp(e, "\r\n\r\n", 4))
       break;
     if (!memcmp(e, "\r\r", 2))
       break;
     e++;
   }
+  // TODO: handle last four bytes properly
+  while (e - ctx->buffer < ctx->length && *e != '\n' && *e != '\r')
+    e++;
+
   char *text = malloc(e - p + 1);
   if (text == NULL) {
     fprintf(stderr, "Couldn't allocate cue text buffer\n");
