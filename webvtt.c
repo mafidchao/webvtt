@@ -132,6 +132,9 @@ webvtt_parse_file(webvtt_parser *ctx, FILE *in)
   ctx->length = fread(ctx->buffer, 1, BUFFER_SIZE, in);
   ctx->offset = 0;
 
+  if (ctx->length >= BUFFER_SIZE)
+    fprintf(stderr, "WARNING: truncating input at %d bytes."
+                    " This is a bug,\n", BUFFER_SIZE);
   p = ctx->buffer;
 
   // Check for signature
