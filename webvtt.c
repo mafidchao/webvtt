@@ -61,10 +61,10 @@ webvtt_print_cue(FILE *out, webvtt_cue *cue)
   return err;
 }
 
-struct webvtt_cue *
+webvtt_cue *
 webvtt_parse_file(webvtt_parser *ctx, FILE *in)
 {
-  struct webvtt_cue *cue = NULL;
+  webvtt_cue *cue = NULL;
   char *p;
 
   ctx->length = fread(ctx->buffer, 1, BUFFER_SIZE, in);
@@ -143,11 +143,11 @@ webvtt_parse_file(webvtt_parser *ctx, FILE *in)
   return cue;
 }
 
-struct webvtt_cue *
+webvtt_cue *
 webvtt_parse_filename(webvtt_parser *ctx, const char *filename)
 {
   FILE *in = fopen(filename, "r");
-  struct webvtt_cue *cue = NULL;
+  webvtt_cue *cue = NULL;
   
   if (in) {
     cue = webvtt_parse_file(ctx, in);
