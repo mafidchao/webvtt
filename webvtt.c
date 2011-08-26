@@ -39,12 +39,13 @@ webvtt_parse_free(webvtt_parser *ctx)
 {
   if (ctx) {
     ctx->state = 0;
-    if (ctx->buffer)
+    if (ctx->buffer) {
       free(ctx->buffer);
       ctx->buffer = NULL;
     }
     ctx->offset = 0;
     ctx->length = 0;
+  }
 }
 
 int
