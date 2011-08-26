@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 
 #include "webvtt.h"
 
@@ -74,8 +75,57 @@ webvtt_parse_file(webvtt_parser *ctx, FILE *in)
     fprintf(stderr, "Bad magic. Not a webvtt file?\n");
     return NULL;
   }
-
+  p += 6;
   fprintf(stderr, "Found signature\n");
+
+  // skip whitespace
+  while (p - ctx->buffer < ctx->length && isspace(*p))
+    p++;
+
+  int smin,ssec,smsec;
+  int emin,esec,emsec;
+  int items = sscanf(p, "%d:%d.%d --> %d:%d.%d",
+                        &smin, &ssec, &smsec, &emin, &esec, &emsec);
+  if (items < 6) {
+    fprintf(stderr, "Couldn't parse cue timestamps\n");
+    return NULL;
+  }
+  double start_time = smin*60 + ssec + smsec * 1e-3;
+  double end_time = emin*60 + esec + emsec * 1e-3;
+
+  while (p - ctx->buffer < ctx->length && *p != '\r' && *p != '\n')
+    p++;
+  p++;
+  char *e = p;
+  while (e - ctx->buffer + 4 < ctx->length) {
+    if (!memcmp(e, "\r\n\r\n", 4))
+      break;
+    if (!memcmp(e, "\n\n", 2))
+      break;
+    if (!memcmp(e, "\r\r", 2))
+      break;
+    e++;
+  }
+  char *text = malloc(e - p + 1);
+  if (text == NULL) {
+    fprintf(stderr, "Couldn't allocate cue text buffer\n");
+    return NULL;
+  }
+  cue = malloc(sizeof(*cue));
+  if (cue == NULL) {
+    fprintf(stderr, "Couldn't allocate cue structure\n");
+    free(text);
+    return NULL;
+  }
+  memcpy(text, p, e - p);
+  text[p - e] = '\0';
+
+  cue->start = start_time * 1e3;
+  cue->end = end_time * 1e3;
+  cue->text = text;
+
+  fprintf(stderr, "cue %.3lf -> %.3lf\n", 1e-3*cue->start, 1e-3*cue->end);
+  fprintf(stderr, "%s\n", cue->text);
 
   return cue;
 }
