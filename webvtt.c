@@ -63,37 +63,16 @@ webvtt_print_cue(FILE *out, webvtt_cue *cue)
 }
 
 webvtt_cue *
-webvtt_parse_file(webvtt_parser *ctx, FILE *in)
+webvtt_parse_cue(webvtt_parser *ctx)
 {
   webvtt_cue *cue = NULL;
-  char *p;
 
-  ctx->length = fread(ctx->buffer, 1, BUFFER_SIZE, in);
-  ctx->offset = 0;
-
-  p = ctx->buffer;
-
-  // Check for signature
-  if (ctx->length < 6) {
-    fprintf(stderr, "Too short. Not a webvtt file\n");
+  if (ctx == NULL)
     return NULL;
-  }
-  if (p[0] == (char)0xef && p[1] == (char)0xbb && p[2] == (char)0xbf) {
-    fprintf(stderr, "Byte order mark\n");
-    p += 3;
-    if (ctx->length < 9) {
-      fprintf(stderr, "Too short. Not a webvtt file\n");
-      return NULL;
-    }
-  }
-  if (memcmp(p, "WEBVTT", 6)) {
-    fprintf(stderr, "Bad magic. Not a webvtt file?\n");
+  if (ctx->buffer == NULL || ctx->length - ctx->offset < 24)
     return NULL;
-  }
-  p += 6;
-  fprintf(stderr, "Found signature\n");
 
-  // skip whitespace
+  char *p = ctx->buffer + ctx->offset;
   while (p - ctx->buffer < ctx->length && isspace(*p))
     p++;
 
@@ -139,7 +118,50 @@ webvtt_parse_file(webvtt_parser *ctx, FILE *in)
   cue->end = end_time * 1e3;
   cue->text = text;
 
-  webvtt_print_cue(stderr, cue);
+  ctx->offset = ctx->buffer - e;
+
+  return cue;
+}
+
+webvtt_cue *
+webvtt_parse_file(webvtt_parser *ctx, FILE *in)
+{
+  webvtt_cue *cue = NULL;
+  char *p;
+
+  ctx->length = fread(ctx->buffer, 1, BUFFER_SIZE, in);
+  ctx->offset = 0;
+
+  p = ctx->buffer;
+
+  // Check for signature
+  if (ctx->length < 6) {
+    fprintf(stderr, "Too short. Not a webvtt file\n");
+    return NULL;
+  }
+  if (p[0] == (char)0xef && p[1] == (char)0xbb && p[2] == (char)0xbf) {
+    fprintf(stderr, "Byte order mark\n");
+    p += 3;
+    if (ctx->length < 9) {
+      fprintf(stderr, "Too short. Not a webvtt file\n");
+      return NULL;
+    }
+  }
+  if (memcmp(p, "WEBVTT", 6)) {
+    fprintf(stderr, "Bad magic. Not a webvtt file?\n");
+    return NULL;
+  }
+  p += 6;
+  fprintf(stderr, "Found signature\n");
+
+  // skip whitespace
+  while (p - ctx->buffer < ctx->length && isspace(*p))
+    p++;
+  ctx->offset = p - ctx->buffer;
+
+  cue = webvtt_parse_cue(ctx);
+  if (cue)
+    webvtt_print_cue(stderr, cue);
 
   return cue;
 }
