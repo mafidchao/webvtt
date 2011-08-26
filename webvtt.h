@@ -22,10 +22,10 @@ typedef struct webvtt_cue webvtt_cue;
 typedef struct webvtt_parser webvtt_parser;
 
 /* allocate and initialize a parser context */
-webvtt_parser *webvtt_parser_new(void);
+webvtt_parser *webvtt_parse_new(void);
 
 /* shut down and release a parser context */
-void webvtt_parser_free(webvtt_parser *ctx);
+void webvtt_parse_free(webvtt_parser *ctx);
 
 /* read a webvtt file from an open file */
 struct webvtt_cue *

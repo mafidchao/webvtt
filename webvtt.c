@@ -18,7 +18,7 @@ struct webvtt_parser {
 };
 
 webvtt_parser *
-webvtt_parser_new(void)
+webvtt_parse_new(void)
 {
   webvtt_parser *ctx = malloc(sizeof(*ctx));
   if (ctx) {
@@ -35,7 +35,7 @@ webvtt_parser_new(void)
 }
 
 void
-webvtt_parser_free(webvtt_parser *ctx)
+webvtt_parse_free(webvtt_parser *ctx)
 {
   if (ctx) {
     ctx->state = 0;

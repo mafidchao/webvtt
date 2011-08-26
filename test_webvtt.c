@@ -14,7 +14,7 @@
 
 int main(int argc, char *argv[])
 {
-  webvtt_parser *ctx = webvtt_parser_new();
+  webvtt_parser *ctx = webvtt_parse_new();
 
   if (ctx == NULL)
     FAIL("Couldnt' allocate parser context");
@@ -26,7 +26,7 @@ int main(int argc, char *argv[])
     free(cue);
   }
 
-  webvtt_parser_free(ctx);
+  webvtt_parse_free(ctx);
 
   return 0;
 }
