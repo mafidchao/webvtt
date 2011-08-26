@@ -11,9 +11,9 @@
    there may be other attributes, but we ignore them
    we store these in a linked list */
 struct webvtt_cue {
-  char *text;
-  long start, end;
-  struct cue *next;
+  char *text;       /** text value of the cue */
+  long start, end;  /** timestamps in milliseconds */
+  struct cue *next; /** pointer to the next cue */
 };
 typedef struct webvtt_cue webvtt_cue;
 
