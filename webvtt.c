@@ -116,7 +116,7 @@ webvtt_parse_cue(webvtt_parser *ctx)
     return NULL;
   }
   memcpy(text, p, e - p);
-  text[p - e] = '\0';
+  text[e - p] = '\0';
 
   cue->start = start_time * 1e3;
   cue->end = end_time * 1e3;
