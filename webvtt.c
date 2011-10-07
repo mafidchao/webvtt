@@ -52,11 +52,29 @@ int
 webvtt_print_cue(FILE *out, webvtt_cue *cue)
 {
   int err;
+  int h, m, s, ms;
+  long time;
 
   if (out == NULL || cue == NULL)
     return -1;
 
-  err = fprintf(out, "%.3lf --> %.3lf\n", cue->start*1e-3, cue->end*1e-3);
+  time = cue->start;
+  h = time/3600000;
+  time %= 3600000;
+  m = time/60000;
+  time %= 60000;
+  s = time/1000;
+  ms = time%1000;
+  err = fprintf(out, "%02d:%02d:%02d.%03d", h, m, s, ms);
+
+  time = cue->end;
+  h = time/3600000;
+  time %= 3600000;
+  m = time/60000;
+  time %= 60000;
+  s = time/1000;
+  err = fprintf(out, " --> %02d:%02d:%02d.%03d\n", h, m, s, ms);
+
   err = fprintf(out, "%s\n\n", cue->text);
 
   return err;
