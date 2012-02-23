@@ -16,6 +16,10 @@
 
 #define BUFFER_SIZE 4096
 
+#ifndef MIN
+#define MIN(x, y) (((x) < (y)) ? (x) : (y))
+#endif
+
 struct webvtt_parser {
   int state;
   char *buffer;
@@ -152,18 +156,10 @@ webvtt_parse_cue(webvtt_parser *ctx)
 }
 
 webvtt_cue *
-webvtt_parse_file(webvtt_parser *ctx, FILE *in)
+webvtt_parse(webvtt_parser *ctx)
 {
   webvtt_cue *cue = NULL;
-  char *p;
-
-  ctx->length = fread(ctx->buffer, 1, BUFFER_SIZE, in);
-  ctx->offset = 0;
-
-  if (ctx->length >= BUFFER_SIZE)
-    fprintf(stderr, "WARNING: truncating input at %d bytes."
-                    " This is a bug,\n", BUFFER_SIZE);
-  p = ctx->buffer;
+  char *p = ctx->buffer;
 
   // Check for signature
   if (ctx->length < 6) {
@@ -208,6 +204,30 @@ webvtt_parse_file(webvtt_parser *ctx, FILE *in)
   }
 
   return cue;
+}
+
+webvtt_cue *
+webvtt_parse_buffer(webvtt_parser *ctx, char *buffer, long length, long *read)
+{
+  long bytes = MIN(length, BUFFER_SIZE - ctx->length);
+
+  memcpy(ctx->buffer, buffer, bytes);
+  ctx->offset += bytes;
+
+  return webvtt_parse(ctx);
+}
+
+webvtt_cue *
+webvtt_parse_file(webvtt_parser *ctx, FILE *in)
+{
+  ctx->length = fread(ctx->buffer, 1, BUFFER_SIZE, in);
+  ctx->offset = 0;
+
+  if (ctx->length >= BUFFER_SIZE)
+    fprintf(stderr, "WARNING: truncating input at %d bytes."
+                    " This is a bug,\n", BUFFER_SIZE);
+
+  return webvtt_parse(ctx);
 }
 
 webvtt_cue *
