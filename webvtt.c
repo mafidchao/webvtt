@@ -212,7 +212,7 @@ webvtt_parse_buffer(webvtt_parser *ctx, char *buffer, long length)
   long bytes = MIN(length, BUFFER_SIZE - ctx->length);
 
   memcpy(ctx->buffer, buffer, bytes);
-  ctx->offset += bytes;
+  ctx->length += bytes;
 
   return webvtt_parse(ctx);
 }
