@@ -10,6 +10,11 @@
 #ifndef _WEBVTT_H_
 #define _WEBVTT_H_
 
+#if defined(__cplusplus)
+extern "C" {
+#endif
+
+
 /* webvtt files are a sequence of cues
    each cue has a start and end time for presentation
    and some text content (which my be marked up)
@@ -43,5 +48,9 @@ webvtt_parse_file(webvtt_parser *ctx, FILE *in);
 /* read a webvtt file from a named file */
 struct webvtt_cue *
 webvtt_parse_filename(webvtt_parser *ctx, const char *filename);
+
+#if defined(__cplusplus)
+} /* close extern "C" */
+#endif
 
 #endif /* _WEBVTT_H_ */
