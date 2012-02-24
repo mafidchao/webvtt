@@ -207,7 +207,7 @@ webvtt_parse(webvtt_parser *ctx)
 }
 
 webvtt_cue *
-webvtt_parse_buffer(webvtt_parser *ctx, char *buffer, long length, long *read)
+webvtt_parse_buffer(webvtt_parser *ctx, char *buffer, long length)
 {
   long bytes = MIN(length, BUFFER_SIZE - ctx->length);
 

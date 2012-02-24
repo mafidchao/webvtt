@@ -32,6 +32,10 @@ webvtt_parser *webvtt_parse_new(void);
 /* shut down and release a parser context */
 void webvtt_parse_free(webvtt_parser *ctx);
 
+/* read a webvtt file stored in a buffer */
+struct webvtt_cue *
+webvtt_parse_buffer(webvtt_parser *ctx, char *buffer, long length);
+
 /* read a webvtt file from an open file */
 struct webvtt_cue *
 webvtt_parse_file(webvtt_parser *ctx, FILE *in);
