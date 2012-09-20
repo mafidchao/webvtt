@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-run-tests-js.py <good_test_dir> <bad_test_dir>
+run-tests-js.py <test_suite_root>
 
 Runs all spec tests for WebVTT using the JavaScript WebVTT Parser
 
@@ -16,9 +16,8 @@ import commands
 
 def checkForWebVTT():
   status, result = commands.getstatusoutput("webvtt")
-  # This should fail with a "Missing input file(s).\nUsage: webvtt [options] <file...>"
-  # message, so expecting 256.  TODO: confirm on other platforms (tested on Mac)
-  return status == 256
+  # 32512 is 'command not found' in python's OS module exit codes
+  return status != 32512
 
 def runTests(root, files, expected):
   failed = 0
