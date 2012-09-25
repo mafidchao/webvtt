@@ -13,8 +13,6 @@ import os
 import sys
 import subprocess
 import commands
-import re
-import tempfile
 
 def checkForWebVTT():
   status, result = commands.getstatusoutput("webvtt")
@@ -24,26 +22,13 @@ def checkForWebVTT():
 def runTests(root, files, expected):
   failed = 0
   passed = 0
-  count = 1
 
   # Run good tests
   for f in files:
     # Get file's absolute path
     file_path = os.path.join(root, f)
-    
-    # Open and read file
-    test_file = open(file_path, 'r')
-    file_data = test_file.read()
-
-    # Close the file
-    test_file.close()
-
-    r = re.compile('[\r\n?|\n][\r\n?|\n].*', re.DOTALL)
-    vtt_file = r.search(file_data).group()[2:]
-    
     # Run file against webvtt parser (in silent mode)
     retcode = subprocess.call(["webvtt", "-s", file_path], stdout=subprocess.PIPE)
-    
     # If we did NOT get expected, add file to fail list & increase fail count.
     if retcode != expected:
       failed = failed + 1
