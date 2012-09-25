@@ -1,4 +1,4 @@
-This tests to make sure that a Cue Component class can be resolved with the [cue component].[subclass] notation.
+This tests to make sure that a Cue Component class can be resolved with the [cue component].[subclass] notation. 
 This test should pass.
 
 WEBVTT
