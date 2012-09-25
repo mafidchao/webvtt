@@ -13,7 +13,7 @@ def findTestFiles(root):
 	dirList = os.listdir(root)
 
 	for d in dirList:
-				
+
 		dir_path = os.path.join(root, d)
 
 		if os.path.isdir(dir_path):
