@@ -1,1 +1,1 @@
-./test/spec/           -text
+./test/spec/* -text
