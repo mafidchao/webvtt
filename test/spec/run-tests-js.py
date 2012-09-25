@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-run-tests-js.py <test_suite_root>
+run-tests-js.py <good_test_dir> <bad_test_dir>
 
 Runs all spec tests for WebVTT using the JavaScript WebVTT Parser
 
