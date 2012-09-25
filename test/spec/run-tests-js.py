@@ -13,8 +13,6 @@ import os
 import sys
 import subprocess
 import commands
-import re
-import tempfile
 
 def checkForWebVTT():
   status, result = commands.getstatusoutput("webvtt")
@@ -26,7 +24,6 @@ def checkForWebVTT():
 def runTests(root, files, expected):
   failed = 0
   passed = 0
-  count = 1
 
   # Run good tests
   for f in files:
