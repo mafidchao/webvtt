@@ -26,20 +26,12 @@ def checkForWebVTT():
 def runTests(root, files, expected):
   failed = 0
   passed = 0
+  count = 1
 
   # Run good tests
   for f in files:
-    found = 0
     # Get file's absolute path
     file_path = os.path.join(root, f)
-
-    test_file = open(file_path, 'r')
-
-    for line in test_file:
-      if "\n" in line:
-        next_line = test_file.next()
-        if next_line == "\n":
-          start = test_file.next()
 
     # Run file against webvtt parser (in silent mode)
     retcode = subprocess.call(["webvtt", "-s", file_path], stdout=subprocess.PIPE, shell=True)
