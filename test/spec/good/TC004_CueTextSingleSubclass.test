@@ -1,0 +1,6 @@
+This test is to verify that a single subclass can be used on cue components.
+
+WEBVTT
+
+00:11.000 --> 00:13.000
+<u.class>Hey this is a test!</u>

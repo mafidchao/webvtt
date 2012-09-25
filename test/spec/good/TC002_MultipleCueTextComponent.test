@@ -1,0 +1,6 @@
+This test is to verify that multiple cue components can be nested within eachother.
+
+WEBVTT
+
+00:11.000 --> 00:13.000
+Hey <i>this is a <b>test!</b></i>

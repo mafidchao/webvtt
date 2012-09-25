@@ -1,0 +1,7 @@
+Verifies that multiple cue component are parsed correctly.
+
+WEBVTT
+
+00:11.000 --> 00:15.000
+We <b>are</b>
+<b>in</b> New York City
