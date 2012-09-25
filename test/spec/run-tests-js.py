@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-run-tests-js.py <test_suite_root>
+run-tests-js.py <good_test_dir> <bad_test_dir>
 
 Runs all spec tests for WebVTT using the JavaScript WebVTT Parser
 
@@ -13,13 +13,12 @@ import os
 import sys
 import subprocess
 import commands
-import re
-import tempfile
 
 def checkForWebVTT():
   status, result = commands.getstatusoutput("webvtt")
-  # 32512 is 'command not found' in python's OS module exit codes
-  return status != 32512
+  # This should fail with a "Missing input file(s).\nUsage: webvtt [options] <file...>"
+  # message, so expecting 256.  TODO: confirm on other platforms (tested on Mac)
+  return status == 256
 
 def runTests(root, files, expected):
   failed = 0
@@ -27,21 +26,10 @@ def runTests(root, files, expected):
 
   # Run good tests
   for f in files:
-    found = 0
     # Get file's absolute path
     file_path = os.path.join(root, f)
-    
-    test_file = open(file_path, 'r')
-    
-    for line in test_file:
-      if "\n" in line:
-        next_line = test_file.next()
-        if next_line == "\n":
-          start = test_file.next()
-    
     # Run file against webvtt parser (in silent mode)
     retcode = subprocess.call(["webvtt", "-s", file_path], stdout=subprocess.PIPE)
-    
     # If we did NOT get expected, add file to fail list & increase fail count.
     if retcode != expected:
       failed = failed + 1
