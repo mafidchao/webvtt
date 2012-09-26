@@ -36,8 +36,8 @@ check: all
 	done
 
 check-js:
-	$(PYTHON) ./test/spec/strip-vtt.py ./test/spec/
-	$(PYTHON) ./test/spec/run-tests-js.py ./objdir/spec/
+	$(PYTHON) ./test/spec/strip-vtt.py ./test/spec/ ./objdir
+	$(PYTHON) ./test/spec/run-tests-js.py ./objdir/test/spec/
 
 clean:
 	$(RM) $(ALL_OBJS)
