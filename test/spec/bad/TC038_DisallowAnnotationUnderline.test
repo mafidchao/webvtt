@@ -1,0 +1,7 @@
+/*
+Verifies that an underline cue component cannot have an annotation.
+*/
+WEBVTT
+
+00:11.000 --> 00:15.000
+We <u Annotation Here>are in New York City</u>

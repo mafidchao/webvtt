@@ -1,0 +1,7 @@
+/*
+Verifies that a special character cannot be used a a subclass.
+*/
+WEBVTT  
+
+00:11.000 --> 00:13.000
+We <i.&amp;>are</i> in New York City
