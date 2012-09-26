@@ -8,12 +8,12 @@ saves it to a mirrored directory structure under webvtt/objdir/spec
 import os
 import sys
 
-def stripVTT(file_path):
-  test_file = open(file_path, 'r')
-  file_data = test_file.read()
+def stripVTT(filePath):
+  testFile = open(filePath, 'r')
+  fileData = testFile.read()
 
   # Rip the VTT
-  vtt_file = file_data[file_data.find('*/\n') + 3:]
+  return fileData[fileData.find('*/\n') + 3:]
 
 def findTestFiles(root, fileList):
 	#List the directory
@@ -32,10 +32,34 @@ def findTestFiles(root, fileList):
 def main():
 	#List that will contain the file paths of the .test files
 	fileList = list()
-	findTestFiles(os.path.realpath(sys.argv[1]), fileList)
+
+	#Find all the test files in the directory specified by the first command line argument
+	findTestFiles(sys.argv[1], fileList)
+	
+	#Get the absolute path to the directory which will contain the ripped vtt files
+	#This path is specified by the second command line argument
+	pathToObjDir = os.path.realpath(sys.argv[2])
 
 	for f in fileList:
-		pass
+		#Strip the .test file of its .vtt
+		vttFileInfo = stripVTT(f)
+
+		#Get the absolute file path of the new .vtt file
+		vttFilePath = os.path.join(pathToObjDir, f[2:])
+		#Get the directory path where the new .vtt file will be stored
+		vttFileDirPath = os.path.dirname(vttFilePath)
+
+		#If the directory path of the .vtt file does not exist then create it
+		if os.path.exists(vttFileDirPath) != 1:
+			os.makedirs(vttFileDirPath)
+
+		#Open the new vtt file and write the vtt content to it
+		vttFile = open(vttFilePath, 'w')
+
+		for fileLine in vttFileInfo:
+			vttFile.writelines(fileLine)
+
+		vttFile.close()
 
 if __name__ == '__main__':
 	status = main()
