@@ -29,16 +29,7 @@ def findTestFiles(root, fileList):
 		elif os.path.splitext(dir_path)[1] == ".test":
 			fileList.append(dir_path)
 
-def main():
-	#List that will contain the file paths of the .test files
-	fileList = list()
-
-	#Find all the test files in the directory specified by the first command line argument
-	findTestFiles(sys.argv[1], fileList)
-	
-	#Get the absolute path to the directory which will contain the ripped vtt files
-	#This path is specified by the second command line argument
-	pathToObjDir = os.path.realpath(sys.argv[2])
+def writeVttFiles(fileList, pathToObjDir):
 
 	for f in fileList:
 		#Strip the .test file of its .vtt
@@ -61,6 +52,20 @@ def main():
 
 		vttFile.close()
 
+def main():
+	#List that will contain the file paths of the .test files
+	fileList = list()
+
+	#Find all the test files in the directory specified by the first command line argument
+	findTestFiles(sys.argv[1], fileList)
+	
+	#Get the absolute path to the directory which will contain the ripped vtt files
+	#This path is specified by the second command line argument
+	pathToObjDir = os.path.realpath(sys.argv[2])
+
+	#Write the vtt files
+	writeVttFiles(fileList, pathToObjDir)
+	
 if __name__ == '__main__':
 	status = main()
 	sys.exit(status)
