@@ -35,8 +35,9 @@ def writeVttFiles(fileList, pathToObjDir):
 		#Strip the .test file of its .vtt
 		vttFileInfo = stripVTT(f)
 
-		#Get the absolute file path of the new .vtt file
-		vttFilePath = os.path.join(pathToObjDir, f[2:])
+		#Get the relative file path of the new .vtt file
+		vttFilePath = os.path.join(pathToObjDir, os.path.splitext(f[2:])[0] + ".vtt")
+
 		#Get the directory path where the new .vtt file will be stored
 		vttFileDirPath = os.path.dirname(vttFilePath)
 
