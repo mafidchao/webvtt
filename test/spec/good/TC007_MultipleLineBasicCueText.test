@@ -1,5 +1,6 @@
+/*
 Verifies that just a cue text span with multiple lines will work.
-
+*/
 WEBVTT
 
 0:11.000 --> 00:13.000

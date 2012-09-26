@@ -1,5 +1,6 @@
+/*
 Verifies that multiple escape characters on multiple lines are parsed.
-
+*/
 WEBVTT
 
 00:11.000 --> 00:15.000

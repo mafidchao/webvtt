@@ -1,5 +1,6 @@
+/*
 Verifies that underline cue components are parsed.
-
+*/
 WEBVTT
 
 00:11.000 --> 00:13.000
