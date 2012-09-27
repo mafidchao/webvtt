@@ -1,7 +1,7 @@
 /*
 Verifies that the subclass of a subclass cannot have a special character.
 */
-WEBVTT  
+WEBVTT
 
 00:11.000 --> 00:13.000
 We <i.class.&amp;>are</i> in New York City

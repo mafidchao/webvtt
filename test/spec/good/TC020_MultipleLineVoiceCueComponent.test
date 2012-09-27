@@ -1,7 +1,0 @@
-Verifies that voice cue components are parsed with multiple lines.
-
-WEBVTT
-
-00:11.000 --> 00:13.000
-<v Roger Bingham>When we e-mailed—</v>
-<v Neil deGrasse Tyson>Didn't we talk about enough in that conversation?</v>
