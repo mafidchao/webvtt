@@ -28,6 +28,9 @@ def runTests(root, files, expected):
   for f in files:
     # Get file's absolute path
     file_path = os.path.join(root, f)
+    # If the file is not a .vtt file, skip this iteration
+    extension = os.path.splitext(file_path)[1]
+    if extension != ".vtt": continue
     # Run file against webvtt parser (in silent mode)
     retcode = subprocess.call(["webvtt", "-s", file_path], stdout=subprocess.PIPE, shell=True)
     # If we did NOT get expected, add file to fail list & increase fail count.
