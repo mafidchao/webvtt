@@ -17,7 +17,9 @@ import commands
 def checkForWebVTT():
   status, result = commands.getstatusoutput("webvtt")
   # 32512 is 'command not found' in python's OS module exit codes
-  return status != 32512
+  # 256 occurs on some platforms (mac, maybe linux?)
+  # 1 occurs on windows
+  return status != 32512, 256, 1
 
 def runTests(root, files, expected):
   failed = 0
@@ -28,7 +30,7 @@ def runTests(root, files, expected):
     # Get file's absolute path
     file_path = os.path.join(root, f)
     # Run file against webvtt parser (in silent mode)
-    retcode = subprocess.call(["webvtt", "-s", file_path], stdout=subprocess.PIPE)
+    retcode = subprocess.call(["webvtt", "-s", file_path], stdout=subprocess.PIPE, shell=True)
     # If we did NOT get expected, add file to fail list & increase fail count.
     if retcode != expected:
       failed = failed + 1
