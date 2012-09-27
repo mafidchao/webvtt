@@ -1,7 +1,0 @@
-/*
-Verifies that a multiple cue components must be nested correctly in order to be parsed.
-*/
-WEBVTT  
-
-00:11.000 --> 00:13.000
-We <i><b>are</i> in </b> New York City
