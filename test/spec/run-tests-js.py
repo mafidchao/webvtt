@@ -18,7 +18,7 @@ def checkForWebVTT():
   status, result = commands.getstatusoutput("webvtt")
   # This should fail with a "Missing input file(s).\nUsage: webvtt [options] <file...>"
   # message, so expecting 256.  TODO: confirm on other platforms (tested on Mac)
-  return status == 256
+  return status == 256 or status == 1
 
 def runTests(root, files, expected):
   failed = 0
@@ -29,7 +29,7 @@ def runTests(root, files, expected):
     # Get file's absolute path
     file_path = os.path.join(root, f)
     # Run file against webvtt parser (in silent mode)
-    retcode = subprocess.call(["webvtt", "-s", file_path], stdout=subprocess.PIPE)
+    retcode = subprocess.call(["webvtt", "-s", file_path], stdout=subprocess.PIPE, shell=True)
     # If we did NOT get expected, add file to fail list & increase fail count.
     if retcode != expected:
       failed = failed + 1
