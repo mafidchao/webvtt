@@ -1,8 +1,0 @@
-﻿/*
-Verifies that the parser correctly parses a combination of 2 cue settings of different types, 
-delimited by U+0020 (space)
-*/
-WEBVTT
-
-00:00.000 --> 00:10.000 vertical:lr line:50%
-Payload
