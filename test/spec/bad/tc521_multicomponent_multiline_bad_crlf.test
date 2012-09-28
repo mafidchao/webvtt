@@ -1,5 +1,5 @@
 /*
-This tests for more than 1 line termators separating cue components.
+This tests for more than 1 line terminator (CRLF) separating cue components.
 This test should fail.
 */
 WEBVTT
