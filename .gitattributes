@@ -1,0 +1,4 @@
+./test/spec/good/* -text
+./test/spec/bad/* -text
+./test/spec/good/* -crlf
+./test/spec/bad/* -crlf

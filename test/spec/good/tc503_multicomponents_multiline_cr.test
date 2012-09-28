@@ -1,0 +1,8 @@
+/*
+This tests for 1 line terminator (CR) between 2 cue components.
+This test should pass.
+*/
+WEBVTT
+
+00:11.000 --> 00:15.000
+We <b>are</b><b>in</b> New York City
