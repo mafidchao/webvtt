@@ -28,7 +28,7 @@ def runTests(root, files, expected):
     # Get file's absolute path
     file_path = os.path.join(root, f)
     # Run file against webvtt parser (in silent mode)
-    retcode = subprocess.call(["webvtt", "-s", file_path], stdout=subprocess.PIPE)
+    retcode = subprocess.call(["webvtt", "-s", file_path], stdout=subprocess.PIPE, shell=True)
     # If we did NOT get expected, add file to fail list & increase fail count.
     if retcode != expected:
       failed = failed + 1
