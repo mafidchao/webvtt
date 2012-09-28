@@ -1,0 +1,8 @@
+/*
+This tests for 2 cue components added in the cue payload with no separation.
+This test should pass.
+*/
+WEBVTT
+
+00:11.000 --> 00:15.000
+We <b>are</b><b>in</b> New York City

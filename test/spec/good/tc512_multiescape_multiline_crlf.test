@@ -1,0 +1,9 @@
+/*
+This tests for 1 line terminator (CRLF) between 2 escape characters.
+This test should pass.
+*/
+WEBVTT
+
+00:11.000 --> 00:15.000
+&amp;
+&amp;
