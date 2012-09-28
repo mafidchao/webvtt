@@ -1,0 +1,8 @@
+﻿/*
+Test if parser fails when multiple cue settings are specified but not separated by webvtt delimiters
+([U+0009|U+0020])
+*/
+WEBVTT
+
+00:00.000 --> 00:10.000 vertical:lr;line:50%
+Payload

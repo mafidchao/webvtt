@@ -1,0 +1,7 @@
+﻿/*
+Test if parser fails when the key/value delimiter is incorrect for an otherwise correct 'line' cue setting.
+*/
+WEBVTT
+
+00:00.000 --> 00:10.000 line;50%
+Payload

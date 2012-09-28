@@ -1,0 +1,7 @@
+﻿/*
+Test if parser fails when there is no webvtt delimiter between the cue timestamp and a cue setting element
+*/
+WEBVTT
+
+00:00.000 --> 00:10.000line:68%
+Payload

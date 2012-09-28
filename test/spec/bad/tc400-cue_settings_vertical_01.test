@@ -1,0 +1,7 @@
+﻿/*
+Test if parser fails when a correct 'vertical' element is not separated from the cue timestamp
+*/
+WEBVTT
+
+00:00.000 --> 00:10.000vertical:lr
+Payload
