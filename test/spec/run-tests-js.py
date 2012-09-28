@@ -31,8 +31,12 @@ def runTests(root, files, expected):
     # If the file is not a .vtt file, skip this iteration
     extension = os.path.splitext(file_path)[1]
     if extension != ".vtt": continue
-    # Run file against webvtt parser (in silent mode)
-    retcode = subprocess.call(["webvtt", "-s", file_path], stdout=subprocess.PIPE, shell=True)
+    # Run file against webvtt parser (in silent mode) for Windows OS
+    if os.name == 'nt':
+      retcode = subprocess.call(["webvtt", "-s", file_path], stdout=subprocess.PIPE, shell=True)
+    # Run file against webvtt parser (in silent mode) for other OSs
+    else :
+      retcode = subprocess.call(["webvtt", "-s", file_path], stdout=subprocess.PIPE)
     # If we did NOT get expected, add file to fail list & increase fail count.
     if retcode != expected:
       failed = failed + 1
