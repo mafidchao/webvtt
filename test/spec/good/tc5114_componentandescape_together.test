@@ -1,0 +1,8 @@
+/*
+This tests for a cue span and escape character with no separator.
+This test should pass.
+*/
+WEBVTT
+
+00:11.000 --> 00:15.000
+We <b>are</b>&amp;in New York City

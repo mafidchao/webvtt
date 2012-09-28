@@ -1,0 +1,8 @@
+/*
+This tests for more than 1 line terminator (CR) separating escape characters.
+This test should fail.
+*/
+WEBVTT
+
+00:11.000 --> 00:15.000
+&amp;&amp;

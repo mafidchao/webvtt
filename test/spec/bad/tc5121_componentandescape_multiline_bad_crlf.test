@@ -1,0 +1,10 @@
+/*
+This tests for more than 1 line terminator (CRLF) separating a cue component.
+and an escape character. This test should fail.
+*/
+WEBVTT
+
+00:11.000 --> 00:15.000
+We <b>are</b>
+
+&amp;in New York City
