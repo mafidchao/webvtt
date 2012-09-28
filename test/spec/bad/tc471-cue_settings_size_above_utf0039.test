@@ -1,0 +1,8 @@
+/*
+Test value above utf+0039 for size cue setting
+Note: This test currently fails due to a bug in the parser
+*/
+WEBVTT
+
+00:11.000 --> 00:13.000 size:A%
+payload

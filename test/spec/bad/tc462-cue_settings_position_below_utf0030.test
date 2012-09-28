@@ -1,0 +1,8 @@
+/*
+Test value below utf+0030 for position cue setting
+Note: This test currently fails due to a bug in the parser
+*/
+WEBVTT
+
+00:11.000 --> 00:13.000 position:+%
+payload

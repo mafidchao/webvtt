@@ -1,0 +1,7 @@
+/*
+Test properly formatted align end cue setting
+*/
+WEBVTT
+
+00:11.000 --> 00:13.000 align:end
+payload
