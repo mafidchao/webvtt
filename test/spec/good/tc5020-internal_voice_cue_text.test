@@ -1,0 +1,7 @@
+/*
+Verifies that a voice cue text with internal text is parsed correctly.
+*/
+WEBVTT
+
+00:11.000 --> 00:13.000
+<v Roger Bingham>We are in New York City</v>

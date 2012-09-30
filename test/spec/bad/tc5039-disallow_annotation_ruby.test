@@ -1,0 +1,7 @@
+/*
+Verifies that a ruby cue component cannot have an annotation.
+*/
+WEBVTT
+
+00:11.000 --> 00:15.000
+We <ruby Annotation Here>are in New York City</ruby>

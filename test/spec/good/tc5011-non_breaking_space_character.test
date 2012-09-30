@@ -1,0 +1,7 @@
+/*
+Verifies that non breaking space characters are parsed.
+*/
+WEBVTT
+
+00:11.000 --> 00:13.000
+&nbsp;

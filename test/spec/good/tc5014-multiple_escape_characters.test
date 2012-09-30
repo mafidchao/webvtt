@@ -1,0 +1,7 @@
+/*
+Verifies that multiple escape characters are parsed.
+*/
+WEBVTT
+
+00:11.000 --> 00:15.000
+&nbsp;&nbsp;
