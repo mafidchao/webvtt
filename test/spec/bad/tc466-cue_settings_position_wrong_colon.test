@@ -1,0 +1,7 @@
+/*
+Test wrong symbol in place of colon (":") for position cue setting
+*/
+WEBVTT
+
+00:11.000 --> 00:13.000 position;10%
+payload

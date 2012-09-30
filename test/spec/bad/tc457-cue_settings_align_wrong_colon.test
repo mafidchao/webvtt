@@ -1,0 +1,7 @@
+/*
+Test wrong symbol in place of colon (":") for align cue setting
+*/
+WEBVTT
+
+00:11.000 --> 00:13.000 align;start
+payload
