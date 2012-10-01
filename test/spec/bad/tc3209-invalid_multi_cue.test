@@ -1,5 +1,10 @@
 /*
-This tests two timestamps where the the 2nd begins after the 1st one.
+WebVTT Spec Date: September 28, 2012
+
+A WebVTT timestamp representing the start time offset of the cue. 
+The time represented by this WebVTT timestamp must be greater than or equal to 
+the start time offsets of all previous cues in the file.
+
 The test should fail.
 */
 WEBVTT

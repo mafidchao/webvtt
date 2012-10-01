@@ -1,5 +1,11 @@
 /*
-This tests how many '00:'s a time cue can have.
+WebVTT Spec Date: September 28, 2012
+
+If minutes is greater than 59, then let hours be the integer component of 
+minutes divided by sixty, and then let minutes be the remainder of dividing 
+minutes divided by sixty. Otherwise, let hours be zero. There is nothing beyond
+hours.
+
 This test should fail.
 */
 WEBVTT

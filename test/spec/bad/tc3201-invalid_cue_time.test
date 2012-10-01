@@ -1,5 +1,10 @@
 /*
-This tests how much time should elapse for time cues.
+WebVTT Spec Date: September 28, 2012
+
+A WebVTT timestamp representing the end time offset of the cue. The time 
+represented by this WebVTT timestamp must be greater than the start time offset
+of the cue.
+
 This test should fail.
 */
 WEBVTT
