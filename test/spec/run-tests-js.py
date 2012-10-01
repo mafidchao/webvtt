@@ -86,6 +86,8 @@ class TestHarness:
         raise
     failed_total = 0
     passed_total = 0
+    known_failed_total = 0
+    known_passed_total = 0
 
     for test_suite in [{'name': 'good', 'expected': 0},
                        {'name': 'bad', 'expected': 1}]:
@@ -94,7 +96,17 @@ class TestHarness:
       failed_total = failed_total + failed
       passed_total = passed_total + passed
 
-    print "\n%s Passed, %s Failed, %s Total." % (passed_total, failed_total, passed_total + failed_total)
+    for test_suite in [{'name': 'known-good', 'expected': 1},
+                       {'name': 'known-bad', 'expected': 0}]:
+      root = os.path.realpath(os.path.join(self.test_root, test_suite['name']))
+      known_failed, known_passed = self.run_test_set(root, os.listdir(root), test_suite['expected'])
+      known_failed_total = known_failed_total + known_failed
+      known_passed_total = known_passed_total + known_passed
+
+    print "\n%s Passed, %s Failed" % (passed_total, failed_total)
+    print "%s Known Fail Tests Failed, %s Known Fail Tests Passed" % (known_passed_total, known_failed_total)
+    print "\n%s Total" % (passed_total + failed_total + known_passed_total + known_failed_total)
+
 
 
 def main():
