@@ -34,7 +34,7 @@ def main():
 				pass
 			else:
 				print >> sys.strerr, "error: failed to create directory `{0}':\n{1}\n".format(vttFileDirPath,e.strerror)
-
+				
 		# Write vtt file
 		try:
 			vttFile = open(sys.argv[2], 'w')
@@ -46,13 +46,13 @@ def main():
 		finally:
 			if vttFile:
 				vttFile.close()
-
+		
 	except IOError as e:
 		print >> sys.stderr, "error: failed to open input file `{0}':\n{1}\n".format(sys.argv[1], e.strerror)
 	finally:
 		if testFile:
 			testFile.close()
-
+			
 if __name__ == '__main__':
 	status = main()
 	sys.exit(status)
