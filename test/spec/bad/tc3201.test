@@ -1,6 +1,6 @@
 /*
-Please goto:
-http://zenit.senecac.on.ca/wiki/index.php/Cue_Times#Vince
+This tests how much time should elapse for time cues.
+This test should fail.
 */
 WEBVTT
 

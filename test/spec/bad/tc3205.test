@@ -1,6 +1,6 @@
 /*
-Please goto:
-http://zenit.senecac.on.ca/wiki/index.php/Cue_Times#Vince
+This tests how many digits can be in seconds.
+This test should fail.
 */
 WEBVTT
 

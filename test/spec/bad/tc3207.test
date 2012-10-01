@@ -1,6 +1,6 @@
 /*
-Please goto:
-http://zenit.senecac.on.ca/wiki/index.php/Cue_Times#Vince
+This tests how many '00:'s a time cue can have.
+This test should fail.
 */
 WEBVTT
 

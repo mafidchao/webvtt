@@ -1,6 +1,6 @@
 /*
-Please goto:
-http://zenit.senecac.on.ca/wiki/index.php/Cue_Times#Vince
+This tests a time stamp that begins after it should end.
+This test should fail.
 */
 WEBVTT
 
