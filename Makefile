@@ -17,6 +17,8 @@ test_webvtt_SRCS := test_webvtt.c libwebvtt.a
 
 EXTRA_DIST := LICENSE
 
+PYTHON = python
+
 ## below this point is boilerplate
 
 BUILD_LIBRARIES := $(LIBRARIES:%=lib%.a)
@@ -32,6 +34,9 @@ check: all
 	    echo ./$$prog  ok;    \
 	  fi; \
 	done
+
+check-js:
+	$(PYTHON) ./test/spec/run-tests-js.py ./test/spec/
 
 clean:
 	$(RM) $(ALL_OBJS)
