@@ -1,0 +1,7 @@
+/*
+According to the spec this should be allowed, however the parser does not accept this. Therefore it is a known test failure.
+*/
+WEBVTT
+
+00:11.000 --> 00:13.000
+<v Roger Bingham>We are in <v Roger Bingham>New York</v> City</v>
