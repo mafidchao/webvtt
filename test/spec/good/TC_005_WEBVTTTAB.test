@@ -1,0 +1,4 @@
+/*
+This makes sure that a WEBVTT header can be followed by a TAB
+*/
+WEBVTT	
