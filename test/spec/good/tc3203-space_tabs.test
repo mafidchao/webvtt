@@ -1,3 +1,7 @@
+/*
+Testing lots of legal tab/space chars between timestamps and "-->"
+This should PASS.
+*/
 WEBVTT
 
 00:11.000 		  -->	 	 	  00:13.000	 	 	 	

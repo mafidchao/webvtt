@@ -1,3 +1,7 @@
+/*
+This tests the highest legal values in a timestamp.
+It should PASS.
+*/
 WEBVTT
 
-99:59:59.998 --> 99:59:59.999
+999:59:59.998 --> 999:59:59.999

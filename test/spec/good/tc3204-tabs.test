@@ -1,3 +1,7 @@
+/*
+Testing using legal tab characters instead of space characters.
+This should PASS.
+*/
 WEBVTT
 
 05:11.000	-->	05:13.000
