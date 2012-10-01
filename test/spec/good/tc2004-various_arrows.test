@@ -1,5 +1,6 @@
 /*
-Test various arrows, all should pass
+Test for various arrows.
+This test should pass.
 */
 WEBVTT
 
@@ -22,4 +23,3 @@ abv - -> sda
 <<->>
 00:20.000 --> 00:22.000
 <v Roger Bingham>Astrophysicist, Director of the Hayden Planetarium
-

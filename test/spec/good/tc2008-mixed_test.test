@@ -1,3 +1,12 @@
+/*
+Combined test for various cue situation:
+_multi lines separation
+_occasional cue
+_standalone time with no cue or sub
+_multiline sub
+_incomplete arrow
+This test should pass.
+*/
 WEBVTT
 
 <j>

@@ -1,5 +1,6 @@
 /*
-Test for alphabet + non-alphabet characters, all should pass
+Test for alphabet + non-alphabet characters.
+This test should pass.
 */
 WEBVTT
 

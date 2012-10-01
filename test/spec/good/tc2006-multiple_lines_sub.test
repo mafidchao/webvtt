@@ -1,5 +1,6 @@
 /*
-Test for multiline subtitle, this shouldn't matter
+Test for multiline subtitle.
+This test should pass.
 */
 WEBVTT
 
