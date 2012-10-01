@@ -19,6 +19,19 @@ EXTRA_DIST := LICENSE
 
 PYTHON = python
 
+SRC_DIR = .
+TEST_DIR = $(SRC_DIR)/test
+SPEC_DIR = $(TEST_DIR)/spec
+OBJ_DIR = $(SRC_DIR)/objdir
+OBJ_DIR_SPEC = $(OBJ_DIR)/test/spec
+# Get all the .test files underneath the directory specified by $(SPEC_DIR)
+TEST_SRC := $(shell find $(SPEC_DIR) -name '*.test' -print)
+# Transform all .test files rooted in ./test to .vtt rooted in
+# .objdir/test
+VTT_SRC := $(subst $(SRC_DIR)/test,$(OBJ_DIR)/test,$(subst .test,.vtt,$(TEST_SRC)))
+
+STIP_VTT = $(SPEC_DIR)/strip-vtt.py
+
 ## below this point is boilerplate
 
 BUILD_LIBRARIES := $(LIBRARIES:%=lib%.a)
@@ -35,9 +48,14 @@ check: all
 	  fi; \
 	done
 
-check-js:
-	$(PYTHON) ./test/spec/strip-vtt.py ./test/spec/ ./objdir
-	$(PYTHON) ./test/spec/run-tests-js.py ./objdir/test/spec/
+objdir:
+	mkdir $(OBJ_DIR)
+
+check-js: objdir $(VTT_SRC)
+	$(PYTHON) ./test/spec/run-tests-js.py $(OBJ_DIR_SPEC)
+
+$(OBJ_DIR)/%.vtt : $(SRC_DIR)/%.test
+	@$(PYTHON) $(STIP_VTT) $< $@
 
 clean:
 	$(RM) $(ALL_OBJS)
@@ -54,6 +72,7 @@ define library_template
 	$$(AR) cr $$@ $$^
 	$$(RANLIB) $$@
 endef
+
 define program_template
  $(1)_OBJS := $$($(1)_SRCS:.c=.o)
  $(1)_OBJS : $$($(1)_HDRS)
@@ -62,6 +81,7 @@ define program_template
  $(1): $$($(1)_OBJS)
 	$(CC) $$(LDFLAGS) -o $$@ $$^ $$($(1)_LIBS:%=-l%)
 endef
+
 $(foreach lib,$(LIBRARIES),$(eval $(call library_template,$(lib))))
 $(foreach prog,$(PROGS),$(eval $(call program_template,$(prog))))
 
