@@ -1,5 +1,5 @@
 /*
-This test is to verify that a ruby cue component must start with an open tag
+This test is to verify that a ruby cue component should be closed with a ruby end tag
 */
 WEBVTT
 
