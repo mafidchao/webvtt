@@ -1,15 +1,15 @@
-/*
+ï»¿/*
 Test for "junk characters".
 "junk characters" should work, depending on your font, displayed characters may be different.
 This test should pass.
 */
 WEBVTT
 
-‚Ü‚½AFirefox ‚Ì‹Zp‚ðŒ³‚Éƒ‚ƒoƒCƒ‹”Å‚ÌŠJ”­‚ài‚ß‚ç‚ê Firefox for Mobile ‚ªƒŠƒŠ[ƒX‚³‚ê‚Ä‚¢‚éB
+ã¾ãŸã€Firefox ã®æŠ€è¡“ã‚’å…ƒã«ãƒ¢ãƒã‚¤ãƒ«ç‰ˆã®é–‹ç™ºã‚‚é€²ã‚ã‚‰ã‚Œ Firefox for Mobile ãŒãƒªãƒªãƒ¼ã‚¹ã•ã‚Œã¦ã„ã‚‹ã€‚
 00:16.000 --> 00:18.000
 <v Roger Bingham>from the American Museum of Natural History
 
-?Zß,<ß<?ƒÁ?|õß:Zß:Ã~.9ÐwÑ)Ê9ÐE?vÈE?Qß,<ß(<ÑEEÑß,<ß<?E?õYß:ß<?Ã?¶?
+?Zï¾Ÿ,<ï¾Ÿ<?Î³?|î‘Š:Zï¾Ÿ:ï¾ƒ~.9ï¾wï¾‘)ï¾Š9ï¾ãƒ»?vï¾ˆãƒ»?Qï¾Ÿ,<ï¾Ÿ(<ï¾‘ãƒ»ãƒ»ï¾‘ï¾Ÿ,<ï¾Ÿ<?ãƒ»?î…ï¾Ÿ:ï¾Ÿ<?ï¾ƒ?ï½¶?
 00:18.000 --> 00:20.000
 <v Roger Bingham>And with me is Neil deGrasse Tyson
 
