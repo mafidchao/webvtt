@@ -1,4 +1,4 @@
 /*
-This makes sure that a WEBVTT header can be followed by a TAB
+This makes sure that a WEBVTT header can be followed by a TAB. spec date:28 September 2012
 */
 WEBVTT	

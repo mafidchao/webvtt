@@ -1,4 +1,4 @@
 ﻿/*
-This test checks for a bom charecter followed by garbage data to make sure that a WEBVTT header follows the bom charecter
+This test checks for a bom charecter followed by garbage data to make sure that a WEBVTT header follows the bom charecter. spec date:28 September 2012
 */
 garbage

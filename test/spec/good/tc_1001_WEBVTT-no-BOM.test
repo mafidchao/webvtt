@@ -1,4 +1,4 @@
 /*
-This makes sure that the WEBVTT header can be followed by a space
+This makes sure that the WEBVTT header can be followed by a space. spec date:28 September 2012
 */
 WEBVTT
