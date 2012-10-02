@@ -1,0 +1,4 @@
+/*
+This makes sure that the WEBVTT header can be followed by a space
+*/
+WEBVTT

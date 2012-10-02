@@ -1,0 +1,4 @@
+﻿/*
+This test checks for a tab after the bom charecter to make sure that trailing spaces after bom do  not make it pass
+*/
+	WEBVTT
