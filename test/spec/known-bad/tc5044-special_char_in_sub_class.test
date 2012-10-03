@@ -1,5 +1,9 @@
 /*
 Verifies that the subclass of a subclass cannot have a special character.
+This test should fail but is a known pass.
+
+Based on the WebVTT cue span start tag specification as of October 3, 2012.
+http://dev.w3.org/html5/webvtt/#webvtt-cue-span-start-tag
 */
 WEBVTT
 

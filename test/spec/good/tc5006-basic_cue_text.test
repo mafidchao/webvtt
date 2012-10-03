@@ -1,5 +1,9 @@
 /*
 Verifies that just a cue text span will work.
+This test should pass.
+
+Based on the WebVTT cue text span specification as of October 3, 2012.
+http://dev.w3.org/html5/webvtt/#webvtt-cue-text-span
 */
 WEBVTT
 

@@ -1,5 +1,9 @@
 /*
 This test is to verify that a single subclass can be used on cue components.
+This test should pass.
+
+Based on the WebVTT cue span start tag specification as of October 3, 2012.
+http://dev.w3.org/html5/webvtt/#webvtt-cue-span-start-tag
 */
 WEBVTT
 

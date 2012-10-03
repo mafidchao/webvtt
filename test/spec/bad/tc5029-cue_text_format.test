@@ -1,5 +1,9 @@
 /*
 Verifies that an incorrectly formatted cue text start tag will not be parsed.
+This test should fail.
+
+Based on the WebVTT cue span start tag specification as of October 3, 2012.
+http://dev.w3.org/html5/webvtt/#webvtt-cue-span-start-tag
 */
 WEBVTT
 

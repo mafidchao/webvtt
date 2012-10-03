@@ -1,5 +1,9 @@
 /*
 Verifies that italic cue components are parsed.
+This test should pass.
+
+Based on the WebVTT cue italics span specification as of October 3, 2012.
+http://dev.w3.org/html5/webvtt/#webvtt-cue-italics-span
 */
 WEBVTT 
 
