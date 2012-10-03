@@ -1,4 +1,5 @@
 ﻿/*
+WebVTT Spec Date: September 28, 2012
 Test for "junk characters".
 "junk characters" should work, depending on your font, displayed characters may be different.
 This test should pass.
