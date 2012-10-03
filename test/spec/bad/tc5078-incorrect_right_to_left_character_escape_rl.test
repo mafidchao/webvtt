@@ -1,0 +1,7 @@
+/*
+ Incorrect Left to Right Character Escape : '&rl;' instead of '&lrm;'
+*/
+WEBVTT
+
+00:11.000 --> 00:13.000
+Test Left to Right Character escape: &rl;

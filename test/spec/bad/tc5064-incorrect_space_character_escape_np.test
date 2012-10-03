@@ -1,0 +1,7 @@
+/*
+ Incorrect Space Character Escape : '&np;' instead of '&nbsp;'
+*/
+WEBVTT
+
+00:11.000 --> 00:13.000
+Test Space Character escape: &np;

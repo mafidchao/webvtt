@@ -1,0 +1,7 @@
+/*
+ Incorrect Ampersand Escape : '&ap;' instead of '&amp;'
+*/
+WEBVTT
+
+00:11.000 --> 00:13.000
+Test Ampersand escape: &ap;

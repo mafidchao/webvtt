@@ -1,0 +1,7 @@
+/* 
+   The Parser should not allow '&' to be entered
+*/
+WEBVTT
+
+00:11.000 --> 00:13.000
+Test Ampersand Special Character: &
