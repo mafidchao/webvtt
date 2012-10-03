@@ -1,7 +1,7 @@
 /*
 Verifies that an incorrect class name cannot be used as a cue component.
 */
-WEBVTT  
+WEBVTT
 
 00:11.000 --> 00:13.000
 We <badclass>are<badclass> in New York City

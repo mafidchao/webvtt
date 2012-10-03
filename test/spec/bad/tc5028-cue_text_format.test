@@ -1,7 +1,7 @@
 /*
 Verifies that a cue component with a start tag that doesn't have an ending > will not be parsed.
 */
-WEBVTT 
+WEBVTT
 
 00:11.000 --> 00:13.000
 We <i are</i> in New York City

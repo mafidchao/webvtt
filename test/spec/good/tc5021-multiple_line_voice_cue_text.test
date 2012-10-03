@@ -1,6 +1,6 @@
 /*
 Verifies that multi line cue text is parsed correctly.
-/*
+*/
 WEBVTT
 
 00:11.000 --> 00:13.000
