@@ -1,0 +1,10 @@
+/*
+WebVTT Spec Date: September 28, 2012
+
+A WebVTT timestamp should consist of hours:minutes:seconds in digits (0-9)
+
+The test should fail.
+*/
+WEBVTT
+
+eight:minutes.@@ --> 00:01.001
