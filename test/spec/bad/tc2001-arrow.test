@@ -1,6 +1,7 @@
 ﻿/*
+WebVTT Spec Date: September 28, 2012
 Test for "-->".
-This should fail.
+This test should fail.
 */
 WEBVTT
 

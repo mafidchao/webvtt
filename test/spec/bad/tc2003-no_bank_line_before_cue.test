@@ -1,4 +1,5 @@
 ﻿/*
+WebVTT Spec Date: September 28, 2012
 Test for blank line before cue.
 This test should fail.
 */
