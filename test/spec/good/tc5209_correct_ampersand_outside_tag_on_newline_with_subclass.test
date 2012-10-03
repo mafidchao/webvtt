@@ -1,0 +1,9 @@
+/*
+ correct Ampersand Character Escape on new line after a tag with a subclass
+ and subclass
+*/
+WEBVTT
+
+00:11.000 --> 00:13.000
+<i.class.subclass> Some Filler Text </i>
+&amp; 
