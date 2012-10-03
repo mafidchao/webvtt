@@ -1,4 +1,5 @@
 /*
+WebVTT Draft Spec Version 2 October 2012
 Testing lots of legal tab/space chars between timestamps and "-->"
 This should PASS.
 */

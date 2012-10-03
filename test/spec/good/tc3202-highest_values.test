@@ -1,4 +1,5 @@
 /*
+WebVTT Draft Spec Version 2 October 2012
 This tests the highest legal values in a timestamp.
 It should PASS.
 */

@@ -1,4 +1,5 @@
 /*
+WebVTT Draft Spec Version 2 October 2012
 Some cue times are nested within another cue.
 This should PASS.
 */

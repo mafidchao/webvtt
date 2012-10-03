@@ -1,4 +1,5 @@
 /*
+WebVTT Draft Spec Version 2 October 2012
 This should the bare minimium required for a valid WebVTT with one cue and sample content.
 This should PASS.
 */
