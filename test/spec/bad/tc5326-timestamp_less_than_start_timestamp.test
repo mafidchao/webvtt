@@ -1,0 +1,9 @@
+/*
+Test if parser failes when a cue timestamp is is less than the start WebVTT timestamp
+
+From http://dev.w3.org/html5/webvtt/#webvtt-cue-timestamp (10/03/2012)
+*/
+WEBVTT
+
+00:11.000 --> 00:15.000
+We <00:10.000>are in New York
