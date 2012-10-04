@@ -1,0 +1,12 @@
+/*
+Test missing colon separator (":" U+003A) for align cue setting
+
+This test tests conformity with Section 3.1 - Syntax - Cue settings - Align - 2
+of the WebVTT Living Standard Updated October 2, 2012
+
+This test should FAIL
+*/
+WEBVTT
+
+00:11.000 --> 00:13.000 alignstart
+payload
