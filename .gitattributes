@@ -1,4 +1,4 @@
-./test/spec/good/* -text
-./test/spec/bad/* -text
-./test/spec/good/* -crlf
-./test/spec/bad/* -crlf
+./test/spec/good/*.test -text
+./test/spec/bad/*.test -text
+./test/spec/known-good/*.test -text
+./test/spec/known-bad/*.test -text
