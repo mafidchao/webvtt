@@ -1,7 +1,0 @@
-/*
- correct Ampersand Character Escape inside tag with a class
-*/
-WEBVTT
-
-00:11.000 --> 00:13.000
-<i.class> ampersand escape: &amp; </i> 
