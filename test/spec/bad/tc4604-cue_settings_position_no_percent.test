@@ -1,5 +1,10 @@
 /*
-Test missing percent ("%") following the value for position cue setting
+Test missing percent ("%" U+0025) following the value for position cue setting
+
+This test tests conformity with Section 3.1 - Syntax - Cue settings - Position - 4
+of the WebVTT Living Standard Updated October 2, 2012
+
+This test should FAIL
 */
 WEBVTT
 
