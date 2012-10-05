@@ -1,0 +1,11 @@
+/*
+Verifies that non breaking space characters are parsed.
+This test should pass but is a known fail.
+
+Based on the WebVTT cue nbsp escape specification as of October 3, 2012.
+http://dev.w3.org/html5/webvtt/#webvtt-cue-nbsp-escape
+*/
+WEBVTT
+
+00:11.000 --> 00:13.000
+&nbsp;

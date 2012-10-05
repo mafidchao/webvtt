@@ -1,0 +1,11 @@
+/*
+Verifies that a voice cue text with internal text is parsed correctly.
+This test should pass.
+
+Based on the WebVTT cue voice span specification as of October 3, 2012.
+http://dev.w3.org/html5/webvtt/#webvtt-cue-voice-span
+*/
+WEBVTT
+
+00:11.000 --> 00:13.000
+<v Roger Bingham>We are in New York City</v>

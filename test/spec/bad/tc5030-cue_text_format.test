@@ -1,0 +1,11 @@
+/*
+Verifies that a cue component with an end tag that does not have a closing > will not be parsed.
+This test should fail.
+
+Based on the WebVTT cue span end tag sepcficication as of October 3, 2012.
+http://dev.w3.org/html5/webvtt/#webvtt-cue-span-end-tag
+*/
+WEBVTT
+
+00:11.000 --> 00:13.000
+We <i>are</i in New York City
