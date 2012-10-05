@@ -1,0 +1,11 @@
+/*
+Verifies that a multiple cue components must be nested correctly in order to be parsed.
+This test should fail.
+
+Based on the WebVTT cue text specification as of October 3, 2012.
+http://dev.w3.org/html5/webvtt/#webvtt-cue-text
+*/
+WEBVTT
+
+00:11.000 --> 00:13.000
+We <i><b>are</i> in</b> New York City

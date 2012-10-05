@@ -1,0 +1,11 @@
+/*
+Verifies that a special character cannot be used a a subclass.
+This test should fail but is a known pass.
+
+Based on the WebVTT cue span start tag specification as of October 3, 2012.
+http://dev.w3.org/html5/webvtt/#webvtt-cue-span-start-tag
+*/
+WEBVTT
+
+00:11.000 --> 00:13.000
+We <i.&amp;>are</i> in New York City

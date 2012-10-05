@@ -1,0 +1,11 @@
+/*
+Verifies that greater than escape characters are parsed.
+This test should pass.
+
+Based on the WebVTT cue gt escape specification as of October 3, 2012.
+http://dev.w3.org/html5/webvtt/#webvtt-cue-gt-escape
+*/
+WEBVTT
+
+00:11.000 --> 00:13.000
+&gt;
