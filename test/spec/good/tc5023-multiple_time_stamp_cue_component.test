@@ -1,0 +1,11 @@
+/*
+Verifies that multiple time stamp cue components are parsed.
+This test should pass.
+
+Based on the WebVTT cue timestamp specification as of October 3, 2012.
+http://dev.w3.org/html5/webvtt/#webvtt-cue-timestamp
+*/
+WEBVTT
+
+00:11.000 --> 00:15.000
+We <00:12.000>are in<0:13.000> New York City

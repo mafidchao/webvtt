@@ -1,0 +1,10 @@
+/*
+This test is to verify that no cue text is valid.
+This test should pass.
+
+Based on the WebVTT cue text span specification as of October 3, 2012.
+http://dev.w3.org/html5/webvtt/#webvtt-cue-text-span
+*/
+WEBVTT
+
+00:11.000 --> 00:13.000

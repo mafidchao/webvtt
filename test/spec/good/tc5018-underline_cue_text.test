@@ -1,0 +1,11 @@
+/*
+Verifies that underline cue components are parsed.
+This test should pass.
+
+Based on the WebVTT cue underline span specification as of October 3, 2012.
+http://dev.w3.org/html5/webvtt/#webvtt-cue-underline-span
+*/
+WEBVTT
+
+00:11.000 --> 00:13.000
+We <u>are</u> in New York City
