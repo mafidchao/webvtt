@@ -1,0 +1,14 @@
+/*
+WebVTT Spec Date: September 28, 2012
+
+A WebVTT timestamp representing the start time offset of the cue. 
+The time represented by this WebVTT timestamp must be greater than or equal to 
+the start time offsets of all previous cues in the file.
+
+The test should fail.
+*/
+WEBVTT
+
+00:01.000 --> 00:01.001
+
+00:00.000 --> 00:00.001

@@ -1,0 +1,8 @@
+/*
+WebVTT Draft Spec Version 2 October 2012
+This test demonstrates that a WebVTT file fails validation when there are non-integers in the timestamp.
+This test should FAIL.
+*/
+WEBVTT
+
+00:aa.000 --> 00:bb.001

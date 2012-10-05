@@ -1,0 +1,11 @@
+﻿/*
+Verifies that the parser correctly parses a combination of 2 cue settings of different types, 
+delimited by a combination of U+0020 (space) and U+0009 (tab)
+
+From http://dev.w3.org/html5/webvtt/#webvtt-vertical-text-cue-setting (09/28/2012):
+	The WebVTT cue settings part of a WebVTT cue consists of zero or more of the following components, in any order, separated from each other by one or more U+0020 SPACE characters or U+0009 CHARACTER TABULATION (tab) characters. Each component must not be included more than once per WebVTT cue settings string.
+*/
+WEBVTT
+
+00:00.000 --> 00:10.000 vertical:lr 	line:50%
+Payload

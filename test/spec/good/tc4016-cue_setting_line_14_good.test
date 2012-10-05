@@ -1,0 +1,18 @@
+﻿/*
+Verifies that the parser correctly parses a single "line" setting with U+003A ':', 
+followed by 1 or more ASCII digits (U+0030-U+0039 '0'-'9'), each positioned correctly.
+
+testing multiple digits at the center of the range, negated
+
+From http://dev.w3.org/html5/webvtt/#webvtt-line-position-cue-setting (09/28/2012):
+	1. The string "line".
+	2. A U+003A COLON character (:).
+	3.
+		To represent a line number
+		1. Optionally a U+002D HYPHEN-MINUS character (-).
+		2. One or more characters in the range U+0030 DIGIT ZERO (0) to U+0039 DIGIT NINE (9).
+*/
+WEBVTT
+
+00:00.000 --> 00:10.000	line:-54
+Payload

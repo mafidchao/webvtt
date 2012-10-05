@@ -1,0 +1,11 @@
+/*
+WebVTT Spec Date: September 28, 2012
+
+The string "-->" (U+002D HYPHEN-MINUS, U+002D HYPHEN-MINUS, U+003E GREATER-THAN 
+SIGN) seperates the start and end time is missing.
+
+This test should fail.
+*/
+WEBVTT
+
+00:00.000 00:00.001

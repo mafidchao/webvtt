@@ -1,0 +1,8 @@
+/*
+This test is to verify that one U+0009 TAB character can be placed after a </rt> tag
+*/
+WEBVTT
+
+00:11.000 --> 00:13.000
+Hey <ruby>WWW<rt>World Wide Web</rt>	
+</ruby>

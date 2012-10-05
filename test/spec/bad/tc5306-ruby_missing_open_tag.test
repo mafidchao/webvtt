@@ -1,0 +1,7 @@
+/*
+This test is to verify that a ruby cue component must start with an open tag
+*/
+WEBVTT
+
+00:11.000 --> 00:13.000
+Hey<rt>World Wide Web</rt></ruby>

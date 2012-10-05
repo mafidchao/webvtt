@@ -103,8 +103,7 @@ class TestHarness:
       known_failed_total = known_failed_total + known_failed
       known_passed_total = known_passed_total + known_passed
 
-    print "\n%s Passed, %s Failed, %s Known Tests Failed, %s Total." % (passed_total, failed_total, known_passed_total, passed_total + failed_total + known_passed_total)
-
+    print "\n%s Passed, %s Failed, %s Known Failed, %s Known Passed, %s Total" % (passed_total, failed_total, known_passed_total, known_failed_total, passed_total + failed_total + known_passed_total + known_failed_total)
 
 def main():
   harness = TestHarness(sys.argv[1])

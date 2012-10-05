@@ -1,0 +1,8 @@
+/*
+WebVTT Draft Spec Version 2 October 2012
+This test demonstrates that a WebVTT file fails validation when the '-->' symbol is anything but those three characters in a row.
+This test should FAIL.
+*/
+WEBVTT
+
+00:00.000 <-- 00:00.001
