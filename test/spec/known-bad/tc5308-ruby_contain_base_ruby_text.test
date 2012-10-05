@@ -1,0 +1,7 @@
+/*
+This test is to verify that a <ruby> tag must contain both a base text and a ruby text tag (not be empty)
+*/
+WEBVTT
+
+00:11.000 --> 00:13.000
+Hey <ruby></ruby>

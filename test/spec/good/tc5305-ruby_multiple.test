@@ -1,0 +1,7 @@
+/*
+This test is to verify multiple base and ruby text tags can be embedded into a single <ruby> tag
+*/
+WEBVTT
+
+00:11.000 --> 00:13.000
+Hey <ruby>WWW<rt>World Wide Web</rt>WWW<rt>World Wide Web</rt></ruby>

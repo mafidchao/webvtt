@@ -1,0 +1,7 @@
+/*
+This test is to verify that a ruby cue component should be closed with a ruby end tag
+*/
+WEBVTT
+
+00:11.000 --> 00:13.000
+Hey<ruby><rt>World Wide Web</rt>
