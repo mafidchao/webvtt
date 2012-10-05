@@ -1,0 +1,7 @@
+/*
+This test is to verify that multiple voice cue components can be nested within eachother.
+*/
+WEBVTT
+
+00:11.000 --> 00:13.000
+<v Roger Bingham>We are in <v Roger Bingham>New York</v> City</v>
