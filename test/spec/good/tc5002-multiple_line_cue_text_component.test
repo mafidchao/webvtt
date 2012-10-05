@@ -1,0 +1,13 @@
+/*
+This test is to verify that multiple cue components can be nested within eachother with line terminators between them.
+This test should pass.
+
+Based on the WebVTT cue components specification as of October 3, 2012.
+http://dev.w3.org/html5/webvtt/#webvtt-cue-components
+*/
+WEBVTT
+
+00:11.000 --> 00:13.000
+<u>
+<i>
+<b>Hey this is a test!</b></i></u>

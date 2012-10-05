@@ -1,0 +1,7 @@
+/*
+This test is to verify ruby cue text components work in standard fashion
+*/
+WEBVTT
+
+00:11.000 --> 00:13.000
+Hey <ruby>WWW<rt>World Wide Web</rt></ruby>

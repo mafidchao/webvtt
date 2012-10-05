@@ -1,0 +1,13 @@
+﻿/*
+Verifies that the parser correctly parses a "vertical" key, followed by U+003A ':',
+followed by 'rl' (indicating that the text be positioned vertically, and grows towards the left)
+
+From http://dev.w3.org/html5/webvtt/#webvtt-vertical-text-cue-setting (09/28/2012):
+	1. The string "vertical".
+	2. A U+003A COLON character (:).
+	3. One of the following strings: "rl", "lr". 
+*/
+WEBVTT
+
+00:00.000 --> 00:10.000 vertical:rl
+Payload
