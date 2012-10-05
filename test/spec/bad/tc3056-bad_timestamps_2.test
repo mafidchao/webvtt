@@ -1,0 +1,8 @@
+/*
+WebVTT Draft Spec Version 2 October 2012
+This test demonstrates that a WebVTT file fails validation any characters but 0-9, :, or . are used in timestamps.
+This test should FAIL.
+*/
+WEBVTT
+
+00;00.000 --> 00;00.001
