@@ -1,0 +1,13 @@
+/*
+A bunch of new lines at the bottom of file
+Spec date:1 October 2012
+http://dev.w3.org/html5/webvtt/#syntax
+*/
+WEBVTT
+
+00:13.000 --> 00:16.000
+Introduction
+Hello world!
+
+
+

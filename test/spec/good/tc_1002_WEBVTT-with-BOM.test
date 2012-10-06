@@ -1,0 +1,6 @@
+﻿/*
+This test makes sure that WEBVTT files can start with the bom charecter.
+Spec date:28 September 2012
+http://dev.w3.org/html5/webvtt/#syntax
+*/
+WEBVTT

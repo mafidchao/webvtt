@@ -1,0 +1,10 @@
+/*
+Missing cue identifier after WEBVTT and before text line
+It should fail
+Date: 04 October 2012
+http://kyle.barnhart.ca/
+*/
+WEBVTT
+
+Hello world!
+
