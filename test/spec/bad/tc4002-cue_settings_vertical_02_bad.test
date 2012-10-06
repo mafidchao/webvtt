@@ -1,0 +1,12 @@
+﻿/*
+Test if parser fails when an unknown keyword is used for the otherwise correct 'vertical' cue setting.
+
+From http://dev.w3.org/html5/webvtt/#webvtt-vertical-text-cue-setting (09/28/2012):
+	1. The string "vertical".
+	2. A U+003A COLON character (:).
+	3. One of the following strings: "rl", "lr". 
+*/
+WEBVTT
+
+00:00.000 --> 00:10.000 vectical:lr
+Payload

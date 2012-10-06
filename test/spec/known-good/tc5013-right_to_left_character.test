@@ -1,0 +1,11 @@
+/*
+Verifies that right to left escape characters are parsed.
+This test should pass but is a known fail.
+
+Based on the WebVTT cue rlm escape specification as of October 3, 2012.
+http://dev.w3.org/html5/webvtt/#webvtt-cue-rlm-escape
+*/
+WEBVTT
+
+00:11.000 --> 00:13.000
+&rlm;

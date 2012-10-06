@@ -1,0 +1,12 @@
+/*
+This tests for 1 line terminator (CRLF) between 2 cue components.
+This test should pass.
+
+Based on WebVTT cue text specification as of October 2, 2012:
+http://dev.w3.org/html5/webvtt/#webvtt-cue-text
+*/
+WEBVTT
+
+00:11.000 --> 00:15.000
+We <b>are</b>
+<b>in</b> New York City

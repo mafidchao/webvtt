@@ -1,0 +1,11 @@
+/*
+This tests for the use of more than 1 cue component in the cue payload,
+separated by cue text. This test should pass.
+
+Based on WebVTT cue text specification as of October 2, 2012:
+http://dev.w3.org/html5/webvtt/#webvtt-cue-text
+*/
+WEBVTT
+
+00:11.000 --> 00:15.000
+We <b>are</b> in <b>New York</b> City

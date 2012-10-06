@@ -59,6 +59,7 @@ $(OBJ_DIR)/%.vtt : $(SRC_DIR)/%.test
 
 clean:
 	$(RM) $(ALL_OBJS)
+	$(RM) -fr $(OBJ_DIR)
 	$(RM) $(BUILD_LIBRARIES)
 	$(RM) $(PROGS)
 

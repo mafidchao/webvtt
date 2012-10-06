@@ -1,0 +1,9 @@
+/*
+WebVTT Draft Spec Version 2 October 2012
+This tests the highest legal values in a timestamp.
+This does not include hours, as the highest legal value of an hour would be the highest value of an int.
+It should PASS.
+*/
+WEBVTT
+
+59:59.998 --> 59:59.999

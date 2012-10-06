@@ -1,0 +1,11 @@
+/*
+This tests to make sure that a Cue Component class can be resolved with the [cue component].[subclass] notation. 
+This test should pass.
+
+Based on the WebVTT cue components specification as of October 3, 2012.
+http://dev.w3.org/html5/webvtt/#webvtt-cue-span-start-tag
+*/
+WEBVTT
+
+00:11.000 --> 00:13.000
+<u.class.subclass>Hey this is a test!</u>

@@ -1,0 +1,8 @@
+/*
+WebVTT Draft Spec Version 2 October 2012
+Testing optional hours parameters in timestamp.
+This should PASS.
+*/
+WEBVTT
+
+11:00:11.000 --> 11:00:13.000

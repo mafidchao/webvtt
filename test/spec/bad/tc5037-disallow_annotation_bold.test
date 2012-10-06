@@ -1,0 +1,11 @@
+/*
+Verifies that a bold cue component cannot have an annotation.
+This test should fail.
+
+Based on the WebVTT cue components specification as of October 3, 2012.
+http://dev.w3.org/html5/webvtt/#webvtt-cue-components
+*/
+WEBVTT
+
+00:11.000 --> 00:15.000
+We <b Annotation Here>are in New York City</b>

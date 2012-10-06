@@ -1,0 +1,16 @@
+/*
+Verifies that the parser can deal with the U+0020 delimiter
+
+From http://dev.w3.org/html5/webvtt/#the-webvtt-file-format (09/28/2012):
+	A WebVTT cue consists of the following components, in the given order:
+
+	1. Optionally, a WebVTT cue identifier followed by a WebVTT line terminator.
+	2. WebVTT cue timings.
+	3. Optionally, one or more U+0020 SPACE characters or U+0009 CHARACTER TABULATION (tab) characters followed by WebVTT cue settings.
+	4. A WebVTT line terminator.
+	5. The cue payload: either WebVTT cue text, WebVTT chapter title text, or WebVTT metadata text.
+*/
+WEBVTT
+
+00:00.000 --> 00:10.000 vertical:lr
+Payload

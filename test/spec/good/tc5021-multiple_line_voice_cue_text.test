@@ -1,0 +1,12 @@
+/*
+Verifies that multi line cue text is parsed correctly.
+This test should pass.
+
+Based on the WebVTT cue voice span specification as of October 3, 2012.
+http://dev.w3.org/html5/webvtt/#webvtt-cue-voice-span
+*/
+WEBVTT
+
+00:11.000 --> 00:13.000
+<v Roger Bingham>When we e-mailed—</v>
+<v Neil deGrasse Tyson>Didn't we talk about enough in that conversation?</v>
