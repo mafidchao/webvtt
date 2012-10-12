@@ -1,5 +1,6 @@
-﻿/*
+/*
 Test to determine how the parser reacts to multiple linefeed characters back to back.
+As of Revision 1.35, October 2nd: This should fail, as an id cannot have multiple cr/lf/crlf
 
 http://dev.w3.org/html5/webvtt/#webvtt-cue-identifier
 */
