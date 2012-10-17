@@ -71,12 +71,16 @@ class TestHarness:
       # If we did NOT get expected, add file to fail list & increase fail count.
       if retcode != expected:
         failed = failed + 1
-        print "Failed %s" % file_path
+        self.print_test_failure(file_path, expected)
       else:
         passed = passed + 1
 
     return failed, passed
 
+  """Prints a verbose error"""
+  def print_test_failure(self, file_path, expected):
+		print "%s %s but was expected to %s." % (file_path, "passed" if expected == 1 else "failed", "fail" if expected == 1 else 'pass')
+		
   """Run all tests. Find the location of the webvtt module we're using, and rethrow if not found. Then call run_test_set for each test set defined in test_suite"""
   def run_tests(self):
     if self.module == None:
@@ -84,26 +88,38 @@ class TestHarness:
         self.find_webvtt()
       except:
         raise
-    failed_total = 0
+		
+    """Totals that relate to tests that should always pass or fail"""
     passed_total = 0
-    known_failed_total = 0
-    known_passed_total = 0
+    failed_total = 0
 
+    """Totals that relate to tests that should pass but are known to fail"""
+    known_good_passed_total = 0
+    known_good_failed_total = 0
+
+    """Totals that relate to tests that should fail but pass"""
+    known_bad_passed_total = 0
+    known_bad_failed_total = 0
+		
     for test_suite in [{'name': 'good', 'expected': 0},
-                       {'name': 'bad', 'expected': 1}]:
-      root = os.path.realpath(os.path.join(self.test_root, test_suite['name']))
-      failed, passed = self.run_test_set(root, os.listdir(root), test_suite['expected'])
-      failed_total = failed_total + failed
-      passed_total = passed_total + passed
-
-    for test_suite in [{'name': 'known-good', 'expected': 1},
+                       {'name': 'bad', 'expected': 1},
+                       {'name': 'known-good', 'expected': 1},
                        {'name': 'known-bad', 'expected': 0}]:
-      root = os.path.realpath(os.path.join(self.test_root, test_suite['name']))
-      known_failed, known_passed = self.run_test_set(root, os.listdir(root), test_suite['expected'])
-      known_failed_total = known_failed_total + known_failed
-      known_passed_total = known_passed_total + known_passed
 
-    print "\n%s Passed, %s Failed, %s Known Failed, %s Known Passed, %s Total" % (passed_total, failed_total, known_passed_total, known_failed_total, passed_total + failed_total + known_passed_total + known_failed_total)
+      root = os.path.realpath(os.path.join(self.test_root, test_suite['name']))
+
+      if test_suite['name'] == 'known-good':
+        known_good_failed_total, known_good_passed_total = self.run_test_set(root, os.listdir(root), test_suite['expected'])
+      elif test_suite['name'] == 'known-bad':
+        known_bad_failed_total, known_bad_passed_total = self.run_test_set(root, os.listdir(root), test_suite['expected'])
+      else:
+        failed, passed = self.run_test_set(root, os.listdir(root), test_suite['expected'])
+        passed_total += passed;
+        failed_total += failed;
+
+    print "\n%s Passed, %s Failed, %s Known Good, %s Known Good Expected to Fail but Passed, %s Known Bad, %s Known Bad Expected to Pass but Failed, %s Total" % \
+            (passed_total, failed_total, known_good_passed_total, known_good_failed_total, known_bad_passed_total, known_bad_failed_total, 
+            passed_total + failed_total + known_good_passed_total + known_good_failed_total + known_bad_passed_total + known_bad_failed_total)
 
 def main():
   harness = TestHarness(sys.argv[1])
