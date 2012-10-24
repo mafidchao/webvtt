@@ -1,0 +1,4 @@
+for file in $(ls ../objdir/test/spec/good)
+do
+	zzuf cat ../objdir/test/spec/good/$file > fuzzedFiles/$file.fuzzed.vtt
+done
