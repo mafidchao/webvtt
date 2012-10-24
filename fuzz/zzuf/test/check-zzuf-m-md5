@@ -1,0 +1,36 @@
+#!/bin/sh
+#
+#  check-zzuf-m-md5 - test "zzuf -m" flag (md5 checksums)
+#  Copyright (c) 2008-2010 Sam Hocevar <sam@hocevar.net>
+#                All Rights Reserved
+#
+#  This program is free software. It comes without any warranty, to
+#  the extent permitted by applicable law. You can redistribute it
+#  and/or modify it under the terms of the Do What The Fuck You Want
+#  To Public License, Version 2, as published by Sam Hocevar. See
+#  http://sam.zoy.org/wtfpl/COPYING for more details.
+#
+
+. "$(dirname "$0")/functions.inc"
+
+checkmd5()
+{
+    CMD="$1"
+    REFMD5="$2"
+    printf " $(echo "$CMD .............................." | cut -b1-30) "
+    MD5="$(eval "$CMD | $ZZUF -m -r0" 2>/dev/null | cut -f2 -d' ')"
+    if [ "$MD5" != "$REFMD5" ]; then
+        fail_test "$MD5 FAILED"
+    else
+        pass_test 'ok'
+    fi
+}
+
+start_test "zzuf -m test"
+
+checkmd5 "printf ''" d41d8cd98f00b204e9800998ecf8427e
+checkmd5 echo 68b329da9893e34099c7d8ad5cb9c940
+checkmd5 "printf 'hello world'" 5eb63bbbe01eeed093cb22bb8f5acdc3
+
+stop_test
+

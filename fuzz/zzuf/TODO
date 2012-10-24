@@ -1,0 +1,26 @@
+
+  * Missing functions:
+    + stdio:
+      - fscanf
+      - fgetws, fgetwc, ungetwc
+      - pipe
+    + zlib functions (eg. libpng)
+    + divert crc checks or recompute checksums (yeah)
+
+  * Detect crashes in the program's stdout/stderr (eg. mplayer) instead of
+    just checking the return value
+
+  * Marker support (eg. \r\n\r\n in HTTP responses)
+
+  * ASCII support (more or less done), UTF-8 support
+
+  * Finish the Win32 port:
+    + pipe inheritance
+    + signal handling
+    + exported functions
+    + memory limits
+
+  * /etc/zzufrc and ~/.zzufrc files
+    + global settings, overridden by the command line
+    + ship rules such as -E '^/usr/' by default
+
