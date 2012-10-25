@@ -10,6 +10,7 @@ The path of the object directory is pass in the second system argument.
 import os
 import sys
 import errno
+import re
 
 def main():
 	# Fail if missing arguments
@@ -23,7 +24,8 @@ def main():
 		fileData = testFile.read()
 
 		# Rip the VTT
-		vttInfo = fileData[fileData.find('*/\n') + 3:]
+		res = re.search(r"\*/\r?\n?", fileData)
+		vttInfo = fileData[res.end():]
 
 		# Get the directory path where the new .vtt file will be stored
 		vttFileDirPath = os.path.dirname(sys.argv[2])
