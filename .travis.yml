@@ -8,8 +8,8 @@ before_script:
   - pwd
   - sudo apt-get update
   - sudo apt-get install zzuf
-  - ls
-  - zzuf
-  - make
-  - cd
+  - which zzuf
 script: make check-js
+after_script:
+  - cd ./fuzz
+  - ./fuzzv2.script 0.1
