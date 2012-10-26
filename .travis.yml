@@ -3,5 +3,10 @@ compiler:
   - gcc
   - clang
 # Change this to your needs
-before_script: npm install webvtt
+before_script: 
+  - npm install webvtt
+  - pwd
+  - cd ./fuzz/zzuf/
+  - make
+  - cd
 script: make check-js
