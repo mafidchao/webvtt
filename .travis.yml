@@ -14,4 +14,5 @@ before_script:
 script: make check-js
 after_script:
   - cd ./fuzz
+  - chmod -R 777 ./fuzzv2.sh
   - ./fuzzv2.sh 0.1
