@@ -6,8 +6,8 @@ compiler:
 before_script: 
   - npm install webvtt
   - pwd
-  - cd ./fuzz/zzuf/
-  - ./bootstrap
+  - sudo apt-get update
+  - sudo apt-get install zzuf
   - ls
   - zzuf
   - make
