@@ -20,11 +20,14 @@ def main():
 
 	# Open the .test file and read it
 	try:
-		testFile = open(sys.argv[1], 'r')
+		testFile = open(sys.argv[1], 'rb')
 		fileData = testFile.read()
-
 		# Rip the VTT
-		res = re.search(r"\*/\r?\n?", fileData)
+		res = re.search(r"/\*.*\*/\r?\n?", fileData, re.M | re.S)
+		if res == None:
+			print "Malformed test file at:", sys.argv[1]
+			return -1
+
 		vttInfo = fileData[res.end():]
 
 		# Get the directory path where the new .vtt file will be stored
