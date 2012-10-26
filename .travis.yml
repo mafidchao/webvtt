@@ -9,7 +9,9 @@ before_script:
   - sudo apt-get update
   - sudo apt-get install zzuf
   - which zzuf
+  - which bash
+  - which sh
 script: make check-js
 after_script:
   - cd ./fuzz
-  - ./fuzzv2.script 0.1
+  - ./fuzzv2.sh 0.1

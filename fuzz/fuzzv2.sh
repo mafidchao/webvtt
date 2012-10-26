@@ -1,3 +1,4 @@
+#!/bin/bash
 echo "Ratio used: $1"
 
 for file in $(ls ../objdir/test/spec/good)
