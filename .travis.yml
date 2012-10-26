@@ -7,6 +7,7 @@ before_script:
   - npm install webvtt
   - pwd
   - cd ./fuzz/zzuf/
+  - ./bootstrap
   - make
   - cd
 script: make check-js
