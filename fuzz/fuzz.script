@@ -1,0 +1,33 @@
+echo "Here are the following fuzz options: "
+echo "#1 Default (0.1 ratio)"
+echo "#2 Specify the fuzz ratio (how much will be fuzzed)"
+read option
+if [ $option == 1 ]
+	then
+	for file in $(ls ../objdir/test/spec/good)
+	do
+		zzuf cat ../objdir/test/spec/good/$file > fuzzedFiles/good.$file.fuzzed.vtt
+	done
+    for file in $(ls ../objdir/test/spec/bad)
+
+    do  
+        zzuf cat ../objdir/test/spec/bad/$file > fuzzedFiles/bad.$file.fuzzed.vtt
+    done
+
+fi
+
+if [ $option == 2 ]
+	then
+	echo "Enter the ratio (eg. 0.12):"
+	read ratio
+    for file in $(ls ../objdir/test/spec/good)
+    do  
+        zzuf -r $ratio cat ../objdir/test/spec/good/$file > fuzzedFiles/good.$file.fuzzed.vtt
+    done
+    for file in $(ls ../objdir/test/spec/bad)
+
+    do
+        zzuf -r $ratio cat ../objdir/test/spec/bad/$file > fuzzedFiles/bad.$file.fuzzed.vtt
+    done
+
+fi
