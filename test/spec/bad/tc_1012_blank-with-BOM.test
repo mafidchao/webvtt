@@ -1,0 +1,5 @@
+﻿/*
+This simply checks to make sure a blank file is not accepted with a bom charecter . 
+Spec date:28 September 2012
+http://dev.w3.org/html5/webvtt/#syntax
+*/

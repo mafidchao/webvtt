@@ -1,0 +1,6 @@
+﻿/*
+This test checks for a bom charecter followed by garbage data to make sure that a WEBVTT header follows the bom charecter. 
+Spec date:28 September 2012
+http://dev.w3.org/html5/webvtt/#syntax
+*/
+garbage

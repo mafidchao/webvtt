@@ -1,0 +1,5 @@
+/*
+This test simply makes sure that a blank file will not be picked up . 
+Spec date:28 September 2012
+http://dev.w3.org/html5/webvtt/#syntax
+*/

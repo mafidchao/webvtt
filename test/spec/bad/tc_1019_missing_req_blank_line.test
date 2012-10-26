@@ -1,0 +1,8 @@
+/*
+It should fail if a blank line between webvtt and first cue is missing
+Date 04 October 2012
+http://kyle.barnhart.ca/
+*/
+WEBVTT
+00:11.000 --> 00:13.000 vertical:rl
+<v Roger Bingham>We are in New York City

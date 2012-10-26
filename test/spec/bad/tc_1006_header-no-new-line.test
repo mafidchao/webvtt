@@ -1,0 +1,8 @@
+/*
+This test makes sure that there is a newline between the WEBVTT header and the cue. 
+Spec date:28 September 2012
+http://dev.w3.org/html5/webvtt/#syntax
+*/
+WEBVTT	
+00:11.000 --> 00:13.000 vertical:rl
+<v Roger Bingham>We are in New York City

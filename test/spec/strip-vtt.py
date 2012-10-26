@@ -1,8 +1,10 @@
 #!/usr/bin/env python
-
 """
-Loops through the directory path passed to it in sys.argv[1], finds any .test files, strips the .vtt file from it, and
-saves it to a mirrored directory structure under webvtt/objdir/spec
+strip-vtt.py
+
+This program will Rip the WebVTT section out of the .test file whose path is passed via the first system argument.
+It will then copy that WebVTT information to a .vtt file under an object directory which mirrors the directory structure of the .text file. 
+The path of the object directory is pass in the second system argument.
 """
 
 import os
