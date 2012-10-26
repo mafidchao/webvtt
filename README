@@ -11,3 +11,7 @@ Right now, nothing works. I'm doing a quick and dirty parser
 for now so I can get on with the API design and associated
 integration work, then spiff it up into a full, compliant
 parser.
+
+Current build status:
+
+"!https://travis-ci.org/mafidchao/webvtt.png!":https://travis-ci.org/mafidchao/webvtt
