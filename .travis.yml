@@ -8,6 +8,8 @@ before_script:
   - pwd
   - cd ./fuzz/zzuf/
   - ./bootstrap
+  - ls
+  - zzuf
   - make
   - cd
 script: make check-js
