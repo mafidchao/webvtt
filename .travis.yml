@@ -16,3 +16,4 @@ after_script:
   - cd ./fuzz
   - chmod -R 777 ./fuzzv2.sh
   - ./fuzzv2.sh 0.1
+  - cat ./fuzzedFiles/good.tc_1009_missing_line_between_cues.vtt.fuzzed.vtt
