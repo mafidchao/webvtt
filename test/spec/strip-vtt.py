@@ -23,7 +23,10 @@ def main():
 		testFile = open(sys.argv[1], 'rb')
 		fileData = testFile.read()
 		# Rip the VTT
-		res = re.search(r"/\*.*\*/\r?\n?", fileData, re.M | re.S)
+        # The RegEx below searches for all characters between /* and */,
+        # followed by a possible Windows carriage return, followed by
+        # a newline character.
+		res = re.search(r"/\*.*\*/\r?\n", fileData, re.M | re.S)
 		if res == None:
 			print "Malformed test file at:", sys.argv[1]
 			return -1
