@@ -5,96 +5,129 @@
 
 PACKAGE := webvtt
 
-CFLAGS = -g -Wall
+# Tools
+lc = $(subst A,a,$(subst B,b,$(subst C,c,$(subst D,d,$(subst E,e,$(subst F,f,$(subst G,g,$(subst H,h,$(subst I,i,$(subst J,j,$(subst K,k,$(subst L,l,$(subst M,m,$(subst N,n,$(subst O,o,$(subst P,p,$(subst Q,q,$(subst R,r,$(subst S,s,$(subst T,t,$(subst U,u,$(subst V,v,$(subst W,w,$(subst X,x,$(subst Y,y,$(subst Z,z,$1))))))))))))))))))))))))))
 
-PROGS := test_webvtt
-LIBRARIES := webvtt
+# Configuration
+OS := $(call lc,$(shell uname -o))
+ARCH := $(call lc,$(shell uname -m))
+CONFIG := development
+BUILDNAME := $(CONFIG)-$(OS)-$(ARCH)
 
-webvtt_SRCS := webvtt.c
-webvtt_HDRS := webvtt.h
+# Platform suffixes
+A := .a
+O := .o
+SA := .sa
+EXE := .exe
 
-test_webvtt_SRCS := test_webvtt.c libwebvtt.a
+# Source tree
+ROOT := ./
+RBIN := $(ROOT)bin/
+BIN := $(RBIN)$(BUILDNAME)/
+SRC := $(ROOT)src/
+INCLUDE := $(ROOT)include/
+TEST := $(ROOT)test/
+SPEC := $(TEST)spec/
+VTT := $(TEST)vtt/
+ROBJ := $(ROOT)obj/
+OBJ := $(ROBJ)$(BUILDNAME)/
+RLIB := $(ROOT)lib/
+LIB := $(RLIB)$(BUILDNAME)/
 
-EXTRA_DIST := LICENSE
-
+# GCC
+CC := gcc
 PYTHON = python
+CFLAGS = -I$(INCLUDE) -g -Wall
+LDFLAGS := -L$(LIB)
 
-SRC_DIR = .
-TEST_DIR = $(SRC_DIR)/test
-SPEC_DIR = $(TEST_DIR)/spec
-OBJ_DIR = $(SRC_DIR)/objdir
-OBJ_DIR_SPEC = $(OBJ_DIR)/test/spec
-# Get all the .test files underneath the directory specified by $(SPEC_DIR)
-TEST_SRC := $(shell find $(SPEC_DIR) -name '*.test' -print)
-# Transform all .test files rooted in ./test to .vtt rooted in
-# .objdir/test
-VTT_SRC := $(subst $(SRC_DIR)/test,$(OBJ_DIR)/test,$(subst .test,.vtt,$(TEST_SRC)))
+# Targets
+LIBRARIES := libwebvtt
+PROGRAMS := parsevtt
+TARGETS := $(LIBRARIES) $(PROGRAMS)
+EXTRA_DIST := LICENSE README.md
+COMMON_DIRS := $(RLIB) $(LIB) $(ROBJ) $(OBJ) $(RBIN) $(BIN)
 
-STIP_VTT = $(SPEC_DIR)/strip-vtt.py
+# Test stuff
+TESTS := $(shell find $(TEST) -name '*.test' -print)
+VTTS := $(patsubst $(SPEC)%.test,$(VTT)%.vtt,$(TESTS))
+STIPVTT = $(SPEC)/strip-vtt.py
 
 ## below this point is boilerplate
 
-BUILD_LIBRARIES := $(LIBRARIES:%=lib%.a)
+BUILD_LIBRARIES := $(LIBRARIES:%=$(LIB)%$(A))
+BUILD_PROGRAMS := $(PROGRAMS:%=$(BIN)%$(EXE))
+# so that linking parsevtt uses flags -lwebvtt
+parsevtt_LIBS := webvtt
 RANLIB ?= ranlib
 
-all: $(PROGS) $(BUILD_LIBRARIES)
-
-check: all
-	@for prog in $(PROGS); do \
-	  if ! ./$$prog; then       \
-	    echo ./$$prog  FAIL;  \
-	  else \
-	    echo ./$$prog  ok;    \
-	  fi; \
-	done
-
-objdir:
-	mkdir $(OBJ_DIR)
-
-check-js: objdir $(VTT_SRC)
-	$(PYTHON) ./test/spec/run-tests-js.py $(OBJ_DIR_SPEC)
-
-$(OBJ_DIR)/%.vtt : $(SRC_DIR)/%.test
-	@$(PYTHON) $(STIP_VTT) $< $@
-
-clean:
-	$(RM) $(ALL_OBJS)
-	$(RM) -fr $(OBJ_DIR)
-	$(RM) $(BUILD_LIBRARIES)
-	$(RM) $(PROGS)
-
 # templates generate per-target rules
+define make_intermittent_targets
+$(1)_SRCS := $$(shell find $$(SRC)$(1) -name "*.c")
+$(1)_OBJS := $$(patsubst $$(SRC)$(1)/%.c,$$(OBJ)$(1)/%$(O),$$($(1)_SRCS))
+$(1)_OBJS: $$(shell find $$(SRC)$(1) -name "*.h")
+ALL_OBJS += $$($(1)_OBJS)
+endef
+
 define library_template
- $(1)_OBJS := $$($(1)_SRCS:.c=.o)
- $(1)_OBJS : $$($(1)_HDRS)
- ALL_OBJS += $$($(1)_OBJS)
- ALL_SRCS += $$(filter-out .a,$$($(1)_SRCS) $$($(1)_HDRS))
- lib$(1).a: $$($(1)_OBJS)
+$(1)_DIRS := $$(sort $$(dir $$($(1)_OBJS)))
+.PHONY: $$($(1)_DIRS)
+$$($(1)_DIRS):
+	@-mkdir $$@ 2>/dev/null
+$$($(1)_OBJS): $$(COMMON_DIRS) $$($(1)_DIRS)
+$(LIB)$(1)$(A): $$($(1)_OBJS) | $$(COMMON_DIRS) $$($(1)_DIRS)
 	$$(AR) cr $$@ $$^
 	$$(RANLIB) $$@
 endef
 
 define program_template
- $(1)_OBJS := $$($(1)_SRCS:.c=.o)
- $(1)_OBJS : $$($(1)_HDRS)
- ALL_OBJS += $$($(1)_OBJS)
- ALL_SRCS += $$(filter-out %.a,$$($(1)_SRCS) $$($(1)_HDRS))
- $(1): $$($(1)_OBJS)
+$(1)_DIRS := $$(sort $$(dir $$($(1)_OBJS)))
+.PHONY: $$($(1)_DIRS)
+$$($(1)_DIRS):
+	@-mkdir $$@ 2>/dev/null
+$$($(1)_OBJS): $$(COMMON_DIRS) $$($(1)_DIRS)
+$(BIN)$(1)$(EXE): $$($(1)_OBJS) | $$(COMMON_DIRS) $$($(1)_DIRS)
 	$(CC) $$(LDFLAGS) -o $$@ $$^ $$($(1)_LIBS:%=-l%)
 endef
 
-$(foreach lib,$(LIBRARIES),$(eval $(call library_template,$(lib))))
-$(foreach prog,$(PROGS),$(eval $(call program_template,$(prog))))
+all: $(BUILD_LIBRARIES) $(BUILD_PROGRAMS) | $(COMMON_DIRS)
+
+$(COMMON_DIRS):
+	@-mkdir $@ 2>/dev/null
+
+libwebvtt: $(LIB)libwebvtt$(A)
+parsevtt: $(BIN)parsevtt$(EXE)
+
+$(foreach T,$(TARGETS),$(eval $(call make_intermittent_targets,$(T)))) 
+$(foreach T,$(LIBRARIES),$(eval $(call library_template,$(T))))
+$(foreach T,$(PROGRAMS),$(eval $(call program_template,$(T))))
+
+check: $(BIN)parsevtt$(EXE) $(VTTS)
+	$(PYTHON) $(SPEC)webvtt-conformance-test.py $(BIN)parsevtt$(EXE) $(VTT)
+
+check-js: $(VTTS)
+	$(PYTHON) $(SPEC)webvtt-conformance-test.py $(VTT)
+
+$(VTT)%.vtt : $(SPEC)%.test
+	@$(PYTHON) $(STIPVTT) $< $@
+
+$(OBJ)%.o: $(SRC)%.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+clean:
+	$(RM) $(ALL_OBJS)
+	$(RM) -fr $(OBJ)
+	$(RM) $(BUILD_LIBRARIES)
+	$(RM) $(BUILD_PROGRAMS)
 
 VERSION ?= $(firstword $(git describe --tags) dev)
 
 dist: $(PACKAGE)-$(VERSION).tar.gz
 	@echo $(ALL_SRCS)
 
-$(PACKAGE)-$(VERSION).tar.gz: Makefile $(ALL_SRCS) $(EXTRA_DIST)
+$(PACKAGE)-$(VERSION).tar.gz: Makefile $(SRC)* $(INCLUDE) $(EXTRA_DIST)
 	-$(RM) -r $(PACKAGE)-$(VERSION)
 	mkdir $(PACKAGE)-$(VERSION)
-	cp $^ $(PACKAGE)-$(VERSION)/
+	cp -r $^ $(PACKAGE)-$(VERSION)/
 	tar cvzf $(PACKAGE)-$(VERSION).tar.gz $(PACKAGE)-$(VERSION)/
 	$(RM) -r $(PACKAGE)-$(VERSION)
 
@@ -104,4 +137,4 @@ distcheck: dist
 	$(RM) -r $(PACKAGE)-$(VERSION)
 	@echo $(PACKAGE)-$(VERSION).tar.gz ready to distribute
 
-.PHONEY: all check clean dist distcheck
+.PHONEY: all libwebvtt parsevtt check clean dist distcheck

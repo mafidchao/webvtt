@@ -69,12 +69,19 @@ class TestHarness:
 			with open(os.devnull, 'wb') as silent:
 				retcode = subprocess.call([self.module, "-s", file_path],stdout=silent,stderr=silent)
 			# If we did NOT get expected, add file to fail list & increase fail count.
-			if retcode != expected:
-				failed = failed + 1
-				self.print_test_failure(file_path, expected)
+			# 11/01/2012 -- retcode == 0 -> parser passed ... retcode != 0 -> parser failed
+			if retcode == 0:
+				if expected == 0:
+					passed = passed + 1
+				else:
+					faild = failed + 1
+					self.print_test_failure(file_path, expected)
 			else:
-				passed = passed + 1
-
+				if expected == 0:
+					failed = failed + 1
+					self.print_test_failure(file_path, expected)
+				else:
+					passed = passed + 1
 		return failed, passed
 
 	"""Prints a verbose error"""
@@ -88,7 +95,7 @@ class TestHarness:
 				self.find_webvtt()
 			except:
 				raise
-		
+		print "Conformance testing using `%s'\n" % (self.module)
 		"""Totals that relate to tests that should always pass or fail"""
 		passed_total = 0
 		failed_total = 0
@@ -101,10 +108,10 @@ class TestHarness:
 		known_bad_passed_total = 0
 		known_bad_failed_total = 0
 		
-		for test_suite in [{'name': 'good', 'expected': 0},
-											 {'name': 'bad', 'expected': 1},
-											 {'name': 'known-good', 'expected': 1},
-											 {'name': 'known-bad', 'expected': 0}]:
+		for test_suite in [ {'name': 'good', 'expected': 0},
+							{'name': 'bad', 'expected': 1},
+							{'name': 'known-good', 'expected': 1},
+							{'name': 'known-bad', 'expected': 0}]:
 
 			root = os.path.realpath(os.path.join(self.test_root, test_suite['name']))
 
