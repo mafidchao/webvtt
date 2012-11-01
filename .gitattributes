@@ -1,4 +1,11 @@
-./test/spec/good/*cr(lf)?.test -text
-./test/spec/bad/*cr(lf)?.test -text
-./test/spec/known-good/*cr(lf)?.test -text
-./test/spec/known-bad/*cr(lf)?.test -text
+* text=auto
+
+Makefile text eol=lf
+*.md text eol=lf
+*.sln text eol=crlf
+*.vcxproj text eol=crlf
+*.vcxproj.filters text eol=crlf
+*.vcxproj.user text eol=crlf
+*.c text eol=lf
+*.h text eol=lf
+test/spec/*/*.test -text
