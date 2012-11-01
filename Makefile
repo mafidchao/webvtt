@@ -124,7 +124,7 @@ VERSION ?= $(firstword $(git describe --tags) dev)
 dist: $(PACKAGE)-$(VERSION).tar.gz
 	@echo $(ALL_SRCS)
 
-$(PACKAGE)-$(VERSION).tar.gz: Makefile $(SRC)* $(INCLUDE) $(EXTRA_DIST)
+$(PACKAGE)-$(VERSION).tar.gz: Makefile $(SRC) $(INCLUDE) $(EXTRA_DIST)
 	-$(RM) -r $(PACKAGE)-$(VERSION)
 	mkdir $(PACKAGE)-$(VERSION)
 	cp -r $^ $(PACKAGE)-$(VERSION)/
