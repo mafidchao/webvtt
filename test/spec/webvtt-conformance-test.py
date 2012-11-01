@@ -67,14 +67,14 @@ class TestHarness:
 			# Get file's absolute path
 			file_path = os.path.join(root, f)
 			with open(os.devnull, 'wb') as silent:
-				retcode = subprocess.call([self.module, "-s", file_path],stdout=silent,stderr=silent)
+				retcode = subprocess.call([self.module, "-f", file_path],stdout=silent,stderr=silent)
 			# If we did NOT get expected, add file to fail list & increase fail count.
 			# 11/01/2012 -- retcode == 0 -> parser passed ... retcode != 0 -> parser failed
 			if retcode == 0:
 				if expected == 0:
 					passed = passed + 1
 				else:
-					faild = failed + 1
+					failed = failed + 1
 					self.print_test_failure(file_path, expected)
 			else:
 				if expected == 0:
