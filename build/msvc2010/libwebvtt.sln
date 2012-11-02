@@ -1,0 +1,39 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libwebvtt", "libwebvtt.vcxproj", "{D48DD9B7-35EF-4674-8525-7E85D6B43AA7}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "parsevtt", "parsevtt.vcxproj", "{E20C2C44-F1B5-4F4D-B6E3-4BEFE328D1F1}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D48DD9B7-35EF-4674-8525-7E85D6B43AA7} = {D48DD9B7-35EF-4674-8525-7E85D6B43AA7}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		development|Win32 = development|Win32
+		development|x64 = development|x64
+		production|Win32 = production|Win32
+		production|x64 = production|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D48DD9B7-35EF-4674-8525-7E85D6B43AA7}.development|Win32.ActiveCfg = development|Win32
+		{D48DD9B7-35EF-4674-8525-7E85D6B43AA7}.development|Win32.Build.0 = development|Win32
+		{D48DD9B7-35EF-4674-8525-7E85D6B43AA7}.development|x64.ActiveCfg = development|x64
+		{D48DD9B7-35EF-4674-8525-7E85D6B43AA7}.development|x64.Build.0 = development|x64
+		{D48DD9B7-35EF-4674-8525-7E85D6B43AA7}.production|Win32.ActiveCfg = production|Win32
+		{D48DD9B7-35EF-4674-8525-7E85D6B43AA7}.production|Win32.Build.0 = production|Win32
+		{D48DD9B7-35EF-4674-8525-7E85D6B43AA7}.production|x64.ActiveCfg = production|x64
+		{D48DD9B7-35EF-4674-8525-7E85D6B43AA7}.production|x64.Build.0 = production|x64
+		{E20C2C44-F1B5-4F4D-B6E3-4BEFE328D1F1}.development|Win32.ActiveCfg = development|Win32
+		{E20C2C44-F1B5-4F4D-B6E3-4BEFE328D1F1}.development|Win32.Build.0 = development|Win32
+		{E20C2C44-F1B5-4F4D-B6E3-4BEFE328D1F1}.development|x64.ActiveCfg = development|x64
+		{E20C2C44-F1B5-4F4D-B6E3-4BEFE328D1F1}.development|x64.Build.0 = development|x64
+		{E20C2C44-F1B5-4F4D-B6E3-4BEFE328D1F1}.production|Win32.ActiveCfg = production|Win32
+		{E20C2C44-F1B5-4F4D-B6E3-4BEFE328D1F1}.production|Win32.Build.0 = production|Win32
+		{E20C2C44-F1B5-4F4D-B6E3-4BEFE328D1F1}.production|x64.ActiveCfg = production|x64
+		{E20C2C44-F1B5-4F4D-B6E3-4BEFE328D1F1}.production|x64.Build.0 = production|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
