@@ -9,7 +9,7 @@ PACKAGE := webvtt
 lc = $(subst A,a,$(subst B,b,$(subst C,c,$(subst D,d,$(subst E,e,$(subst F,f,$(subst G,g,$(subst H,h,$(subst I,i,$(subst J,j,$(subst K,k,$(subst L,l,$(subst M,m,$(subst N,n,$(subst O,o,$(subst P,p,$(subst Q,q,$(subst R,r,$(subst S,s,$(subst T,t,$(subst U,u,$(subst V,v,$(subst W,w,$(subst X,x,$(subst Y,y,$(subst Z,z,$1))))))))))))))))))))))))))
 
 # Configuration
-OS := $(call lc,$(shell uname -o))
+OS := $(call lc,$(shell uname -r))
 ARCH := $(call lc,$(shell uname -m))
 CONFIG := development
 BUILDNAME := $(CONFIG)-$(OS)-$(ARCH)
@@ -72,7 +72,7 @@ define library_template
 $(1)_DIRS := $$(sort $$(dir $$($(1)_OBJS)))
 .PHONY: $$($(1)_DIRS)
 $$($(1)_DIRS):
-	@-mkdir $$@ 2>/dev/null
+	@-mkdir -p $$@ 2>/dev/null
 $$($(1)_OBJS): $$(COMMON_DIRS) $$($(1)_DIRS)
 $(LIB)$(1)$(A): $$($(1)_OBJS) | $$(COMMON_DIRS) $$($(1)_DIRS)
 	$$(AR) cr $$@ $$^
@@ -83,7 +83,7 @@ define program_template
 $(1)_DIRS := $$(sort $$(dir $$($(1)_OBJS)))
 .PHONY: $$($(1)_DIRS)
 $$($(1)_DIRS):
-	@-mkdir $$@ 2>/dev/null
+	@-mkdir -p $$@ 2>/dev/null
 $$($(1)_OBJS): $$(COMMON_DIRS) $$($(1)_DIRS)
 $(BIN)$(1)$(EXE): $$($(1)_OBJS) | $$(COMMON_DIRS) $$($(1)_DIRS)
 	$(CC) $$(LDFLAGS) -o $$@ $$^ $$($(1)_LIBS:%=-l%)
@@ -92,7 +92,7 @@ endef
 all: $(BUILD_LIBRARIES) $(BUILD_PROGRAMS) | $(COMMON_DIRS)
 
 $(COMMON_DIRS):
-	@-mkdir $@ 2>/dev/null
+	@-mkdir -p $@ 2>/dev/null
 
 libwebvtt: $(LIB)libwebvtt$(A)
 parsevtt: $(BIN)parsevtt$(EXE)
@@ -126,7 +126,7 @@ dist: $(PACKAGE)-$(VERSION).tar.gz
 
 $(PACKAGE)-$(VERSION).tar.gz: Makefile $(SRC) $(INCLUDE) $(EXTRA_DIST)
 	-$(RM) -r $(PACKAGE)-$(VERSION)
-	mkdir $(PACKAGE)-$(VERSION)
+	mkdir -p $(PACKAGE)-$(VERSION)
 	cp -r $^ $(PACKAGE)-$(VERSION)/
 	tar cvzf $(PACKAGE)-$(VERSION).tar.gz $(PACKAGE)-$(VERSION)/
 	$(RM) -r $(PACKAGE)-$(VERSION)

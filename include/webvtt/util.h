@@ -17,7 +17,11 @@
 #	elif defined(__GNUC__)
 #		define WEBVTT_CC_GCC 1
 #		define WEBVTT_HAVE_STDINT 1
-#		define WEBVTT_CALLBACK __attribute__((cdecl))
+#	  if ( defined(__APPLE__) && defined(__MACH__) )
+#     define WEBVTT_CALLBACK /* not supported on OS X */
+#   else
+#		  define WEBVTT_CALLBACK __attribute__((cdecl))
+#   endif
 #	else
 #		define WEBVTT_CC_UNKNOWN 1
 #		define WEBVTT_CALLBACK /* default calling convention */

@@ -36,7 +36,7 @@ static const char *errstr[] =
 const char *
 webvtt_strerror( webvtt_error errno )
 {
-	if( errno < 0 || errno >= (sizeof(errstr) / sizeof(*errstr)) )
+	if( errno >= (sizeof(errstr) / sizeof(*errstr)) )
 	{
 		return "";
 	}
