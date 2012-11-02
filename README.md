@@ -30,6 +30,10 @@ See: [W3C WebVTT Draft](http://dev.w3.org/html5/webvtt/)
 ##TODO:
 - *** IMPORTANT *** Implement routine to validate cue-text and produce a tree of nodes
 - Normalize routine names ( webvtt_create_XXX, webvtt_delete_XXX, rather than webvtt_XXX_new, webvtt_XXX_delete)
+- node-ffi bindings for libwebvtt structures and public API, to assist with unit testing
+- New unit tests, and convert some existing conformance tests to unit tests
+- Integration with TravisCI
+- Bug fixes
 - Thread-safety where needed (Lock before setting global function pointers)
 - Reference counting objects (may be a hassle, but would help to prevent leaking
   dropped cue objects)  
