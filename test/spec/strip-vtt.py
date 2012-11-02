@@ -10,6 +10,7 @@ The path of the object directory is pass in the second system argument.
 import os
 import sys
 import errno
+import re
 
 def main():
 	# Fail if missing arguments
@@ -19,11 +20,18 @@ def main():
 
 	# Open the .test file and read it
 	try:
-		testFile = open(sys.argv[1], 'r')
+		testFile = open(sys.argv[1], 'rb')
 		fileData = testFile.read()
-
 		# Rip the VTT
-		vttInfo = fileData[fileData.find('*/\n') + 3:]
+        # The RegEx below searches for all characters between /* and */,
+        # followed by a possible Windows carriage return, followed by
+        # a possible newline character.
+		res = re.search(r"/\*.*\*/((\r\n)|[\r\n])", fileData, re.M | re.S)
+		if res == None:
+			print "Malformed test file at:", sys.argv[1]
+			return -1
+
+		vttInfo = fileData[res.end():]
 
 		# Get the directory path where the new .vtt file will be stored
 		vttFileDirPath = os.path.dirname(sys.argv[2])
