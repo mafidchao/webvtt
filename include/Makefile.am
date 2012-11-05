@@ -1,0 +1,1 @@
+include_HEADERS = webvtt/cue.h webvtt/error.h webvtt/parser.h webvtt/string.h webvtt/util.h
