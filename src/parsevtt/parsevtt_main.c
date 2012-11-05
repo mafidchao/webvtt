@@ -98,31 +98,25 @@ main( int argc, char **argv )
 	if( !input_file )
 	{
 		fprintf( stderr, "error: missing input file.\n\nUsage: parsevtt -f <vttfile>\n" );
-		ret = 1;
+		return 1;
 	}
 	
 	fh = fopen(input_file,"rb");
 	if( !fh )
 	{
 		fprintf( stderr, "error: failed to open `%s': %s\n", input_file, strerror(errno) );
-		ret = 1;
+		return 1;
 	}
 	
 	if( ( result = webvtt_create_parser( &cue, &error, (void *)input_file, &vtt ) ) != WEBVTT_SUCCESS )
 	{
 		fprintf( stderr, "error: failed to create VTT parser.\n" );
 		fclose( fh );
-		ret = 1;
+		return 1;
 	}
 	
-	if( !ret )
-	{
-		ret = parse_fh( fh, vtt );
-	}
+	ret = parse_fh( fh, vtt );
 	webvtt_delete_parser( vtt );
-	if( fh )
-	{
-		fclose( fh );
-	}
+	fclose( fh );
 	return ret;
 }
