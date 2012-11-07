@@ -3,6 +3,8 @@
 
 AC_PREREQ([2.67])
 AC_INIT([webvtt], [0.0.2])
+AC_CONFIG_MACRO_DIR([build/autoconf])
+LT_INIT([disable-static win32-dll])
 AM_INIT_AUTOMAKE([foreign])
 AC_CONFIG_SRCDIR([src/libwebvtt/alloc.c])
 AC_CONFIG_HEADERS([config.h])
