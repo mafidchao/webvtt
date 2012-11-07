@@ -1,11 +1,13 @@
 #ifndef __WEBVTT_UTIL_H__
 #	define __WEBVTT_UTIL_H__
-
 #	if defined(_WIN32) || defined(__WIN32__) || defined(__TOS_WIN__) || defined(__WINDOWS__)
+#		include "webvtt-config-win32.h"
 #		define WEBVTT_OS_WIN32 1
 #		if defined(_WIN64)
 #			define WEBVTT_OS_WIN64 1
 #		endif
+#	else
+#		include <webvtt/webvtt-config.h>
 #	endif
 
 #	if defined(_MSC_VER)
