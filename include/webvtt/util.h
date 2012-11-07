@@ -11,20 +11,25 @@
 #	if defined(_MSC_VER)
 #		define WEBVTT_CC_MSVC 1
 #		define WEBVTT_CALLBACK __cdecl
+#		if WEBVTT_BUILD_LIBRARY
+#			define WEBVTT_EXPORT __declspec(dllexport)
+#		else
+#			define WEBVTT_EXPORT __declspec(dllimport)
+#		endif
 #		if _MSC_VER >= 1600
 #			define WEBVTT_HAVE_STDINT 1
 #		endif
 #	elif defined(__GNUC__)
 #		define WEBVTT_CC_GCC 1
 #		define WEBVTT_HAVE_STDINT 1
-#	  if ( defined(__APPLE__) && defined(__MACH__) )
-#     define WEBVTT_CALLBACK /* not supported on OS X */
-#   else
-#		  define WEBVTT_CALLBACK __attribute__((cdecl))
-#   endif
 #	else
 #		define WEBVTT_CC_UNKNOWN 1
-#		define WEBVTT_CALLBACK /* default calling convention */
+#	endif
+#	ifndef WEBVTT_CALLBACK
+#		define WEBVTT_CALLBACK
+#	endif
+#	ifndef WEBVTT_EXPORT
+#		define WEBVTT_EXPORT
 #	endif
 
 #	if WEBVTT_HAVE_STDINT
