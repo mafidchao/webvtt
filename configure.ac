@@ -3,6 +3,21 @@
 
 AC_PREREQ([2.67])
 AC_INIT([webvtt], [0.0.2])
+AC_CANONICAL_HOST
+
+linux="no"
+osx="no"
+win32="no"
+
+AS_CASE([$host],
+  [*-*-linux*],[linux=true gtk=true],
+  [*-*-darwin*],[osx=true qt=true],
+  [*-mingw*|*-winnt*],[win32=true])
+
+AM_CONDITIONAL(LINUX,test x$linux = xtrue)
+AM_CONDITIONAL(OSX,test x$osx = xtrue)
+AM_CONDITIONAL(WIN32,test x$win32 = xtrue)
+
 AC_CONFIG_MACRO_DIR([build/autoconf])
 LT_INIT([disable-static win32-dll])
 AM_INIT_AUTOMAKE([foreign])
