@@ -44,7 +44,7 @@ enum token_state_t
 	T_MIDDLE4, T_END0, T_END1, T_TIMESTAMP1, T_TIMESTAMP2, T_TIMESTAMP3, T_TIMESTAMP4, T_TIMESTAMP5
 };
 
-webvtt_token
+WEBVTT_INTERN webvtt_token
 webvtt_lex( webvtt_parser self, webvtt_byte *buffer, webvtt_uint *pos, webvtt_uint length, int finish )
 {
 	while( *pos < length )

@@ -26,9 +26,9 @@ webvtt_bytearray_t
 	webvtt_byte array[1];
 };
 
-webvtt_status webvtt_bytearray_new( webvtt_uint32 alloc, webvtt_bytearray *ppstr );
-void webvtt_bytearray_delete( webvtt_bytearray *pstr );
-int webvtt_bytearray_getline( webvtt_bytearray *ppstr, const webvtt_byte *buffer,
+WEBVTT_INTERN webvtt_status webvtt_bytearray_new( webvtt_uint32 alloc, webvtt_bytearray *ppstr );
+WEBVTT_INTERN void webvtt_bytearray_delete( webvtt_bytearray *pstr );
+WEBVTT_INTERN int webvtt_bytearray_getline( webvtt_bytearray *ppstr, const webvtt_byte *buffer,
 	webvtt_uint *pos, webvtt_uint len, int *truncate );
-webvtt_status webvtt_bytearray_putc( webvtt_bytearray *ppstr, webvtt_byte ch );
+WEBVTT_INTERN webvtt_status webvtt_bytearray_putc( webvtt_bytearray *ppstr, webvtt_byte ch );
 #endif
