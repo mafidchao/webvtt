@@ -44,3 +44,6 @@ See: [W3C WebVTT Draft](http://dev.w3.org/html5/webvtt/)
 - Routines for generating conformant WebVTT text
 - Language bindings (Rust, C++, D, etc)
 - GNU Autotools build system to enhance portability (With MPL2'd M4 from Mozilla-Central to support Windows environments)
+
+### Build status:
+[![Build Status](https://travis-ci.org/mafidchao/webvtt.png?branch=tci-v3)](https://travis-ci.org/mafidchao/webvtt)
