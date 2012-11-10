@@ -87,7 +87,7 @@ var webvtt_cue = refStruct({
 });
 
 // create binding to libwebvtt
-var libwebvtt = ffi.Library('libwebvtt', {
+var libwebvtt = ffi.Library('libwebvtt.so', {
   'webvtt_parse_chunk': [ webvtt_status, [webvtt_parser, voidPtr, webvtt_uint] ],
   'webvtt_finish_parsing': [ webvtt_status, [webvtt_parser] ],
   'webvtt_parse_cuetext': [ webvtt_status, [ webvtt_parser, webvtt_uint ] ]
