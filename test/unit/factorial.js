@@ -1,4 +1,4 @@
-var ffi = require('../../')
+var ffi = require('ffi')
 
 var libfactorial = ffi.Library('./libfactorial', {
   'factorial': [ 'uint64', [ 'int' ] ]

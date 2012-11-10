@@ -22,7 +22,7 @@ after_script:
   - ls -lRa
   - cd ..
   - cd ./test/unit
-  - ls -lRa
   - gcc -shared -fpic factorial.c -o libfactorial.so
+  - ls -lRa  
   - node factorial.js 8
   - node libwebvtt.js
