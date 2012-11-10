@@ -10,4 +10,5 @@ before_script:
   - npm install ref ffi ref-struct
 script: ./configure && make
 after_script:
-  - ls -R
+  - cd ./test/unit
+  - node libwebvtt.js
