@@ -13,9 +13,12 @@ after_script:
   - cp ./src/libwebvtt/.libs/libwebvtt.so ./test/unit
   - cp ./src/libwebvtt/.libs/libwebvtt.so.0 ./test/unit
   - cp ./src/libwebvtt/.libs/libwebvtt.so.0.0.0 ./test/unit
+  - cp ./src/libwebvtt/.libs/libwebvtt.so ./node_modules/ffi/lib
+  - cp ./src/libwebvtt/.libs/libwebvtt.so.0 ./node_modules/ffi/lib
+  - cp ./src/libwebvtt/.libs/libwebvtt.so.0.0.0 ./node_modules/ffi/lib
   - cd ./src/
-  - ls -Ra
+  - ls -lRa
   - cd ..
   - cd ./test/unit
-  - ls -Ra
+  - ls -lRa
   - node libwebvtt.js
