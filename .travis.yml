@@ -7,6 +7,7 @@ before_script:
   - npm install webvtt
   - sudo apt-get update
   - sudo apt-get install zzuf
+  - npm install ref ffi ref-struct
 script: ./configure && make
 after_script:
-  - ls
+  - ls -R | grep libwebvtt
