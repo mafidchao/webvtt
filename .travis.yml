@@ -10,7 +10,8 @@ before_script:
   - npm install ref ffi ref-struct
 script: ./configure && make
 after_script:
-  - cd ./src
+  - cp ./src/libwebvtt/.libs/libwebvtt.so ./test/unit
+  - cd ./src/
   - ls -Ra
   - cd ..
   - cd ./test/unit
