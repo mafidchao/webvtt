@@ -11,6 +11,8 @@ before_script:
 script: ./configure && make
 after_script:
   - cp ./src/libwebvtt/.libs/libwebvtt.so ./test/unit
+  - cp ./src/libwebvtt/.libs/libwebvtt.so.0 ./test/unit
+  - cp ./src/libwebvtt/.libs/libwebvtt.so.0.0.0 ./test/unit
   - cd ./src/
   - ls -Ra
   - cd ..
