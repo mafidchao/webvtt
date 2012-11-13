@@ -12,11 +12,15 @@ config.status
 libtool
 objdir
 stamp-h1
+autom4te.cache
 lib
+build/include/
 include/Makefile
 src/Makefile
 src/parsevtt/Makefile
 src/libwebvtt/Makefile
+src/libwebvtt/.deps
+src/libwebvtt/.libs
 src/parsevtt/.deps/
 src/parsevtt/parsevtt
 test/unit/node_modules/
