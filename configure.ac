@@ -19,7 +19,7 @@ AM_CONDITIONAL(OSX,test x$osx = xtrue)
 AM_CONDITIONAL(WIN32,test x$win32 = xtrue)
 
 AC_CONFIG_MACRO_DIR([build/autoconf])
-LT_INIT([disable-static win32-dll])
+LT_INIT([shared disable-static win32-dll])
 AM_INIT_AUTOMAKE([foreign])
 AC_CONFIG_SRCDIR([src/libwebvtt/alloc.c])
 AC_CONFIG_HEADERS([config.h])

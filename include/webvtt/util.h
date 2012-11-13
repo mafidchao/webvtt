@@ -15,8 +15,10 @@
 #		define WEBVTT_CALLBACK __cdecl
 #		if WEBVTT_BUILD_LIBRARY
 #			define WEBVTT_EXPORT __declspec(dllexport)
-#		else
+#		elif !WEBVTT_STATIC
 #			define WEBVTT_EXPORT __declspec(dllimport)
+#		else
+#			define WEBVTT_EXPORT
 #		endif
 #		if _MSC_VER >= 1600
 #			define WEBVTT_HAVE_STDINT 1
@@ -24,9 +26,19 @@
 #	elif defined(__GNUC__)
 #		define WEBVTT_CC_GCC 1
 #		define WEBVTT_HAVE_STDINT 1
-#		if __GNUC__ >= 4
-#			define WEBVTT_EXPORT __attribute__((visibility("default")))
-#			define WEBVTT_INTERN __attribute__((visibility("hidden")))
+#		if WEBVTT_OS_WIN32
+#			if WEBVTT_BUILD_LIBRARY
+#				define WEBVTT_EXPORT __declspec(dllexport)
+#			elif !WEBVTT_STATIC
+#				define WEBVTT_EXPORT __declspec(dllimport)
+#			else
+#				define WEBVTT_EXPORT
+#			endif
+#		else
+#			if __GNUC__ >= 4
+#				define WEBVTT_EXPORT __attribute__((visibility("default")))
+#				define WEBVTT_INTERN __attribute__((visibility("hidden")))
+#			endif
 #		endif
 #	else
 #		define WEBVTT_CC_UNKNOWN 1
