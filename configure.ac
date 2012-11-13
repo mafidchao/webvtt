@@ -19,7 +19,7 @@ AM_CONDITIONAL(OSX,test x$osx = xtrue)
 AM_CONDITIONAL(WIN32,test x$win32 = xtrue)
 
 AC_CONFIG_MACRO_DIR([build/autoconf])
-LT_INIT([shared disable-static win32-dll])
+LT_INIT([win32-dll])
 AM_INIT_AUTOMAKE([foreign])
 AC_CONFIG_SRCDIR([src/libwebvtt/alloc.c])
 AC_CONFIG_HEADERS([config.h])
@@ -31,6 +31,15 @@ AC_PROG_SED
 AC_PROG_INSTALL
 AC_PROG_RANLIB
 AC_PROG_MKDIR_P
+
+# Enable debugging (currently only gdb)
+AC_ARG_ENABLE([debug],
+    [  --enable-debug           build with additional debugging code],
+    [CFLAGS='-g'; AC_DEFINE([DEBUG],[1],[Defined if debugging is enabled])])
+# Enable profiling (currently only gdb)
+AC_ARG_ENABLE([gprof],
+	[ --enable-gprof            build with gprof profiling engine],
+	[CFLAGS='-pg'; AC_DEFINE([GPROF],[1],[Defined if using gprof profiling engine])])
 
 # Checks for libraries.
 

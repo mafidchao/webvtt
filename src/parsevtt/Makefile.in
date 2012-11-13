@@ -53,10 +53,10 @@ CONFIG_CLEAN_VPATH_FILES =
 PROGRAMS = $(noinst_PROGRAMS)
 am_parsevtt_OBJECTS = parsevtt-parsevtt_main.$(OBJEXT)
 parsevtt_OBJECTS = $(am_parsevtt_OBJECTS)
-parsevtt_DEPENDENCIES = ../libwebvtt/libwebvtt.la
+parsevtt_DEPENDENCIES = ../libwebvtt/libwebvtt-static.la
 parsevtt_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
-	--mode=link $(CCLD) $(parsevtt_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
-	$(LDFLAGS) -o $@
+	--mode=link $(CCLD) $(parsevtt_CFLAGS) $(CFLAGS) \
+	$(parsevtt_LDFLAGS) $(LDFLAGS) -o $@
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
@@ -194,9 +194,10 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-parsevtt_CFLAGS = -I${top_builddir}/include -I${top_srcdir}/include
+parsevtt_CFLAGS = -DWEBVTT_STATIC=1 -I${top_builddir}/include -I${top_srcdir}/include
 parsevtt_SOURCES = parsevtt_main.c
-parsevtt_LDADD = ../libwebvtt/libwebvtt.la
+parsevtt_LDFLAGS = -static
+parsevtt_LDADD = ../libwebvtt/libwebvtt-static.la
 all: all-am
 
 .SUFFIXES:

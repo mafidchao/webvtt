@@ -15,7 +15,6 @@
 
 @SET_MAKE@
 
-
 VPATH = @srcdir@
 pkgdatadir = $(datadir)/@PACKAGE@
 pkgincludedir = $(includedir)/@PACKAGE@
@@ -50,16 +49,6 @@ mkinstalldirs = $(install_sh) -d
 CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
-LIBRARIES = $(noinst_LIBRARIES)
-ARFLAGS = cru
-libwebvtt_a_AR = $(AR) $(ARFLAGS)
-libwebvtt_a_LIBADD =
-am_libwebvtt_a_OBJECTS = libwebvtt_a-alloc.$(OBJEXT) \
-	libwebvtt_a-bytearray.$(OBJEXT) libwebvtt_a-cue.$(OBJEXT) \
-	libwebvtt_a-cuetext.$(OBJEXT) libwebvtt_a-error.$(OBJEXT) \
-	libwebvtt_a-lexer.$(OBJEXT) libwebvtt_a-parser.$(OBJEXT) \
-	libwebvtt_a-string.$(OBJEXT)
-libwebvtt_a_OBJECTS = $(am_libwebvtt_a_OBJECTS)
 am__vpath_adj_setup = srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`;
 am__vpath_adj = case $$p in \
     $(srcdir)/*) f=`echo "$$p" | sed "s|^$$srcdirstrip/||"`;; \
@@ -82,13 +71,25 @@ am__base_list = \
   sed '$$!N;$$!N;$$!N;$$!N;$$!N;$$!N;$$!N;s/\n/ /g' | \
   sed '$$!N;$$!N;$$!N;$$!N;s/\n/ /g'
 am__installdirs = "$(DESTDIR)$(libdir)"
-LTLIBRARIES = $(lib_LTLIBRARIES)
+LTLIBRARIES = $(lib_LTLIBRARIES) $(noinst_LTLIBRARIES)
+libwebvtt_static_la_LIBADD =
+am__objects_1 = libwebvtt_static_la-alloc.lo \
+	libwebvtt_static_la-bytearray.lo libwebvtt_static_la-cue.lo \
+	libwebvtt_static_la-cuetext.lo libwebvtt_static_la-error.lo \
+	libwebvtt_static_la-lexer.lo libwebvtt_static_la-parser.lo \
+	libwebvtt_static_la-string.lo
+am_libwebvtt_static_la_OBJECTS = $(am__objects_1)
+libwebvtt_static_la_OBJECTS = $(am_libwebvtt_static_la_OBJECTS)
+libwebvtt_static_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) \
+	$(libwebvtt_static_la_CFLAGS) $(CFLAGS) \
+	$(libwebvtt_static_la_LDFLAGS) $(LDFLAGS) -o $@
 libwebvtt_la_LIBADD =
-am_libwebvtt_la_OBJECTS = libwebvtt_la-alloc.lo \
-	libwebvtt_la-bytearray.lo libwebvtt_la-cue.lo \
-	libwebvtt_la-cuetext.lo libwebvtt_la-error.lo \
-	libwebvtt_la-lexer.lo libwebvtt_la-parser.lo \
-	libwebvtt_la-string.lo
+am__objects_2 = libwebvtt_la-alloc.lo libwebvtt_la-bytearray.lo \
+	libwebvtt_la-cue.lo libwebvtt_la-cuetext.lo \
+	libwebvtt_la-error.lo libwebvtt_la-lexer.lo \
+	libwebvtt_la-parser.lo libwebvtt_la-string.lo
+am_libwebvtt_la_OBJECTS = $(am__objects_2)
 libwebvtt_la_OBJECTS = $(am_libwebvtt_la_OBJECTS)
 libwebvtt_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(libwebvtt_la_CFLAGS) \
@@ -106,8 +107,8 @@ CCLD = $(CC)
 LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
-SOURCES = $(libwebvtt_a_SOURCES) $(libwebvtt_la_SOURCES)
-DIST_SOURCES = $(libwebvtt_a_SOURCES) $(libwebvtt_la_SOURCES)
+SOURCES = $(libwebvtt_static_la_SOURCES) $(libwebvtt_la_SOURCES)
+DIST_SOURCES = $(libwebvtt_static_la_SOURCES) $(libwebvtt_la_SOURCES)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -230,13 +231,16 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-noinst_LIBRARIES = libwebvtt.a
 lib_LTLIBRARIES = libwebvtt.la
-libwebvtt_la_LDFLAGS = -no-undefined
-libwebvtt_a_CFLAGS = -DWEBVTT_STATIC=1 -I${top_builddir}/include -I{top_srcdir}/include
-libwebvtt_a_SOURCES = alloc.c bytearray.c cue.c cuetext.c error.c lexer.c parser.c string.c
-libwebvtt_la_CFLAGS = -DWEBVTT_BUILD_LIBRARY=1 -I${top_builddir}/include -I{top_srcdir}/include -DWEBVTT_BUILD_LIBRARY=1
-libwebvtt_la_SOURCES = alloc.c bytearray.c cue.c cuetext.c error.c lexer.c parser.c string.c
+noinst_LTLIBRARIES = libwebvtt-static.la
+WEBVTT_SOURCES = alloc.c bytearray.c cue.c cuetext.c error.c lexer.c parser.c string.c
+WEBVTT_CFLAGS = -I${top_builddir}/include -I${top_srcdir}/include
+libwebvtt_la_LDFLAGS = -no-undefined -shared
+libwebvtt_la_CFLAGS = -DWEBVTT_BUILD_LIBRARY=1 $(WEBVTT_CFLAGS)
+libwebvtt_la_SOURCES = $(WEBVTT_SOURCES)
+libwebvtt_static_la_LDFLAGS = -no-undefined -static
+libwebvtt_static_la_CFLAGS = -DWEBVTT_STATIC=1 $(WEBVTT_CFLAGS)
+libwebvtt_static_la_SOURCES = $(WEBVTT_SOURCES)
 all: all-am
 
 .SUFFIXES:
@@ -271,13 +275,6 @@ $(top_srcdir)/configure:  $(am__configure_deps)
 $(ACLOCAL_M4):  $(am__aclocal_m4_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
 $(am__aclocal_m4_deps):
-
-clean-noinstLIBRARIES:
-	-test -z "$(noinst_LIBRARIES)" || rm -f $(noinst_LIBRARIES)
-libwebvtt.a: $(libwebvtt_a_OBJECTS) $(libwebvtt_a_DEPENDENCIES) 
-	-rm -f libwebvtt.a
-	$(libwebvtt_a_AR) libwebvtt.a $(libwebvtt_a_OBJECTS) $(libwebvtt_a_LIBADD)
-	$(RANLIB) libwebvtt.a
 install-libLTLIBRARIES: $(lib_LTLIBRARIES)
 	@$(NORMAL_INSTALL)
 	test -z "$(libdir)" || $(MKDIR_P) "$(DESTDIR)$(libdir)"
@@ -309,6 +306,17 @@ clean-libLTLIBRARIES:
 	  echo "rm -f \"$${dir}/so_locations\""; \
 	  rm -f "$${dir}/so_locations"; \
 	done
+
+clean-noinstLTLIBRARIES:
+	-test -z "$(noinst_LTLIBRARIES)" || rm -f $(noinst_LTLIBRARIES)
+	@list='$(noinst_LTLIBRARIES)'; for p in $$list; do \
+	  dir="`echo $$p | sed -e 's|/[^/]*$$||'`"; \
+	  test "$$dir" != "$$p" || dir=.; \
+	  echo "rm -f \"$${dir}/so_locations\""; \
+	  rm -f "$${dir}/so_locations"; \
+	done
+libwebvtt-static.la: $(libwebvtt_static_la_OBJECTS) $(libwebvtt_static_la_DEPENDENCIES) 
+	$(libwebvtt_static_la_LINK)  $(libwebvtt_static_la_OBJECTS) $(libwebvtt_static_la_LIBADD) $(LIBS)
 libwebvtt.la: $(libwebvtt_la_OBJECTS) $(libwebvtt_la_DEPENDENCIES) 
 	$(libwebvtt_la_LINK) -rpath $(libdir) $(libwebvtt_la_OBJECTS) $(libwebvtt_la_LIBADD) $(LIBS)
 
@@ -318,14 +326,6 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libwebvtt_a-alloc.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libwebvtt_a-bytearray.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libwebvtt_a-cue.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libwebvtt_a-cuetext.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libwebvtt_a-error.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libwebvtt_a-lexer.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libwebvtt_a-parser.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libwebvtt_a-string.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libwebvtt_la-alloc.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libwebvtt_la-bytearray.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libwebvtt_la-cue.Plo@am__quote@
@@ -334,6 +334,14 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libwebvtt_la-lexer.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libwebvtt_la-parser.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libwebvtt_la-string.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libwebvtt_static_la-alloc.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libwebvtt_static_la-bytearray.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libwebvtt_static_la-cue.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libwebvtt_static_la-cuetext.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libwebvtt_static_la-error.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libwebvtt_static_la-lexer.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libwebvtt_static_la-parser.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libwebvtt_static_la-string.Plo@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -356,117 +364,61 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(LTCOMPILE) -c -o $@ $<
 
-libwebvtt_a-alloc.o: alloc.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libwebvtt_a_CFLAGS) $(CFLAGS) -MT libwebvtt_a-alloc.o -MD -MP -MF $(DEPDIR)/libwebvtt_a-alloc.Tpo -c -o libwebvtt_a-alloc.o `test -f 'alloc.c' || echo '$(srcdir)/'`alloc.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libwebvtt_a-alloc.Tpo $(DEPDIR)/libwebvtt_a-alloc.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='alloc.c' object='libwebvtt_a-alloc.o' libtool=no @AMDEPBACKSLASH@
+libwebvtt_static_la-alloc.lo: alloc.c
+@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libwebvtt_static_la_CFLAGS) $(CFLAGS) -MT libwebvtt_static_la-alloc.lo -MD -MP -MF $(DEPDIR)/libwebvtt_static_la-alloc.Tpo -c -o libwebvtt_static_la-alloc.lo `test -f 'alloc.c' || echo '$(srcdir)/'`alloc.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libwebvtt_static_la-alloc.Tpo $(DEPDIR)/libwebvtt_static_la-alloc.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='alloc.c' object='libwebvtt_static_la-alloc.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libwebvtt_a_CFLAGS) $(CFLAGS) -c -o libwebvtt_a-alloc.o `test -f 'alloc.c' || echo '$(srcdir)/'`alloc.c
+@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libwebvtt_static_la_CFLAGS) $(CFLAGS) -c -o libwebvtt_static_la-alloc.lo `test -f 'alloc.c' || echo '$(srcdir)/'`alloc.c
 
-libwebvtt_a-alloc.obj: alloc.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libwebvtt_a_CFLAGS) $(CFLAGS) -MT libwebvtt_a-alloc.obj -MD -MP -MF $(DEPDIR)/libwebvtt_a-alloc.Tpo -c -o libwebvtt_a-alloc.obj `if test -f 'alloc.c'; then $(CYGPATH_W) 'alloc.c'; else $(CYGPATH_W) '$(srcdir)/alloc.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libwebvtt_a-alloc.Tpo $(DEPDIR)/libwebvtt_a-alloc.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='alloc.c' object='libwebvtt_a-alloc.obj' libtool=no @AMDEPBACKSLASH@
+libwebvtt_static_la-bytearray.lo: bytearray.c
+@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libwebvtt_static_la_CFLAGS) $(CFLAGS) -MT libwebvtt_static_la-bytearray.lo -MD -MP -MF $(DEPDIR)/libwebvtt_static_la-bytearray.Tpo -c -o libwebvtt_static_la-bytearray.lo `test -f 'bytearray.c' || echo '$(srcdir)/'`bytearray.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libwebvtt_static_la-bytearray.Tpo $(DEPDIR)/libwebvtt_static_la-bytearray.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='bytearray.c' object='libwebvtt_static_la-bytearray.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libwebvtt_a_CFLAGS) $(CFLAGS) -c -o libwebvtt_a-alloc.obj `if test -f 'alloc.c'; then $(CYGPATH_W) 'alloc.c'; else $(CYGPATH_W) '$(srcdir)/alloc.c'; fi`
+@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libwebvtt_static_la_CFLAGS) $(CFLAGS) -c -o libwebvtt_static_la-bytearray.lo `test -f 'bytearray.c' || echo '$(srcdir)/'`bytearray.c
 
-libwebvtt_a-bytearray.o: bytearray.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libwebvtt_a_CFLAGS) $(CFLAGS) -MT libwebvtt_a-bytearray.o -MD -MP -MF $(DEPDIR)/libwebvtt_a-bytearray.Tpo -c -o libwebvtt_a-bytearray.o `test -f 'bytearray.c' || echo '$(srcdir)/'`bytearray.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libwebvtt_a-bytearray.Tpo $(DEPDIR)/libwebvtt_a-bytearray.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='bytearray.c' object='libwebvtt_a-bytearray.o' libtool=no @AMDEPBACKSLASH@
+libwebvtt_static_la-cue.lo: cue.c
+@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libwebvtt_static_la_CFLAGS) $(CFLAGS) -MT libwebvtt_static_la-cue.lo -MD -MP -MF $(DEPDIR)/libwebvtt_static_la-cue.Tpo -c -o libwebvtt_static_la-cue.lo `test -f 'cue.c' || echo '$(srcdir)/'`cue.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libwebvtt_static_la-cue.Tpo $(DEPDIR)/libwebvtt_static_la-cue.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='cue.c' object='libwebvtt_static_la-cue.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libwebvtt_a_CFLAGS) $(CFLAGS) -c -o libwebvtt_a-bytearray.o `test -f 'bytearray.c' || echo '$(srcdir)/'`bytearray.c
+@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libwebvtt_static_la_CFLAGS) $(CFLAGS) -c -o libwebvtt_static_la-cue.lo `test -f 'cue.c' || echo '$(srcdir)/'`cue.c
 
-libwebvtt_a-bytearray.obj: bytearray.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libwebvtt_a_CFLAGS) $(CFLAGS) -MT libwebvtt_a-bytearray.obj -MD -MP -MF $(DEPDIR)/libwebvtt_a-bytearray.Tpo -c -o libwebvtt_a-bytearray.obj `if test -f 'bytearray.c'; then $(CYGPATH_W) 'bytearray.c'; else $(CYGPATH_W) '$(srcdir)/bytearray.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libwebvtt_a-bytearray.Tpo $(DEPDIR)/libwebvtt_a-bytearray.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='bytearray.c' object='libwebvtt_a-bytearray.obj' libtool=no @AMDEPBACKSLASH@
+libwebvtt_static_la-cuetext.lo: cuetext.c
+@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libwebvtt_static_la_CFLAGS) $(CFLAGS) -MT libwebvtt_static_la-cuetext.lo -MD -MP -MF $(DEPDIR)/libwebvtt_static_la-cuetext.Tpo -c -o libwebvtt_static_la-cuetext.lo `test -f 'cuetext.c' || echo '$(srcdir)/'`cuetext.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libwebvtt_static_la-cuetext.Tpo $(DEPDIR)/libwebvtt_static_la-cuetext.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='cuetext.c' object='libwebvtt_static_la-cuetext.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libwebvtt_a_CFLAGS) $(CFLAGS) -c -o libwebvtt_a-bytearray.obj `if test -f 'bytearray.c'; then $(CYGPATH_W) 'bytearray.c'; else $(CYGPATH_W) '$(srcdir)/bytearray.c'; fi`
+@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libwebvtt_static_la_CFLAGS) $(CFLAGS) -c -o libwebvtt_static_la-cuetext.lo `test -f 'cuetext.c' || echo '$(srcdir)/'`cuetext.c
 
-libwebvtt_a-cue.o: cue.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libwebvtt_a_CFLAGS) $(CFLAGS) -MT libwebvtt_a-cue.o -MD -MP -MF $(DEPDIR)/libwebvtt_a-cue.Tpo -c -o libwebvtt_a-cue.o `test -f 'cue.c' || echo '$(srcdir)/'`cue.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libwebvtt_a-cue.Tpo $(DEPDIR)/libwebvtt_a-cue.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='cue.c' object='libwebvtt_a-cue.o' libtool=no @AMDEPBACKSLASH@
+libwebvtt_static_la-error.lo: error.c
+@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libwebvtt_static_la_CFLAGS) $(CFLAGS) -MT libwebvtt_static_la-error.lo -MD -MP -MF $(DEPDIR)/libwebvtt_static_la-error.Tpo -c -o libwebvtt_static_la-error.lo `test -f 'error.c' || echo '$(srcdir)/'`error.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libwebvtt_static_la-error.Tpo $(DEPDIR)/libwebvtt_static_la-error.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='error.c' object='libwebvtt_static_la-error.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libwebvtt_a_CFLAGS) $(CFLAGS) -c -o libwebvtt_a-cue.o `test -f 'cue.c' || echo '$(srcdir)/'`cue.c
+@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libwebvtt_static_la_CFLAGS) $(CFLAGS) -c -o libwebvtt_static_la-error.lo `test -f 'error.c' || echo '$(srcdir)/'`error.c
 
-libwebvtt_a-cue.obj: cue.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libwebvtt_a_CFLAGS) $(CFLAGS) -MT libwebvtt_a-cue.obj -MD -MP -MF $(DEPDIR)/libwebvtt_a-cue.Tpo -c -o libwebvtt_a-cue.obj `if test -f 'cue.c'; then $(CYGPATH_W) 'cue.c'; else $(CYGPATH_W) '$(srcdir)/cue.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libwebvtt_a-cue.Tpo $(DEPDIR)/libwebvtt_a-cue.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='cue.c' object='libwebvtt_a-cue.obj' libtool=no @AMDEPBACKSLASH@
+libwebvtt_static_la-lexer.lo: lexer.c
+@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libwebvtt_static_la_CFLAGS) $(CFLAGS) -MT libwebvtt_static_la-lexer.lo -MD -MP -MF $(DEPDIR)/libwebvtt_static_la-lexer.Tpo -c -o libwebvtt_static_la-lexer.lo `test -f 'lexer.c' || echo '$(srcdir)/'`lexer.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libwebvtt_static_la-lexer.Tpo $(DEPDIR)/libwebvtt_static_la-lexer.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='lexer.c' object='libwebvtt_static_la-lexer.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libwebvtt_a_CFLAGS) $(CFLAGS) -c -o libwebvtt_a-cue.obj `if test -f 'cue.c'; then $(CYGPATH_W) 'cue.c'; else $(CYGPATH_W) '$(srcdir)/cue.c'; fi`
+@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libwebvtt_static_la_CFLAGS) $(CFLAGS) -c -o libwebvtt_static_la-lexer.lo `test -f 'lexer.c' || echo '$(srcdir)/'`lexer.c
 
-libwebvtt_a-cuetext.o: cuetext.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libwebvtt_a_CFLAGS) $(CFLAGS) -MT libwebvtt_a-cuetext.o -MD -MP -MF $(DEPDIR)/libwebvtt_a-cuetext.Tpo -c -o libwebvtt_a-cuetext.o `test -f 'cuetext.c' || echo '$(srcdir)/'`cuetext.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libwebvtt_a-cuetext.Tpo $(DEPDIR)/libwebvtt_a-cuetext.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='cuetext.c' object='libwebvtt_a-cuetext.o' libtool=no @AMDEPBACKSLASH@
+libwebvtt_static_la-parser.lo: parser.c
+@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libwebvtt_static_la_CFLAGS) $(CFLAGS) -MT libwebvtt_static_la-parser.lo -MD -MP -MF $(DEPDIR)/libwebvtt_static_la-parser.Tpo -c -o libwebvtt_static_la-parser.lo `test -f 'parser.c' || echo '$(srcdir)/'`parser.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libwebvtt_static_la-parser.Tpo $(DEPDIR)/libwebvtt_static_la-parser.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='parser.c' object='libwebvtt_static_la-parser.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libwebvtt_a_CFLAGS) $(CFLAGS) -c -o libwebvtt_a-cuetext.o `test -f 'cuetext.c' || echo '$(srcdir)/'`cuetext.c
+@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libwebvtt_static_la_CFLAGS) $(CFLAGS) -c -o libwebvtt_static_la-parser.lo `test -f 'parser.c' || echo '$(srcdir)/'`parser.c
 
-libwebvtt_a-cuetext.obj: cuetext.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libwebvtt_a_CFLAGS) $(CFLAGS) -MT libwebvtt_a-cuetext.obj -MD -MP -MF $(DEPDIR)/libwebvtt_a-cuetext.Tpo -c -o libwebvtt_a-cuetext.obj `if test -f 'cuetext.c'; then $(CYGPATH_W) 'cuetext.c'; else $(CYGPATH_W) '$(srcdir)/cuetext.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libwebvtt_a-cuetext.Tpo $(DEPDIR)/libwebvtt_a-cuetext.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='cuetext.c' object='libwebvtt_a-cuetext.obj' libtool=no @AMDEPBACKSLASH@
+libwebvtt_static_la-string.lo: string.c
+@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libwebvtt_static_la_CFLAGS) $(CFLAGS) -MT libwebvtt_static_la-string.lo -MD -MP -MF $(DEPDIR)/libwebvtt_static_la-string.Tpo -c -o libwebvtt_static_la-string.lo `test -f 'string.c' || echo '$(srcdir)/'`string.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libwebvtt_static_la-string.Tpo $(DEPDIR)/libwebvtt_static_la-string.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='string.c' object='libwebvtt_static_la-string.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libwebvtt_a_CFLAGS) $(CFLAGS) -c -o libwebvtt_a-cuetext.obj `if test -f 'cuetext.c'; then $(CYGPATH_W) 'cuetext.c'; else $(CYGPATH_W) '$(srcdir)/cuetext.c'; fi`
-
-libwebvtt_a-error.o: error.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libwebvtt_a_CFLAGS) $(CFLAGS) -MT libwebvtt_a-error.o -MD -MP -MF $(DEPDIR)/libwebvtt_a-error.Tpo -c -o libwebvtt_a-error.o `test -f 'error.c' || echo '$(srcdir)/'`error.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libwebvtt_a-error.Tpo $(DEPDIR)/libwebvtt_a-error.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='error.c' object='libwebvtt_a-error.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libwebvtt_a_CFLAGS) $(CFLAGS) -c -o libwebvtt_a-error.o `test -f 'error.c' || echo '$(srcdir)/'`error.c
-
-libwebvtt_a-error.obj: error.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libwebvtt_a_CFLAGS) $(CFLAGS) -MT libwebvtt_a-error.obj -MD -MP -MF $(DEPDIR)/libwebvtt_a-error.Tpo -c -o libwebvtt_a-error.obj `if test -f 'error.c'; then $(CYGPATH_W) 'error.c'; else $(CYGPATH_W) '$(srcdir)/error.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libwebvtt_a-error.Tpo $(DEPDIR)/libwebvtt_a-error.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='error.c' object='libwebvtt_a-error.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libwebvtt_a_CFLAGS) $(CFLAGS) -c -o libwebvtt_a-error.obj `if test -f 'error.c'; then $(CYGPATH_W) 'error.c'; else $(CYGPATH_W) '$(srcdir)/error.c'; fi`
-
-libwebvtt_a-lexer.o: lexer.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libwebvtt_a_CFLAGS) $(CFLAGS) -MT libwebvtt_a-lexer.o -MD -MP -MF $(DEPDIR)/libwebvtt_a-lexer.Tpo -c -o libwebvtt_a-lexer.o `test -f 'lexer.c' || echo '$(srcdir)/'`lexer.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libwebvtt_a-lexer.Tpo $(DEPDIR)/libwebvtt_a-lexer.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='lexer.c' object='libwebvtt_a-lexer.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libwebvtt_a_CFLAGS) $(CFLAGS) -c -o libwebvtt_a-lexer.o `test -f 'lexer.c' || echo '$(srcdir)/'`lexer.c
-
-libwebvtt_a-lexer.obj: lexer.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libwebvtt_a_CFLAGS) $(CFLAGS) -MT libwebvtt_a-lexer.obj -MD -MP -MF $(DEPDIR)/libwebvtt_a-lexer.Tpo -c -o libwebvtt_a-lexer.obj `if test -f 'lexer.c'; then $(CYGPATH_W) 'lexer.c'; else $(CYGPATH_W) '$(srcdir)/lexer.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libwebvtt_a-lexer.Tpo $(DEPDIR)/libwebvtt_a-lexer.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='lexer.c' object='libwebvtt_a-lexer.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libwebvtt_a_CFLAGS) $(CFLAGS) -c -o libwebvtt_a-lexer.obj `if test -f 'lexer.c'; then $(CYGPATH_W) 'lexer.c'; else $(CYGPATH_W) '$(srcdir)/lexer.c'; fi`
-
-libwebvtt_a-parser.o: parser.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libwebvtt_a_CFLAGS) $(CFLAGS) -MT libwebvtt_a-parser.o -MD -MP -MF $(DEPDIR)/libwebvtt_a-parser.Tpo -c -o libwebvtt_a-parser.o `test -f 'parser.c' || echo '$(srcdir)/'`parser.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libwebvtt_a-parser.Tpo $(DEPDIR)/libwebvtt_a-parser.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='parser.c' object='libwebvtt_a-parser.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libwebvtt_a_CFLAGS) $(CFLAGS) -c -o libwebvtt_a-parser.o `test -f 'parser.c' || echo '$(srcdir)/'`parser.c
-
-libwebvtt_a-parser.obj: parser.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libwebvtt_a_CFLAGS) $(CFLAGS) -MT libwebvtt_a-parser.obj -MD -MP -MF $(DEPDIR)/libwebvtt_a-parser.Tpo -c -o libwebvtt_a-parser.obj `if test -f 'parser.c'; then $(CYGPATH_W) 'parser.c'; else $(CYGPATH_W) '$(srcdir)/parser.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libwebvtt_a-parser.Tpo $(DEPDIR)/libwebvtt_a-parser.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='parser.c' object='libwebvtt_a-parser.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libwebvtt_a_CFLAGS) $(CFLAGS) -c -o libwebvtt_a-parser.obj `if test -f 'parser.c'; then $(CYGPATH_W) 'parser.c'; else $(CYGPATH_W) '$(srcdir)/parser.c'; fi`
-
-libwebvtt_a-string.o: string.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libwebvtt_a_CFLAGS) $(CFLAGS) -MT libwebvtt_a-string.o -MD -MP -MF $(DEPDIR)/libwebvtt_a-string.Tpo -c -o libwebvtt_a-string.o `test -f 'string.c' || echo '$(srcdir)/'`string.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libwebvtt_a-string.Tpo $(DEPDIR)/libwebvtt_a-string.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='string.c' object='libwebvtt_a-string.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libwebvtt_a_CFLAGS) $(CFLAGS) -c -o libwebvtt_a-string.o `test -f 'string.c' || echo '$(srcdir)/'`string.c
-
-libwebvtt_a-string.obj: string.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libwebvtt_a_CFLAGS) $(CFLAGS) -MT libwebvtt_a-string.obj -MD -MP -MF $(DEPDIR)/libwebvtt_a-string.Tpo -c -o libwebvtt_a-string.obj `if test -f 'string.c'; then $(CYGPATH_W) 'string.c'; else $(CYGPATH_W) '$(srcdir)/string.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libwebvtt_a-string.Tpo $(DEPDIR)/libwebvtt_a-string.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='string.c' object='libwebvtt_a-string.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libwebvtt_a_CFLAGS) $(CFLAGS) -c -o libwebvtt_a-string.obj `if test -f 'string.c'; then $(CYGPATH_W) 'string.c'; else $(CYGPATH_W) '$(srcdir)/string.c'; fi`
+@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libwebvtt_static_la_CFLAGS) $(CFLAGS) -c -o libwebvtt_static_la-string.lo `test -f 'string.c' || echo '$(srcdir)/'`string.c
 
 libwebvtt_la-alloc.lo: alloc.c
 @am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libwebvtt_la_CFLAGS) $(CFLAGS) -MT libwebvtt_la-alloc.lo -MD -MP -MF $(DEPDIR)/libwebvtt_la-alloc.Tpo -c -o libwebvtt_la-alloc.lo `test -f 'alloc.c' || echo '$(srcdir)/'`alloc.c
@@ -614,7 +566,7 @@ distdir: $(DISTFILES)
 	done
 check-am: all-am
 check: check-am
-all-am: Makefile $(LIBRARIES) $(LTLIBRARIES)
+all-am: Makefile $(LTLIBRARIES)
 installdirs:
 	for dir in "$(DESTDIR)$(libdir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
@@ -647,7 +599,7 @@ maintainer-clean-generic:
 clean: clean-am
 
 clean-am: clean-generic clean-libLTLIBRARIES clean-libtool \
-	clean-noinstLIBRARIES mostlyclean-am
+	clean-noinstLTLIBRARIES mostlyclean-am
 
 distclean: distclean-am
 	-rm -rf ./$(DEPDIR)
@@ -718,8 +670,8 @@ uninstall-am: uninstall-libLTLIBRARIES
 .MAKE: install-am install-strip
 
 .PHONY: CTAGS GTAGS all all-am check check-am clean clean-generic \
-	clean-libLTLIBRARIES clean-libtool clean-noinstLIBRARIES ctags \
-	distclean distclean-compile distclean-generic \
+	clean-libLTLIBRARIES clean-libtool clean-noinstLTLIBRARIES \
+	ctags distclean distclean-compile distclean-generic \
 	distclean-libtool distclean-tags distdir dvi dvi-am html \
 	html-am info info-am install install-am install-data \
 	install-data-am install-dvi install-dvi-am install-exec \
