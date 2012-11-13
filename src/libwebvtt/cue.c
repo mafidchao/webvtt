@@ -1,6 +1,6 @@
 #include <webvtt/cue.h>
 
-webvtt_status
+WEBVTT_EXPORT webvtt_status
 webvtt_create_cue( webvtt_cue *pcue )
 {
 	webvtt_cue cue;
@@ -37,7 +37,7 @@ webvtt_create_cue( webvtt_cue *pcue )
 	return WEBVTT_SUCCESS;
 }
 
-void
+WEBVTT_EXPORT void
 webvtt_delete_cue( webvtt_cue *pcue )
 {
 	if( pcue && *pcue )
@@ -50,7 +50,7 @@ webvtt_delete_cue( webvtt_cue *pcue )
 	}
 }
 
-int
+WEBVTT_EXPORT int
 webvtt_validate_cue( webvtt_cue cue )
 {
 	if( cue )
