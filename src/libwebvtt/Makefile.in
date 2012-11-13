@@ -92,7 +92,7 @@ am_libwebvtt_la_OBJECTS = libwebvtt_la-alloc.lo \
 libwebvtt_la_OBJECTS = $(am_libwebvtt_la_OBJECTS)
 libwebvtt_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(libwebvtt_la_CFLAGS) \
-	$(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
+	$(CFLAGS) $(libwebvtt_la_LDFLAGS) $(LDFLAGS) -o $@
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
@@ -232,6 +232,7 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 noinst_LIBRARIES = libwebvtt.a
 lib_LTLIBRARIES = libwebvtt.la
+libwebvtt_la_LDFLAGS = -no-undefined
 libwebvtt_a_CFLAGS = -DWEBVTT_STATIC=1 -I${top_builddir}/include -I{top_srcdir}/include
 libwebvtt_a_SOURCES = alloc.c bytearray.c cue.c cuetext.c error.c lexer.c parser.c string.c
 libwebvtt_la_CFLAGS = -DWEBVTT_BUILD_LIBRARY=1 -I${top_builddir}/include -I{top_srcdir}/include -DWEBVTT_BUILD_LIBRARY=1
