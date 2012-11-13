@@ -63,7 +63,7 @@
 /**
  * Allocate new string.
  */
-webvtt_status
+WEBVTT_EXPORT webvtt_status
 webvtt_string_new( webvtt_uint32 alloc, webvtt_string *ppstr )
 {
 	webvtt_string s;
@@ -88,7 +88,7 @@ webvtt_string_new( webvtt_uint32 alloc, webvtt_string *ppstr )
 /**
  * Delete string
  */
-void
+WEBVTT_EXPORT void
 webvtt_string_delete( webvtt_string pstr )
 {
 	if( pstr )
@@ -196,7 +196,7 @@ static const webvtt_uint32 utf8_min_uc[] =
  * Append UTF8 text to string, reallocating as needed.
  */
 #define PUTC(ch) s->text[ s->length++ ] = (webvtt_wchar)(ch)
-webvtt_status
+WEBVTT_EXPORT webvtt_status
 webvtt_string_append_utf8( webvtt_string *ppstr, 
 							const webvtt_byte *buf, 
 							webvtt_uint *pos, 

@@ -25,7 +25,7 @@ do \
 			return WEBVTT_PARSE_ERROR; \
 } while(0)
 
-webvtt_status
+WEBVTT_EXPORT webvtt_status
 webvtt_parse_cuetext( webvtt_parser self, webvtt_uint line, const webvtt_wchar *pch,
 	const webvtt_uint len, webvtt_node *pnode )
 {
