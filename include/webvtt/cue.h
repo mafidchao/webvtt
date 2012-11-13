@@ -136,8 +136,8 @@ webvtt_cue_t
 	webvtt_node text;
 };
 
-webvtt_status webvtt_create_cue( webvtt_cue *pcue );
-void webvtt_delete_cue( webvtt_cue *pcue );
-int webvtt_validate_cue( webvtt_cue cue );
+WEBVTT_EXPORT webvtt_status webvtt_create_cue( webvtt_cue *pcue );
+WEBVTT_EXPORT void webvtt_delete_cue( webvtt_cue *pcue );
+WEBVTT_EXPORT int webvtt_validate_cue( webvtt_cue cue );
 
 #endif

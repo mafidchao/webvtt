@@ -57,7 +57,7 @@ static int find_bytes(const webvtt_byte *buffer, webvtt_uint len, const webvtt_b
 static webvtt_int64 parse_int( const webvtt_byte **pb, int *pdigits );
 static int parse_timestamp( webvtt_parser self, const webvtt_byte *b, webvtt_timestamp *result );
 
-webvtt_status
+WEBVTT_EXPORT webvtt_status
 webvtt_create_parser( webvtt_cue_fn_ptr on_read,
 						webvtt_error_fn_ptr on_error, void *
 						userdata,
@@ -104,7 +104,7 @@ finish_cue( webvtt_parser self )
 	}
 }
 
-webvtt_status
+WEBVTT_EXPORT webvtt_status
 webvtt_finish_parsing( webvtt_parser self )
 {
 	if( !self )
@@ -190,7 +190,7 @@ webvtt_finish_parsing( webvtt_parser self )
 	return WEBVTT_SUCCESS;
 }
 
-void
+WEBVTT_EXPORT void
 webvtt_delete_parser( webvtt_parser self )
 {
 	if( self )
@@ -238,7 +238,7 @@ static int find_newline( const webvtt_byte *buffer, webvtt_uint *pos, webvtt_uin
 /**
  * basic strnstr-ish routine
  */
-int
+WEBVTT_INTERN int
 find_bytes(const webvtt_byte *buffer, webvtt_uint len, const webvtt_byte *sbytes, webvtt_uint slen)
 {
 	webvtt_uint slen2 = slen - 1;
@@ -252,7 +252,7 @@ find_bytes(const webvtt_byte *buffer, webvtt_uint len, const webvtt_byte *sbytes
 	return 0;
 }
 
-webvtt_status
+WEBVTT_EXPORT webvtt_status
 webvtt_parse_chunk( webvtt_parser self, const void *buffer, webvtt_uint len )
 {
 	webvtt_token token;

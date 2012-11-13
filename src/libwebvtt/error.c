@@ -33,7 +33,7 @@ static const char *errstr[] =
  * Add i18n localized error strings with support for glibc and msvcrt locale identifiers
  * (This might be too much work!)
  */
-const char *
+WEBVTT_EXPORT const char *
 webvtt_strerror( webvtt_error errno )
 {
 	if( errno >= (sizeof(errstr) / sizeof(*errstr)) )

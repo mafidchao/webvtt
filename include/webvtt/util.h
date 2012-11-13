@@ -15,8 +15,10 @@
 #		define WEBVTT_CALLBACK __cdecl
 #		if WEBVTT_BUILD_LIBRARY
 #			define WEBVTT_EXPORT __declspec(dllexport)
-#		else
+#		elif !WEBVTT_STATIC
 #			define WEBVTT_EXPORT __declspec(dllimport)
+#		else
+#			define WEBVTT_EXPORT
 #		endif
 #		if _MSC_VER >= 1600
 #			define WEBVTT_HAVE_STDINT 1
@@ -24,14 +26,32 @@
 #	elif defined(__GNUC__)
 #		define WEBVTT_CC_GCC 1
 #		define WEBVTT_HAVE_STDINT 1
+#		if WEBVTT_OS_WIN32
+#			if WEBVTT_BUILD_LIBRARY
+#				define WEBVTT_EXPORT __declspec(dllexport)
+#			elif !WEBVTT_STATIC
+#				define WEBVTT_EXPORT __declspec(dllimport)
+#			else
+#				define WEBVTT_EXPORT
+#			endif
+#		else
+#			if __GNUC__ >= 4
+#				define WEBVTT_EXPORT __attribute__((visibility("default")))
+#				define WEBVTT_INTERN __attribute__((visibility("hidden")))
+#			endif
+#		endif
 #	else
 #		define WEBVTT_CC_UNKNOWN 1
 #	endif
+
 #	ifndef WEBVTT_CALLBACK
 #		define WEBVTT_CALLBACK
 #	endif
 #	ifndef WEBVTT_EXPORT
 #		define WEBVTT_EXPORT
+#	endif
+#	ifndef WEBVTT_INTERN
+#		define WEBVTT_INTERN
 #	endif
 
 #	if WEBVTT_HAVE_STDINT
@@ -99,10 +119,10 @@ typedef void (WEBVTT_CALLBACK *webvtt_free_fn_ptr)( void *userdata, void *pmem )
  * for allocation, as it is negligible compared to the act of allocating memory itself, and having
  * a configurable allocation strategy could be very useful.
  */
-void *webvtt_alloc( webvtt_uint nb );
-void *webvtt_alloc0( webvtt_uint nb );
-void webvtt_free( void *data );
-void webvtt_set_allocator( webvtt_alloc_fn_ptr alloc, webvtt_free_fn_ptr free, void *userdata );
+WEBVTT_EXPORT void *webvtt_alloc( webvtt_uint nb );
+WEBVTT_EXPORT void *webvtt_alloc0( webvtt_uint nb );
+WEBVTT_EXPORT void webvtt_free( void *data );
+WEBVTT_EXPORT void webvtt_set_allocator( webvtt_alloc_fn_ptr alloc, webvtt_free_fn_ptr free, void *userdata );
 
 typedef enum webvtt_status_t webvtt_status;
 
