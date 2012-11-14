@@ -8,6 +8,7 @@ before_script:
   - sudo apt-get update
   - sudo apt-get install zzuf
   - npm install ref ffi ref-struct
+  - npm install nodeunit
 script: ./configure && make
 after_script:
   - cp ./src/libwebvtt/libwebvtt.a ./test/unit
