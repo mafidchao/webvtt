@@ -21,12 +21,14 @@ after_script:
   - cp ./src/libwebvtt/.libs/libwebvtt.so.0 ./node_modules/ffi/lib
   - cp ./src/libwebvtt/.libs/libwebvtt.so.0.0.0 ./node_modules/ffi/lib
   - cd ./test/unit
+  - npm install nodeunit
   - gcc -shared -fpic factorial.c -o libfactorial.so
   - ls -lRa  
   - node factorial.js 8
   - node libwebvtt.js
   - which node
   - which nodeunit
+  - echo $NODE_PATH
   - nodeunit sample.js
   - nodeunit sample2.js
   - nodeunit unit-test.js
