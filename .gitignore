@@ -1,4 +1,7 @@
 *.a
+*.sdf
+*.user
+*.suo
 *.la
 *.o
 *.lo
