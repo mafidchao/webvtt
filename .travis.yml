@@ -11,7 +11,9 @@ before_script:
   - npm install nodeunit
 script: ./configure && make
 after_script:
-  - cp ./src/libwebvtt/libwebvtt.a ./test/unit
+  - cd ./src/
+  - ls -lRa
+  - cd ..
   - cp ./src/libwebvtt/.libs/libwebvtt.so ./test/unit
   - cp ./src/libwebvtt/.libs/libwebvtt.so.0 ./test/unit
   - cp ./src/libwebvtt/.libs/libwebvtt.so.0.0.0 ./test/unit
@@ -19,9 +21,6 @@ after_script:
   - cp ./src/libwebvtt/.libs/libwebvtt.so ./node_modules/ffi/lib
   - cp ./src/libwebvtt/.libs/libwebvtt.so.0 ./node_modules/ffi/lib
   - cp ./src/libwebvtt/.libs/libwebvtt.so.0.0.0 ./node_modules/ffi/lib
-  - cd ./src/
-  - ls -lRa
-  - cd ..
   - cd ./test/unit
   - gcc -shared -fpic factorial.c -o libfactorial.so
   - ls -lRa  
