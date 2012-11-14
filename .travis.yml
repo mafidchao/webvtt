@@ -25,3 +25,5 @@ after_script:
   - ls -lRa  
   - node factorial.js 8
   - node libwebvtt.js
+  - nodeunit sample.js
+  - nodeunit sample2.js
