@@ -1,5 +1,8 @@
 *.a
-*.sdf*.user*.suo*.la
+*.sdf
+*.user
+*.suo
+*.la
 *.o
 *.lo
 *.dylib
