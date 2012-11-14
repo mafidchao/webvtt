@@ -7,7 +7,7 @@
 /**
  * Allocate new bytearray.
  */
-webvtt_status
+WEBVTT_INTERN webvtt_status
 webvtt_bytearray_new( webvtt_uint32 alloc, webvtt_bytearray *pba )
 {
 	webvtt_bytearray s;
@@ -32,7 +32,7 @@ webvtt_bytearray_new( webvtt_uint32 alloc, webvtt_bytearray *pba )
 /**
  * Delete bytearray
  */
-void
+WEBVTT_INTERN void
 webvtt_bytearray_delete( webvtt_bytearray *pstr )
 {
 	if( pstr && *pstr )
@@ -42,7 +42,7 @@ webvtt_bytearray_delete( webvtt_bytearray *pstr )
 	}
 }
 
-static webvtt_status
+WEBVTT_INTERN static webvtt_status
 grow( webvtt_bytearray *pba, webvtt_uint need )
 {
 	static const webvtt_uint page = 0x1000;
@@ -81,7 +81,7 @@ grow( webvtt_bytearray *pba, webvtt_uint need )
 	return WEBVTT_SUCCESS;
 }
 
-int
+WEBVTT_INTERN int
 webvtt_bytearray_getline( webvtt_bytearray *pba, const webvtt_byte *buffer,
 	webvtt_uint *pos, webvtt_uint len, int *truncate )
 {
@@ -127,7 +127,7 @@ webvtt_bytearray_getline( webvtt_bytearray *pba, const webvtt_byte *buffer,
 	return ret;
 }
 
-webvtt_status
+WEBVTT_INTERN webvtt_status
 webvtt_bytearray_putc( webvtt_bytearray *ppstr, webvtt_byte ch )
 {
 	webvtt_bytearray ba = *ppstr;

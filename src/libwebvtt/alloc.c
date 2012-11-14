@@ -29,7 +29,7 @@ default_free( void *unused, void *ptr )
 	free( ptr );
 }
 
-void
+WEBVTT_EXPORT void
 webvtt_set_allocator( webvtt_alloc_fn_ptr alloc, webvtt_free_fn_ptr free, void *userdata )
 {
 	/**
@@ -57,7 +57,7 @@ webvtt_set_allocator( webvtt_alloc_fn_ptr alloc, webvtt_free_fn_ptr free, void *
 /**
  * public alloc/dealloc functions
  */
-void *
+WEBVTT_EXPORT void *
 webvtt_alloc( webvtt_uint nb )
 {
 	void *ret = allocator.alloc( allocator.alloc_data, nb );
@@ -66,7 +66,7 @@ webvtt_alloc( webvtt_uint nb )
 	return ret;
 }
 
-void *
+WEBVTT_EXPORT void *
 webvtt_alloc0( webvtt_uint nb )
 {
 	void *ret = allocator.alloc( allocator.alloc_data, nb );
@@ -78,7 +78,7 @@ webvtt_alloc0( webvtt_uint nb )
 	return ret;
 }
 
-void
+WEBVTT_EXPORT void
 webvtt_free( void *data )
 {
 	if( data && allocator.n_alloc )

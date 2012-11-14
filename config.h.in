@@ -1,5 +1,11 @@
 /* config.h.in.  Generated from configure.ac by autoheader.  */
 
+/* Defined if debugging is enabled */
+#undef DEBUG
+
+/* Defined if using gprof profiling engine */
+#undef GPROF
+
 /* Define to 1 if you have the <dlfcn.h> header file. */
 #undef HAVE_DLFCN_H
 

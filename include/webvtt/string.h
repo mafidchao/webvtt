@@ -37,9 +37,9 @@ webvtt_utf8_reader_t
 	webvtt_uint32 nc; /* number of non-characters encountered */
 };
 
-webvtt_status webvtt_string_new( webvtt_uint32 alloc, webvtt_string *ppstr );
-void webvtt_string_delete( webvtt_string pstr );
-webvtt_status webvtt_string_append_utf8( webvtt_string *ppstr, const webvtt_byte *buffer,
+WEBVTT_EXPORT webvtt_status webvtt_string_new( webvtt_uint32 alloc, webvtt_string *ppstr );
+WEBVTT_EXPORT void webvtt_string_delete( webvtt_string pstr );
+WEBVTT_EXPORT webvtt_status webvtt_string_append_utf8( webvtt_string *ppstr, const webvtt_byte *buffer,
 	webvtt_uint *pos, webvtt_uint len, webvtt_utf8_reader reader );
 
 #endif
