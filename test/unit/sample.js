@@ -36,4 +36,5 @@ exports.sampleTest = function(test) {
   );
 
   harness.parseTestFile( 'test/spec/good/tc0000-sample_test.test', success_callback, failure_callback );
+  console.log ("harness.parseTestFile executed");
 }
