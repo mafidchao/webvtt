@@ -7,7 +7,8 @@ before_script:
   - npm install webvtt
   - sudo apt-get update
   - sudo apt-get install zzuf
-  - npm install ref ffi ref-struct  
+  - npm install ref ffi ref-struct
+  - npm install nodeunit -g
 script: ./configure && make
 after_script:
   - cd ./src/
@@ -24,6 +25,6 @@ after_script:
   - ls -lRa  
   - node factorial.js 8
   - node libwebvtt.js
-  - node sample.js
-  - node sample2.js
-  - node unit-test.js
+  - nodeunit sample.js
+  - nodeunit sample2.js
+  - nodeunit unit-test.js
