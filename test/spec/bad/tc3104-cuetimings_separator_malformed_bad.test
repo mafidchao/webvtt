@@ -16,7 +16,7 @@ The WebVTT cue timings part of a WebVTT cue consists of the following components
 	5. A WebVTT timestamp representing the end time offset of the cue. The time represented by this
 	   WebVTT timestamp must be greater than the start time offset of the cue.
 */
-WWEBVTT
+WEBVTT
 
 00:00:22.000 -> 00:09:33.000
 Payload
