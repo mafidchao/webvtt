@@ -53,7 +53,7 @@ On Windows, we use a Visual Studio Project, see files in build/msvc2010
 - Language bindings (Rust, C++, D, etc)
 - GNU Autotools build system to enhance portability (With MPL2'd M4 from Mozilla-Central to support Windows environments)
 
-Cue Text Payload Parsing
+###Cue Text Payload Parsing
 - Error reporting
 - Line and character tracking in the cue_text in order to report errors correctly
 - Possible change of token and node data structs to allow easier readability
