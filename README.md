@@ -38,6 +38,8 @@ On Windows, we use a Visual Studio Project, see files in build/msvc2010
 	const char *webvtt_strerror( webvtt_error );
 
 ##TODO:
+
+###General
 - node-ffi bindings for libwebvtt structures and public API, to assist with unit testing
 - New unit tests, and convert some existing conformance tests to unit tests
 - Integration with TravisCI
