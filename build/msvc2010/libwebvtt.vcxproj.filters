@@ -60,5 +60,8 @@
     <ClInclude Include="..\..\include\webvtt\string.h">
       <Filter>include\webvtt</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\libwebvtt\cuetext.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
