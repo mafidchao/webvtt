@@ -16,6 +16,21 @@ do \
 			return WEBVTT_PARSE_ERROR; \
 } while(0)
 
+/**
+ * Macros for return statuses based on memory operations.
+ * This is to avoid many if statements checking for multiple memory operation return statuses in functions.
+ */
+#define CHECK_MEMORY_OP(status) \
+	if( status != WEBVTT_SUCCESS ) \
+		return status; \
+
+#define CHECK_MEMORY_OP_JUMP(status_var, returned_status) \
+	if( returned_status != WEBVTT_SUCCESS) \
+	{ \
+		status_var = returned_status; \
+		goto dealloc; \
+	} \
+
 webvtt_status
 webvtt_create_cue_text_token( webvtt_cue_text_token_ptr *token_pptr, void *concrete_token, webvtt_cue_text_token_type token_type )
 {
@@ -198,7 +213,7 @@ webvtt_get_valid_token_tag_name( webvtt_string tag_name, webvtt_node_kind *kind 
 	}
 	else
 	{
-		return WEBVTT_NOT_SUPPORTED;
+		return WEBVTT_INVALID_TAG_NAME;
 	}
 
 	return WEBVTT_SUCCESS;
@@ -219,44 +234,26 @@ webvtt_create_node_from_token( webvtt_cue_text_token_ptr token_ptr, webvtt_node_
 	switch ( token_ptr->token_type )
 	{
 	case( TEXT_TOKEN ):
-		 webvtt_create_text_leaf_node( node_pptr, parent_ptr, 
-			 ((webvtt_cue_text_text_token_ptr)token_ptr->concrete_token)->text );
+		 return webvtt_create_text_leaf_node( node_pptr, parent_ptr, 
+					((webvtt_cue_text_text_token_ptr)token_ptr->concrete_token)->text );
 		break;
 	case( START_TOKEN ):
 		temp_start_token_ptr = (webvtt_cue_text_start_tag_token_ptr)token_ptr->concrete_token;
 
-		if( webvtt_get_valid_token_tag_name( temp_start_token_ptr->tag_name, &kind) == WEBVTT_NOT_SUPPORTED )
-		{
-			return WEBVTT_NOT_SUPPORTED;
-		}
-		 webvtt_create_internal_node( node_pptr, parent_ptr, kind,
-			 temp_start_token_ptr->css_classes_ptr, temp_start_token_ptr->annotations );
+		CHECK_MEMORY_OP( webvtt_get_valid_token_tag_name( temp_start_token_ptr->tag_name, &kind) );
+			
+		return webvtt_create_internal_node( node_pptr, parent_ptr, kind,
+				temp_start_token_ptr->css_classes_ptr, temp_start_token_ptr->annotations );
 
 		break;
 	case ( TIME_STAMP_TOKEN ):
-		 webvtt_create_time_stamp_leaf_node( node_pptr, parent_ptr,
-			 ((webvtt_cue_text_time_stamp_token_ptr)token_ptr->concrete_token)->time_stamp );
+		 return webvtt_create_time_stamp_leaf_node( node_pptr, parent_ptr,
+				((webvtt_cue_text_time_stamp_token_ptr)token_ptr->concrete_token)->time_stamp );
 		break;
 	default:
-		return WEBVTT_NOT_SUPPORTED;
+		return WEBVTT_INVALID_TOKEN_TYPE;
 	}
-
-	return WEBVTT_SUCCESS;
 }
-
-/**
- * Macros for cue text tokenizer functions.
- */
-#define CHECK_MEMORY_OP(status) \
-	if( status != WEBVTT_SUCCESS ) \
-		return status; \
-
-#define CHECK_MEMORY_OP_JUMP(status_var, returned_status) \
-	if( returned_status != WEBVTT_SUCCESS) \
-	{ \
-		status_var = returned_status; \
-		goto dealloc; \
-	} \
 
 webvtt_status 
 webvtt_cue_text_tokenizer_data_state( webvtt_wchar_ptr *position_pptr, 
@@ -637,8 +634,18 @@ webvtt_cue_text_tokenizer( webvtt_wchar_ptr *position_pptr, webvtt_cue_text_toke
 	if( **position_pptr == UTF16_GREATER_THAN )
 		(*position_pptr)++;
 
+	/**
+	 * If we have not recieved a webvtt success then that means we should not create a token and 
+	 * therefore we need to deallocate result, annotation, and css classes now because no token/node
+	 * struct will take care of deallocation later in the parser.
+	 */
 	if( status != WEBVTT_SUCCESS )
+	{
+		webvtt_delete_string( result );
+		webvtt_delete_string( annotation );
+		webvtt_delete_string_list( css_classes_ptr );
 		return status;
+	}
 
 	/**
 	 * The state that the tokenizer left off on will tell us what kind of token needs to be made.
