@@ -29,7 +29,6 @@ AC_PROG_CC
 AC_PROG_CXX
 AC_PROG_SED
 AC_PROG_INSTALL
-AC_PROG_RANLIB
 AC_PROG_MKDIR_P
 
 # Enable debugging (currently only gdb)

@@ -5,6 +5,16 @@ audio and video elements.
 
 See: [W3C WebVTT Draft](http://dev.w3.org/html5/webvtt/)
 
+##Build Instructions:
+
+In Unix-like environments, we use autotools:
+
+```
+./bootstrap.sh && ./configure && make
+```
+
+On Windows, we use a Visual Studio Project, see files in build/msvc2010
+
 ##Routines available to application:
 ### Parser object routines
 	webvtt_status webvtt_create_parser( webvtt_cue_fn_ptr, webvtt_error_fn_ptr,
@@ -36,7 +46,7 @@ See: [W3C WebVTT Draft](http://dev.w3.org/html5/webvtt/)
 - Bug fixes
 - Thread-safety where needed (Lock before setting global function pointers)
 - Reference counting objects (may be a hassle, but would help to prevent leaking
-  dropped cue objects)  
+  dropped cue objects)
 - Improvements to lexer/parser state machines, in terms of speed and conformance
 - Default error handlers when not provided by user
 - Internationalized error messages
