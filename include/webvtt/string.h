@@ -97,9 +97,9 @@ webvtt_string_list_t
 WEBVTT_EXPORT webvtt_status webvtt_create_string( webvtt_uint32 alloc, webvtt_string *ppstr );
 WEBVTT_EXPORT void webvtt_delete_string( webvtt_string pstr );
 
-webvtt_status webvtt_create_string_list( webvtt_string_list_ptr *string_list_pptr );
-void webvtt_delete_string_list( webvtt_string_list_ptr string_list_ptr );
-webvtt_status webvtt_add_to_string_list( webvtt_string_list_ptr string_list_ptr, webvtt_string string );
+WEBVTT_EXPORT webvtt_status webvtt_create_string_list( webvtt_string_list_ptr *string_list_pptr );
+WEBVTT_EXPORT void webvtt_delete_string_list( webvtt_string_list_ptr string_list_ptr );
+WEBVTT_EXPORT webvtt_status webvtt_add_to_string_list( webvtt_string_list_ptr string_list_ptr, webvtt_string string );
 
 /**
  * Methods for appending data to strings.
@@ -107,41 +107,36 @@ webvtt_status webvtt_add_to_string_list( webvtt_string_list_ptr string_list_ptr,
 WEBVTT_EXPORT webvtt_status webvtt_string_append_utf8( webvtt_string *ppstr, const webvtt_byte *buffer,
 	webvtt_uint *pos, webvtt_uint len, webvtt_utf8_reader reader );
 
-webvtt_status append_wchar_to_wchar( webvtt_wchar *append_to, webvtt_uint len, webvtt_wchar *to_append, webvtt_uint start, webvtt_uint stop );
-webvtt_status webvtt_string_append_wchar( webvtt_string *append_to, webvtt_wchar *to_append, webvtt_uint len );
-webvtt_status webvtt_string_append_single_wchar( webvtt_string *append_to, webvtt_wchar to_append );
-webvtt_status webvtt_string_append_string( webvtt_string *append_to, webvtt_string to_append );
+WEBVTT_EXPORT webvtt_status append_wchar_to_wchar( webvtt_wchar *append_to, webvtt_uint len, webvtt_wchar *to_append, webvtt_uint start, webvtt_uint stop );
+WEBVTT_EXPORT webvtt_status webvtt_string_append_wchar( webvtt_string *append_to, webvtt_wchar *to_append, webvtt_uint len );
+WEBVTT_EXPORT webvtt_status webvtt_string_append_single_wchar( webvtt_string *append_to, webvtt_wchar to_append );
+WEBVTT_EXPORT webvtt_status webvtt_string_append_string( webvtt_string *append_to, webvtt_string to_append );
 
 /**
  * Compare two strings.
  * Return 1 if equal 0 if not equal.
  */
-webvtt_uint webvtt_compare_strings( webvtt_string one, webvtt_string two );
+WEBVTT_EXPORT webvtt_status webvtt_compare_strings( webvtt_string one, webvtt_string two );
 
 /**
  * Compare two wchars.
  * Return 1 if equal 0 if not.
  */
-webvtt_uint webvtt_compare_wchars( webvtt_wchar  *one, webvtt_uint one_len, webvtt_wchar *two, webvtt_uint two_len );
+WEBVTT_EXPORT webvtt_status webvtt_compare_wchars( webvtt_wchar  *one, webvtt_uint one_len, webvtt_wchar *two, webvtt_uint two_len );
 
 /**
  * Returns successful if the character is a alphanumeric.
  */
-webvtt_uint webvtt_is_alphanumeric( webvtt_wchar character );
+WEBVTT_EXPORT webvtt_status webvtt_is_alphanumeric( webvtt_wchar character );
 
 /**
  * Returns successful if the character is a digit.
  */
-webvtt_uint webvtt_is_digit( webvtt_wchar character );
+WEBVTT_EXPORT webvtt_status webvtt_is_digit( webvtt_wchar character );
 
 /**
  * Advances a pointer past one LF or CR(LF) line ending.
  */
-webvtt_status webvtt_advance_past_line_ending( webvtt_wchar *position );
-
-/**
- * Advances a pointer past one LF or CR(LF) line ending.
- */
-webvtt_status webvtt_advance_past_line_ending( webvtt_wchar_ptr *position_pptr );
+WEBVTT_EXPORT webvtt_status webvtt_advance_past_line_ending( webvtt_wchar_ptr *position_pptr );
 
 #endif

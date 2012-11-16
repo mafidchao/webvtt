@@ -98,7 +98,7 @@ webvtt_delete_string( webvtt_string pstr )
 	}
 }
 
-webvtt_status 
+WEBVTT_EXPORT webvtt_status 
 webvtt_create_string_list( webvtt_string_list_ptr *string_list_pptr )
 {
 	webvtt_string_list_ptr temp_string_list_ptr = (webvtt_string_list_ptr)malloc( sizeof(*temp_string_list_ptr) );
@@ -115,7 +115,7 @@ webvtt_create_string_list( webvtt_string_list_ptr *string_list_pptr )
 	return WEBVTT_SUCCESS;
 }
 
-void 
+WEBVTT_EXPORT void 
 webvtt_delete_string_list( webvtt_string_list_ptr string_list_ptr )
 {
 	int i;
@@ -225,6 +225,7 @@ static const webvtt_uint32 utf8_min_uc[] =
  * Append UTF8 text to string, reallocating as needed.
  */
 #define PUTC(ch) s->text[ s->length++ ] = (webvtt_wchar)(ch)
+
 WEBVTT_EXPORT webvtt_status
 webvtt_string_append_utf8( webvtt_string *ppstr, 
 							const webvtt_byte *buf, 
@@ -341,7 +342,7 @@ _end:
 	return result;
 }
 
-webvtt_status 
+WEBVTT_EXPORT webvtt_status 
 append_wchar_to_wchar( webvtt_wchar *append_to, webvtt_uint len, webvtt_wchar *to_append, webvtt_uint start, webvtt_uint stop )
 {
 	int i;
@@ -356,7 +357,7 @@ append_wchar_to_wchar( webvtt_wchar *append_to, webvtt_uint len, webvtt_wchar *t
 	return WEBVTT_SUCCESS;
 }
 
-webvtt_status 
+WEBVTT_EXPORT webvtt_status 
 webvtt_string_append_wchar( webvtt_string *append_to, webvtt_wchar *to_append, webvtt_uint len )
 {
 	webvtt_status status;
@@ -375,7 +376,7 @@ webvtt_string_append_wchar( webvtt_string *append_to, webvtt_wchar *to_append, w
 	return WEBVTT_SUCCESS;
 }
 
-webvtt_status 
+WEBVTT_EXPORT webvtt_status 
 webvtt_string_append_single_wchar( webvtt_string *append_to, webvtt_wchar to_append )
 {
 	webvtt_wchar temp[1]; 
@@ -388,7 +389,7 @@ webvtt_string_append_single_wchar( webvtt_string *append_to, webvtt_wchar to_app
 	return webvtt_string_append_wchar( append_to, temp, 1 );
 }
 
-webvtt_status 
+WEBVTT_EXPORT webvtt_status 
 webvtt_string_append_string( webvtt_string *append_to, webvtt_string to_append )
 {
 	webvtt_status status;
@@ -399,39 +400,39 @@ webvtt_string_append_string( webvtt_string *append_to, webvtt_string to_append )
 	return WEBVTT_SUCCESS;
 }
 
-webvtt_uint 
+WEBVTT_EXPORT webvtt_status 
 webvtt_compare_wchars( webvtt_wchar  *one, webvtt_uint one_len, webvtt_wchar *two, webvtt_uint two_len )
 {
 	int i;
 
 	/* Should we return a webvtt_status to account for this case here? */
 	if( !one || !two )
-		return 0;
+		return WEBVTT_INVALID_PARAM;
 	
 	if( one_len != two_len )
-		return 0;
+		return WEBVTT_FAIL;
 
 	for( i = 0; i < one_len; i++ )
 	{
 		if( one[i] != two[i] )
 		{
-			return 0;
+			return WEBVTT_FAIL;
 		}
 	}
 
-	return 1;
+	return WEBVTT_SUCCESS;
 }
 
-webvtt_uint 
+WEBVTT_EXPORT webvtt_status 
 webvtt_compare_strings( webvtt_string one, webvtt_string two )
 {
 	if( !one || !two )
-		return 0;
+		return WEBVTT_INVALID_PARAM;
 
 	return webvtt_compare_wchars( one->text, one->length, two->text, two->length );
 }
 
-webvtt_status 
+WEBVTT_EXPORT webvtt_status 
 webvtt_add_to_string_list( webvtt_string_list_ptr string_list_ptr, webvtt_string string )
 {
 	if( !string )
@@ -455,22 +456,24 @@ webvtt_add_to_string_list( webvtt_string_list_ptr string_list_ptr, webvtt_string
 	return WEBVTT_SUCCESS;
 }
 
-webvtt_uint 
+WEBVTT_EXPORT webvtt_status 
 webvtt_is_alphanumeric( webvtt_wchar character )
 {
-	return ( character >= UTF16_DIGIT_ZERO && character <= UTF16_DIGIT_NINE ) ||
-			  ( character >= UTF16_CAPITAL_A && character <= UTF16_CAPITAL_Z ) ||
-			  ( character >= UTF16_A && character <= UTF16_Z );
-
+	if( ( character >= UTF16_DIGIT_ZERO && character <= UTF16_DIGIT_NINE ) || ( character >= UTF16_CAPITAL_A && character <= UTF16_CAPITAL_Z ) ||
+		( character >= UTF16_A && character <= UTF16_Z ) )
+		return WEBVTT_SUCCESS;
+	return WEBVTT_FAIL;
 }
 
-webvtt_uint 
+WEBVTT_EXPORT webvtt_status 
 webvtt_is_digit( webvtt_wchar character )
 {
-	return character >= UTF16_DIGIT_ZERO && character <= UTF16_DIGIT_NINE;
+	if( character >= UTF16_DIGIT_ZERO && character <= UTF16_DIGIT_NINE )
+		return WEBVTT_SUCCESS;
+	return WEBVTT_FAIL;
 }
 
-webvtt_status 
+WEBVTT_EXPORT webvtt_status 
 webvtt_advance_past_line_ending( webvtt_wchar_ptr *position_pptr )
 {
 	int done = 0;

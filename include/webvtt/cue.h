@@ -161,30 +161,4 @@ WEBVTT_EXPORT webvtt_status webvtt_create_cue( webvtt_cue *pcue );
 WEBVTT_EXPORT void webvtt_delete_cue( webvtt_cue *pcue );
 WEBVTT_EXPORT int webvtt_validate_cue( webvtt_cue cue );
 
-/**
- * Routines for creating nodes.
- */
-webvtt_status webvtt_create_node( webvtt_node_ptr *node_pptr, void *concrete_node, webvtt_node_kind kind, webvtt_node_ptr parent_ptr );
-webvtt_status webvtt_create_internal_node( webvtt_node_ptr *node_pptr, webvtt_node_ptr parent_ptr, webvtt_node_kind kind, webvtt_string_list_ptr css_classes_ptr, webvtt_string annotation );
-webvtt_status webvtt_create_head_node( webvtt_node_ptr *node_pptr );
-webvtt_status webvtt_create_time_stamp_leaf_node( webvtt_node_ptr *node_pptr, webvtt_node_ptr parent_ptr, webvtt_timestamp time_stamp );
-webvtt_status webvtt_create_text_leaf_node( webvtt_node_ptr *node_pptr, webvtt_node_ptr parent_ptr, webvtt_string text );
-
-/**
- * Attaches a node to the internal node list of another node.
- */
-webvtt_status webvtt_attach_internal_node( webvtt_internal_node_ptr current, webvtt_node_ptr to_attach );
-
-/**
- * Routines for deleting nodes.
- */
-void webvtt_delete_node( webvtt_node_ptr node_ptr );
-void webvtt_delete_leaf_node( webvtt_leaf_node_ptr leaf_node_prt );
-
-/**
- * Deletes an internal node as well as it's child nodes. 
- */
-void webvtt_delete_internal_node( webvtt_internal_node_ptr internal_node_ptr );
-
-
 #endif

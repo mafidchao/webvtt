@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <webvtt/cue.h>
+#include "cue.h"
 
 WEBVTT_EXPORT webvtt_status
 webvtt_create_cue( webvtt_cue *pcue )
@@ -75,7 +76,7 @@ error:
 	return 0;
 }
 
-webvtt_status  
+WEBVTT_INTERN webvtt_status  
 webvtt_create_node( webvtt_node_ptr *node_pptr, void *concrete_node, webvtt_node_kind kind, webvtt_node_ptr parent_ptr )
 {
 	webvtt_node_ptr temp_node_ptr = (webvtt_node_ptr)malloc(sizeof(*temp_node_ptr));
@@ -91,7 +92,7 @@ webvtt_create_node( webvtt_node_ptr *node_pptr, void *concrete_node, webvtt_node
 	return WEBVTT_SUCCESS;
 }
 
-webvtt_status  
+WEBVTT_INTERN webvtt_status  
 webvtt_create_internal_node( webvtt_node_ptr *node_pptr, webvtt_node_ptr parent_ptr, webvtt_node_kind kind, webvtt_string_list_ptr css_classes_ptr, webvtt_string annotation )
 {
 	webvtt_internal_node_ptr internal_node_ptr = (webvtt_internal_node_ptr)malloc(sizeof(*internal_node_ptr));
@@ -108,7 +109,8 @@ webvtt_create_internal_node( webvtt_node_ptr *node_pptr, webvtt_node_ptr parent_
 	return webvtt_create_node( node_pptr, (void *)internal_node_ptr, kind, parent_ptr );
 }
 
-webvtt_status webvtt_create_head_node( webvtt_node_ptr *node_pptr )
+WEBVTT_INTERN webvtt_status 
+webvtt_create_head_node( webvtt_node_ptr *node_pptr )
 {
 	webvtt_internal_node_ptr internal_node_ptr = (webvtt_internal_node_ptr)malloc(sizeof(*internal_node_ptr));
 
@@ -123,7 +125,7 @@ webvtt_status webvtt_create_head_node( webvtt_node_ptr *node_pptr )
 	return webvtt_create_node( node_pptr, (void *)internal_node_ptr, WEBVTT_HEAD_NODE, NULL );	
 }
 
-webvtt_status  
+WEBVTT_INTERN webvtt_status  
 webvtt_create_time_stamp_leaf_node( webvtt_node_ptr *node_pptr, webvtt_node_ptr parent_ptr, webvtt_timestamp time_stamp )
 {
 	webvtt_leaf_node_ptr leaf_node_ptr = (webvtt_leaf_node_ptr)malloc(sizeof(*leaf_node_ptr));
@@ -136,7 +138,7 @@ webvtt_create_time_stamp_leaf_node( webvtt_node_ptr *node_pptr, webvtt_node_ptr 
 	return webvtt_create_node( node_pptr, (void *)leaf_node_ptr, WEBVTT_TIME_STAMP, parent_ptr );		
 }
 
-webvtt_status  
+WEBVTT_INTERN webvtt_status  
 webvtt_create_text_leaf_node( webvtt_node_ptr *node_pptr, webvtt_node_ptr parent_ptr, webvtt_string text )
 {
 	webvtt_leaf_node_ptr leaf_node_ptr = (webvtt_leaf_node_ptr)malloc(sizeof(*leaf_node_ptr));
@@ -151,7 +153,7 @@ webvtt_create_text_leaf_node( webvtt_node_ptr *node_pptr, webvtt_node_ptr parent
 
 }
 
-void 
+WEBVTT_INTERN void 
 webvtt_delete_node( webvtt_node_ptr node_ptr )
 {
 	if( node_ptr )
@@ -168,10 +170,10 @@ webvtt_delete_node( webvtt_node_ptr node_ptr )
 	}
 }
 
-void 
+WEBVTT_INTERN void 
 webvtt_delete_internal_node( webvtt_internal_node_ptr internal_node_ptr )
 {
-	int i ;
+	webvtt_uint i ;
 
 	if( internal_node_ptr )
 	{
@@ -186,7 +188,7 @@ webvtt_delete_internal_node( webvtt_internal_node_ptr internal_node_ptr )
 	}
 }
 
-void 
+WEBVTT_INTERN void 
 webvtt_delete_leaf_node( webvtt_leaf_node_ptr leaf_node_ptr )
 {
 	if( leaf_node_ptr )
@@ -197,7 +199,7 @@ webvtt_delete_leaf_node( webvtt_leaf_node_ptr leaf_node_ptr )
 	}
 }
 
-webvtt_status 
+WEBVTT_INTERN webvtt_status 
 webvtt_attach_internal_node( webvtt_internal_node_ptr current_ptr, webvtt_node_ptr to_attach_ptr )
 {
 	if( !current_ptr || !to_attach_ptr )
