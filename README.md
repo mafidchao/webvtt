@@ -40,6 +40,7 @@ On Windows, we use a Visual Studio Project, see files in build/msvc2010
 ##TODO:
 
 ###General
+- Change parser to convert to UTF16 as it goes through the buffer and convert parser to work with UTF16 instead of UTF8.
 - node-ffi bindings for libwebvtt structures and public API, to assist with unit testing
 - New unit tests, and convert some existing conformance tests to unit tests
 - Integration with TravisCI
@@ -56,6 +57,7 @@ On Windows, we use a Visual Studio Project, see files in build/msvc2010
 - GNU Autotools build system to enhance portability (With MPL2'd M4 from Mozilla-Central to support Windows environments)
 
 ###Cue Text Payload Parsing
+- Get shared UTF16 time stamp parser function working in order to create a time stamp node/token.
 - Error reporting
 - Line and character tracking in the cue_text in order to report errors correctly
 - Possible change of token and node data structs to allow easier readability
