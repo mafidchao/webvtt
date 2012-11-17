@@ -1,3 +1,5 @@
+notifications:
+  irc: "irc.mozilla.org#seneca"
 language: c
 compiler:
   - gcc
