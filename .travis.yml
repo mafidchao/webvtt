@@ -6,9 +6,9 @@ compiler:
 before_script:
   #- sudo apt-get update
   #- sudo apt-get install zzuf
-  - npm install webvtt  
-  - npm install ref ffi ref-struct
-  - npm install nodeunit -g
+  #- npm install webvtt  
+  #- npm install ref ffi ref-struct
+  #- npm install nodeunit -g
 script: ./bootstrap.sh && ./configure && make
 after_script:
   - ls
