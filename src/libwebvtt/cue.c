@@ -1,6 +1,6 @@
 #include <stdlib.h>
-#include <../../include/webvtt/cue.h>
-//#include "cue.h"
+#include <webvtt/cue.h>
+#include "cue.h"
 
 WEBVTT_EXPORT webvtt_status
 webvtt_create_cue( webvtt_cue *pcue )
