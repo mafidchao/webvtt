@@ -5,7 +5,7 @@ audio and video elements.
 
 See: [W3C WebVTT Draft](http://dev.w3.org/html5/webvtt/)
 
-[![Build Status](https://travis-ci.org/humphd/webvtt.png)](https://travis-ci.org/humphd/webvtt)
+[![Build Status](https://travis-ci.org/mafidchao/webvtt.png?branch=tci-gtest)](https://travis-ci.org/mafidchao/webvtt)
 
 ##Build Instructions:
 

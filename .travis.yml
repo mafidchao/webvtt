@@ -3,11 +3,17 @@ language: c
 compiler:
   - clang
   - gcc
-
+before_script:
+  - sudo apt-get update
+  - sudo apt-get install zzuf
+  - npm install webvtt  
+  - npm install ref ffi ref-struct
+  - npm install nodeunit -g
 script: ./bootstrap.sh && ./configure && make
-
+after_script:
+  - ls
 notifications:
-  email:
-    - david.humphrey@senecacollege.ca
-
-  irc: "irc.mozilla.org#seneca"
+  email: false
+    #- david.humphrey@senecacollege.ca
+#
+  #irc: "irc.mozilla.org#seneca"
