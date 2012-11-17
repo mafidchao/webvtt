@@ -12,6 +12,8 @@ before_script:
 script: ./bootstrap.sh && ./configure && make
 after_script:
   - ls
+  - cd gtest
+  - ls -l
 notifications:
   email: false
     #- david.humphrey@senecacollege.ca
