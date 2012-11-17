@@ -1,6 +1,6 @@
 #ifndef __CUE_H__
 #	define __CUE_H__
-#	include <webvtt\string.h>
+#	include <webvtt/string.h>
 
 /**
  * Routines for creating nodes.
