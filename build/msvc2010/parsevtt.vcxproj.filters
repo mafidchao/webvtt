@@ -11,7 +11,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\parsevtt\parsevtt_main.c">
+    <ClCompile Include="..\..\src\parsevtt\unit_test.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>

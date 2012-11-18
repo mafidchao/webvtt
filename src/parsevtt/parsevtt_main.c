@@ -48,7 +48,7 @@ parse_fh(FILE *fh, webvtt_parser vtt)
 	}
 	return 0;
 }
-
+#ifndef TESTING
 int
 main( int argc, char **argv )
 {
@@ -125,3 +125,4 @@ main( int argc, char **argv )
 	fclose( fh );
 	return ret;
 }
+#endif
