@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.67])
-AC_INIT([webvtt], [0.0.2])
+AC_INIT([webvtt], [0.0.3])
 AC_CANONICAL_HOST
 
 linux="no"
@@ -19,13 +19,15 @@ AM_CONDITIONAL(OSX,test x$osx = xtrue)
 AM_CONDITIONAL(WIN32,test x$win32 = xtrue)
 
 AC_CONFIG_MACRO_DIR([build/autoconf])
-LT_INIT([win32-dll])
-AM_INIT_AUTOMAKE([foreign])
+AM_INIT_AUTOMAKE([1.11 -Wall -Wno-extra-portability foreign subdir-objects])
 AC_CONFIG_SRCDIR([src/libwebvtt/alloc.c])
 AC_CONFIG_HEADERS([config.h])
 
+LT_INIT([win32-dll])
+
 # Checks for programs.
 AC_PROG_CC
+AM_PROG_CC_C_O
 AC_PROG_CXX
 AC_PROG_SED
 AC_PROG_INSTALL
@@ -41,6 +43,27 @@ AC_ARG_ENABLE([gprof],
 	[CFLAGS='-pg'; AC_DEFINE([GPROF],[1],[Defined if using gprof profiling engine])])
 
 # Checks for libraries.
+# * Check for pthreads library.
+ACX_PTHREAD([have_pthread=yes], [heve_pthread=no])
+
+# Define variables for unit test using gtest
+GTEST_VERSION="1.6.0"
+if test "x$have_pthread" = "xyes"; then
+  GTEST_CPPFLAGS="-DGTEST_HAS_PTHREAD=1 -I\$(top_srcdir)/test/gtest"
+  GTEST_CXXFLAGS="$PTHREAD_CFLAGS"
+  GTEST_LDFLAGS="-L\$(top_builddir)/test/gtest"
+  GTEST_LIBS="$PTHREAD_LIBS"
+else
+  GTEST_CPPFLAGS="-DGTEST_HAS_PTHREAD=0 -I\$(top_srcdir)/test/gtest"
+  GTEST_CXXFLAGS=
+  GTEST_LDFLAGS="-L\$(top_builddir)/test/gtest"
+  GTEST_LIBS=
+fi
+AC_SUBST([GTEST_VERSION])
+AC_SUBST([GTEST_CPPFLAGS])
+AC_SUBST([GTEST_CXXFLAGS])
+AC_SUBST([GTEST_LDFLAGS])
+AC_SUBST([GTEST_LIBS])
 
 # Checks for header files.
 AC_CHECK_HEADER([stdint.h],[],[])
@@ -54,6 +77,18 @@ AC_CHECK_FUNC([memset],[],[AC_ERROR([error: missing function 'memset'])])
 AC_CHECK_FUNC([malloc],[],[AC_ERROR([error: missing function 'malloc'])])
 AC_CHECK_FUNC([free],[],[AC_ERROR([error: missing function 'free'])])
 AC_CHECK_FUNC([strerror],[AC_DEFINE([HAVE_STRERROR],[1],[Define if strerror() is available])])
-AC_CONFIG_FILES([Makefile include/Makefile src/Makefile src/libwebvtt/Makefile 
-src/libwebvttxx/Makefile src/parsevtt/Makefile])
+
+# Generate Makefiles
+AC_CONFIG_FILES([
+  Makefile
+  include/Makefile
+  src/Makefile
+  src/libwebvtt/Makefile
+  src/libwebvttxx/Makefile
+  src/parsevtt/Makefile
+  test/Makefile
+  test/gtest/Makefile
+  test/unit/Makefile
+])
+
 AC_OUTPUT
