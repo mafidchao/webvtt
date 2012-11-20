@@ -4,6 +4,10 @@
 #	include "cue.h"
 #	include "error.h"
 
+#if defined(__cplusplus) || defined(c_plusplus)
+extern "C" {
+#endif
+
 typedef struct webvtt_parser_t *webvtt_parser;
 typedef struct webvtt_struct_params_t webvtt_struct_params;
 
@@ -25,6 +29,10 @@ webvtt_status webvtt_finish_parsing( webvtt_parser self );
 WEBVTT_EXPORT void webvtt_delete_parser( webvtt_parser parser );
 WEBVTT_EXPORT webvtt_status webvtt_parse_chunk( webvtt_parser self, const void *buffer, webvtt_uint len );
 WEBVTT_EXPORT webvtt_status webvtt_finish_parsing( webvtt_parser self );
-WEBVTT_EXPORT webvtt_status webvtt_parse_cuetext( webvtt_wchar *cue_text, webvtt_node_ptr node_ptr );
+WEBVTT_EXPORT webvtt_status webvtt_parse_cuetext( const webvtt_wchar *cue_text, webvtt_node_ptr node_ptr );
+
+#if defined(__cplusplus) || defined(c_plusplus)
+}
+#endif
 
 #endif

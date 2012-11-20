@@ -3,6 +3,10 @@
 #	include "util.h"
 #	include <webvtt/string.h>
 
+#if defined(__cplusplus) || defined(c_plusplus)
+extern "C" {
+#endif
+
 typedef struct webvtt_cue_t *webvtt_cue;
 typedef double webvtt_timestamp_t, webvtt_timestamp;
 typedef struct webvtt_cue_settings_t webvtt_cue_settings;
@@ -60,7 +64,7 @@ webvtt_node_kind_t
 #	define WEBVTT_CAST(Type,Val) ((Type)(Val))
 #endif
 
-#define WEBVTT_IS_LEAF(Kind) ( (Kind) & WEBVTT_NODE_LEAF != 0 )
+#define WEBVTT_IS_LEAF(Kind) ( ((Kind) & WEBVTT_NODE_LEAF) != 0 )
 #define WEBVTT_NODE_INDEX(Kind) ( (Kind) & ~WEBVTT_NODE_LEAF )
 #define WEBVTT_IS_VALID_LEAF_NODE(Kind) ( WEBVTT_IS_LEAF(Kind) && (WEBVTT_NODE_INDEX(Kind) >= WEBVTT_NODE_LEAF_START && WEBVTT_NODE_INDEX(Kind) <= WEBVTT_NODE_LEAF_END ) )
 #define WEBVTT_IS_VALID_INTERNAL_NODE(Kind) ( (!WEBVTT_IS_LEAF(Kind)) && (WEBVTT_NODE_INDEX(Kind) >= WEBVTT_NODE_INTERNAL_START && WEBVTT_NODE_INDEX(Kind) <= WEBVTT_NODE_INTERNAL_END) )
@@ -92,7 +96,7 @@ webvtt_internal_node_t
 	webvtt_string_list_ptr css_classes_ptr;
 
 	webvtt_uint alloc;
-	webvtt_uint child_node_count;
+	webvtt_uint length;
 	webvtt_node_ptr *children;
 };
 
@@ -160,5 +164,9 @@ webvtt_cue_t
 WEBVTT_EXPORT webvtt_status webvtt_create_cue( webvtt_cue *pcue );
 WEBVTT_EXPORT void webvtt_delete_cue( webvtt_cue *pcue );
 WEBVTT_EXPORT int webvtt_validate_cue( webvtt_cue cue );
+
+#if defined(__cplusplus) || defined(c_plusplus)
+}
+#endif
 
 #endif

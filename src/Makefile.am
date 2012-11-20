@@ -1,1 +1,1 @@
-SUBDIRS = libwebvtt parsevtt
+SUBDIRS = libwebvtt libwebvttxx parsevtt

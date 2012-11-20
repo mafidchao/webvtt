@@ -1,5 +1,5 @@
-#ifndef __WEBVTT_BYTEARRAY_H__
-#	define __WEBVTT_BYTEARRAY_H__
+#ifndef __INTERN_BYTEARRAY_H__
+#	define __INTERN_BYTEARRAY_H__
 #	include <webvtt/util.h>
 
 #	ifndef WEBVTT_MAX_LINE

@@ -1,5 +1,5 @@
-#ifndef __CUE_H__
-#	define __CUE_H__
+#ifndef __INTERN_CUE_H__
+#	define __INTERN_CUE_H__
 #	include <webvtt/string.h>
 
 /**

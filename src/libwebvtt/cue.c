@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <string.h>
 #include <webvtt/cue.h>
 #include "cue.h"
 
@@ -46,8 +47,8 @@ webvtt_delete_cue( webvtt_cue *pcue )
 	{
 		webvtt_cue cue = *pcue;
 		*pcue = 0;
-		webvtt_delete_string( cue->id );
-		webvtt_delete_string( cue->payload );
+		webvtt_release_string( &cue->id );
+		webvtt_release_string( &cue->payload );
 		webvtt_free( cue );
 		webvtt_delete_node( cue->node_head );
 	}
@@ -103,7 +104,7 @@ webvtt_create_internal_node( webvtt_node_ptr *node_pptr, webvtt_node_ptr parent_
 	internal_node_ptr->css_classes_ptr = css_classes_ptr;
 	internal_node_ptr->annotation = annotation;
 	internal_node_ptr->children = NULL;
-	internal_node_ptr->child_node_count = 0;
+	internal_node_ptr->length = 0;
 	internal_node_ptr->alloc = 0;
 
 	return webvtt_create_node( node_pptr, (void *)internal_node_ptr, kind, parent_ptr );
@@ -112,14 +113,16 @@ webvtt_create_internal_node( webvtt_node_ptr *node_pptr, webvtt_node_ptr parent_
 WEBVTT_INTERN webvtt_status 
 webvtt_create_head_node( webvtt_node_ptr *node_pptr )
 {
-	webvtt_internal_node_ptr internal_node_ptr = (webvtt_internal_node_ptr)malloc(sizeof(*internal_node_ptr));
+	webvtt_internal_node_ptr internal_node_ptr = (webvtt_internal_node_ptr)webvtt_alloc(sizeof(*internal_node_ptr));
 
 	if ( !internal_node_ptr )
+	{
 		return WEBVTT_OUT_OF_MEMORY;
+	}
 
-	internal_node_ptr->annotation = NULL;
+	webvtt_init_string(&internal_node_ptr->annotation);
 	internal_node_ptr->children = NULL;
-	internal_node_ptr->child_node_count = 0;
+	internal_node_ptr->length = 0;
 	internal_node_ptr->alloc = 0;
 
 	return webvtt_create_node( node_pptr, (void *)internal_node_ptr, WEBVTT_HEAD_NODE, NULL );	
@@ -128,10 +131,12 @@ webvtt_create_head_node( webvtt_node_ptr *node_pptr )
 WEBVTT_INTERN webvtt_status  
 webvtt_create_time_stamp_leaf_node( webvtt_node_ptr *node_pptr, webvtt_node_ptr parent_ptr, webvtt_timestamp time_stamp )
 {
-	webvtt_leaf_node_ptr leaf_node_ptr = (webvtt_leaf_node_ptr)malloc(sizeof(*leaf_node_ptr));
+	webvtt_leaf_node_ptr leaf_node_ptr = (webvtt_leaf_node_ptr)webvtt_alloc(sizeof(*leaf_node_ptr));
 
 	if( !leaf_node_ptr )
+	{
 		return WEBVTT_OUT_OF_MEMORY;
+	}
 
 	leaf_node_ptr->time_stamp = time_stamp;
 
@@ -177,14 +182,17 @@ webvtt_delete_internal_node( webvtt_internal_node_ptr internal_node_ptr )
 
 	if( internal_node_ptr )
 	{
-		webvtt_delete_string_list( internal_node_ptr->css_classes_ptr );
+		webvtt_delete_string_list( &internal_node_ptr->css_classes_ptr );
 
-		if( internal_node_ptr->annotation )
-			webvtt_delete_string( internal_node_ptr->annotation );
-
-		for( i = 0; i < internal_node_ptr->child_node_count; i++ )
+		if( webvtt_string_length(&internal_node_ptr->annotation) )
+		{
+			webvtt_release_string( &internal_node_ptr->annotation );
+		}
+		for( i = 0; i < internal_node_ptr->length; i++ )
+		{
 			webvtt_delete_node( *(internal_node_ptr->children + i) );
-		free( internal_node_ptr );
+		}
+		webvtt_free( internal_node_ptr );
 	}
 }
 
@@ -193,9 +201,11 @@ webvtt_delete_leaf_node( webvtt_leaf_node_ptr leaf_node_ptr )
 {
 	if( leaf_node_ptr )
 	{
-		if( leaf_node_ptr->text )
-			webvtt_delete_string( leaf_node_ptr->text );
-		free( leaf_node_ptr );
+		if( webvtt_string_length( &leaf_node_ptr->text ) )
+		{
+			webvtt_release_string( &leaf_node_ptr->text );
+		}
+		webvtt_free( leaf_node_ptr );
 	}
 }
 
@@ -207,16 +217,23 @@ webvtt_attach_internal_node( webvtt_internal_node_ptr current_ptr, webvtt_node_p
 		return WEBVTT_INVALID_PARAM;
 	}
 
-	if( current_ptr->alloc == current_ptr->child_node_count )
+	if( current_ptr->length + 1 <= ( current_ptr->alloc / 3 ) * 2 )
 	{
-		current_ptr->alloc += 4;
-		current_ptr->children = (webvtt_node_ptr *)realloc(current_ptr->children, sizeof(webvtt_node_ptr *) * (current_ptr->alloc));
-		
-		if( !current_ptr->children )
+		webvtt_node_ptr *arr, *old;
+		current_ptr->alloc = current_ptr->alloc ? current_ptr->alloc * 2 : 8;
+		arr = (webvtt_node_ptr *)webvtt_alloc0( sizeof(webvtt_node_ptr) * (current_ptr->alloc));
+		if( !arr )
+		{
 			return WEBVTT_OUT_OF_MEMORY;
+		}
+
+		old = current_ptr->children;
+		memcpy( arr, old, current_ptr->length * sizeof(webvtt_node_ptr) );
+		current_ptr->children = arr;
+		webvtt_free( old );
 	}
 
-	current_ptr->children[current_ptr->child_node_count++] = to_attach_ptr;
+	current_ptr->children[current_ptr->length++] = to_attach_ptr;
 
 	return WEBVTT_SUCCESS;
 }

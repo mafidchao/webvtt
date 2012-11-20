@@ -2,54 +2,10 @@
 #	define __WEBVTT_STRING_H__
 #	include "util.h"
 
-#define UTF16_AMPERSAND					(0x0026)
-#define UTF16_LESS_THAN					(0x003C)
-#define UTF16_GREATER_THAN				(0x003E)
-#define UTF16_LEFT_TO_RIGHT				(0x200E)
-#define UTF16_RIGHT_TO_LEFT				(0x200F)
-#define UTF16_NO_BREAK_SPACE			(0x00A0)
-#define UTF16_NULL_BYTE					(0x0000)
-#define UTF16_SEMI_COLON				(0x003B)
-#define UTF16_TAB						(0x0009)
-#define UTF16_FORM_FEED					(0x000C)
-#define UTF16_LINE_FEED					(0x000A)
-#define UTF16_CARRIAGE_RETURN			(0x000D)
-#define UTF16_FULL_STOP					(0x002E)
-#define UTF16_SOLIDUS					(0x002F)
-#define UTF16_SPACE						(0x0020)
-#define UTF16_DIGIT_ZERO				(0x0030)
-#define UTF16_DIGIT_NINE				(0x0039)
-
-#define UTF16_CAPITAL_A					(0x0041)
-#define UTF16_CAPITAL_Z					(0x005A)
-
-#define UTF16_A								(0x0061)
-#define UTF16_B								UTF16_A + 1
-#define UTF16_C								UTF16_A + 2
-#define UTF16_D								UTF16_A + 3
-#define UTF16_E								UTF16_A + 4
-#define UTF16_F								UTF16_A + 5
-#define UTF16_G								UTF16_A + 6
-#define UTF16_H								UTF16_A + 7
-#define UTF16_I								UTF16_A + 8
-#define UTF16_J								UTF16_A + 9
-#define UTF16_K								UTF16_A + 10
-#define UTF16_L								UTF16_A + 11
-#define UTF16_M								UTF16_A + 12
-#define UTF16_N								UTF16_A + 13
-#define UTF16_O								UTF16_A + 14
-#define UTF16_P								UTF16_A + 15
-#define UTF16_Q								UTF16_A + 16
-#define UTF16_R								UTF16_A + 17
-#define UTF16_S								UTF16_A + 18
-#define UTF16_T								UTF16_A + 19
-#define UTF16_U								UTF16_A + 20
-#define UTF16_V								UTF16_A + 21
-#define UTF16_W								UTF16_A + 22
-#define UTF16_X								UTF16_A + 23
-#define UTF16_Y								UTF16_A + 24
-#define UTF16_Z								UTF16_A + 25
-
+#if defined(__cplusplus) || defined(c_plusplus)
+extern "C" {
+#endif
+ 
 /**
  * webvtt_wchar - A utf16 surrogate/character
  */
@@ -58,24 +14,50 @@ typedef webvtt_uint16 webvtt_wchar, *webvtt_wchar_ptr;
 /**
  * webvtt_string - A buffer of utf16 characters
  */
-typedef struct webvtt_string_t *webvtt_string;
+typedef struct webvtt_string_t webvtt_string;
 typedef struct webvtt_utf8_reader_t *webvtt_utf8_reader;
-typedef struct webvtt_string_list_t webvtt_string_list, *webvtt_string_list_ptr;
+typedef struct webvtt_string_data_t webvtt_string_data;
 
-/**
- * These objects are NOT reference counted, they
- * are not meant to be shared.
- *
- * If this is required by mozilla, it can be added.
- */
 struct
-webvtt_string_t
+webvtt_string_data_t
 {
+	struct webvtt_refcount_t refs;
 	webvtt_uint32 alloc;
 	webvtt_uint32 length;
 	webvtt_wchar *text;
 	webvtt_wchar array[1];
 };
+
+struct
+webvtt_string_t
+{
+	webvtt_string_data *d;
+};
+
+#	ifdef WEBVTT_INLINE
+static WEBVTT_INLINE const webvtt_wchar *
+webvtt_string_text(const webvtt_string *s)
+{
+	return s->d->text;
+}
+
+static WEBVTT_INLINE const webvtt_uint32
+webvtt_string_length(const webvtt_string *s)
+{
+	return s->d->length;
+}
+
+static WEBVTT_INLINE const webvtt_uint32
+webvtt_string_capacity(const webvtt_string *s)
+{
+	return s->d->alloc;
+}
+
+#	else
+#		define webvtt_string_text(s) ((s)->d->text)
+#		define webvtt_string_length(s) ((s)->d->length)
+#		define webvtt_string_capacity(s) ((s)->d->alloc)
+#	endif
 
 struct
 webvtt_utf8_reader_t
@@ -86,57 +68,63 @@ webvtt_utf8_reader_t
 	webvtt_uint32 nc; /* number of non-characters encountered */
 };
 
-struct
-webvtt_string_list_t
-{
-	webvtt_uint alloc;
-	webvtt_uint list_count;
-	webvtt_string *items;
-};
+WEBVTT_EXPORT void webvtt_init_string( webvtt_string *result );
+WEBVTT_EXPORT void webvtt_copy_string( webvtt_string *left, const webvtt_string *right );
+WEBVTT_EXPORT webvtt_status webvtt_create_string( webvtt_uint32 alloc, webvtt_string *result );
 
-WEBVTT_EXPORT webvtt_status webvtt_create_string( webvtt_uint32 alloc, webvtt_string *ppstr );
-WEBVTT_EXPORT void webvtt_delete_string( webvtt_string pstr );
+/**
+ * I'm sorry to impose COM-style stuff :(
+ */
+WEBVTT_EXPORT void webvtt_ref_string( webvtt_string *str );
+WEBVTT_EXPORT void webvtt_release_string( webvtt_string *str );
 
-WEBVTT_EXPORT webvtt_status webvtt_create_string_list( webvtt_string_list_ptr *string_list_pptr );
-WEBVTT_EXPORT void webvtt_delete_string_list( webvtt_string_list_ptr string_list_ptr );
-WEBVTT_EXPORT webvtt_status webvtt_add_to_string_list( webvtt_string_list_ptr string_list_ptr, webvtt_string string );
+/**
+ * "Unshare" a shared string, meaning allocate a new copy of the string if it's shared,
+ * so that we are not manipulating someone elses text
+ */
+WEBVTT_EXPORT webvtt_status webvtt_string_detach( webvtt_string *str );
 
 /**
  * Methods for appending data to strings.
  */
-WEBVTT_EXPORT webvtt_status webvtt_string_append_utf8( webvtt_string *ppstr, const webvtt_byte *buffer,
+WEBVTT_EXPORT webvtt_status webvtt_string_append_utf8( webvtt_string *str, const webvtt_byte *buffer,
 	webvtt_uint *pos, webvtt_uint len, webvtt_utf8_reader reader );
 
-WEBVTT_EXPORT webvtt_status append_wchar_to_wchar( webvtt_wchar *append_to, webvtt_uint len, webvtt_wchar *to_append, webvtt_uint start, webvtt_uint stop );
-WEBVTT_EXPORT webvtt_status webvtt_string_append_wchar( webvtt_string *append_to, webvtt_wchar *to_append, webvtt_uint len );
-WEBVTT_EXPORT webvtt_status webvtt_string_append_single_wchar( webvtt_string *append_to, webvtt_wchar to_append );
-WEBVTT_EXPORT webvtt_status webvtt_string_append_string( webvtt_string *append_to, webvtt_string to_append );
+WEBVTT_EXPORT webvtt_status webvtt_string_append( webvtt_string *str, const webvtt_wchar *to_append, webvtt_uint len );
+WEBVTT_EXPORT webvtt_status webvtt_string_putc( webvtt_string *str, webvtt_wchar to_append );
+
+#	ifdef WEBVTT_INLINE
+static WEBVTT_INLINE webvtt_status
+webvtt_string_append_string( webvtt_string *str, const webvtt_string *other )
+{
+	if( !str || !other )
+	{
+		return WEBVTT_INVALID_PARAM;
+	}
+	return webvtt_string_append( str, webvtt_string_text( other ), webvtt_string_length( other ) );
+}	 
+#	else
+#		define webvtt_string_append_string(str,other) ( ((str) && (other)) ? (webvtt_string_append( (str), webvtt_string_text( other ), \
+			webvtt_string_length( other ) ) : WEBVTT_INVALID_PARAM )
+#	endif
 
 /**
- * Compare two strings.
- * Return 1 if equal 0 if not equal.
+ * string lists
  */
-WEBVTT_EXPORT webvtt_status webvtt_compare_strings( webvtt_string one, webvtt_string two );
+struct
+webvtt_string_list_t
+{
+	webvtt_uint alloc;
+	webvtt_uint length;
+	webvtt_string *items;
+};
+typedef struct webvtt_string_list_t webvtt_string_list, *webvtt_string_list_ptr;
+ 
+WEBVTT_EXPORT webvtt_status webvtt_create_string_list( webvtt_string_list_ptr *string_list_pptr );
+WEBVTT_EXPORT void webvtt_delete_string_list( webvtt_string_list_ptr *string_list_ptr );
+WEBVTT_EXPORT webvtt_status webvtt_add_to_string_list( webvtt_string_list_ptr string_list_ptr, webvtt_string *string );
 
-/**
- * Compare two wchars.
- * Return 1 if equal 0 if not.
- */
-WEBVTT_EXPORT webvtt_status webvtt_compare_wchars( webvtt_wchar  *one, webvtt_uint one_len, webvtt_wchar *two, webvtt_uint two_len );
-
-/**
- * Returns successful if the character is a alphanumeric.
- */
-WEBVTT_EXPORT webvtt_status webvtt_is_alphanumeric( webvtt_wchar character );
-
-/**
- * Returns successful if the character is a digit.
- */
-WEBVTT_EXPORT webvtt_status webvtt_is_digit( webvtt_wchar character );
-
-/**
- * Advances a pointer past one LF or CR(LF) line ending.
- */
-WEBVTT_EXPORT webvtt_status webvtt_advance_past_line_ending( webvtt_wchar_ptr *position_pptr );
-
+#if defined(__cplusplus) || defined(c_plusplus)
+}
+#endif
 #endif

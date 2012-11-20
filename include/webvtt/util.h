@@ -1,5 +1,10 @@
 #ifndef __WEBVTT_UTIL_H__
 #	define __WEBVTT_UTIL_H__
+
+#if defined(__cplusplus) || defined(c_plusplus)
+extern "C" {
+#endif
+
 #	if defined(_WIN32) || defined(__WIN32__) || defined(__TOS_WIN__) || defined(__WINDOWS__)
 #		include "webvtt-config-win32.h"
 #		define WEBVTT_OS_WIN32 1
@@ -52,6 +57,14 @@
 #	endif
 #	ifndef WEBVTT_INTERN
 #		define WEBVTT_INTERN
+#	endif
+
+#	if defined(__cplusplus) || defined(c_plusplus)
+#		define WEBVTT_INLINE inline
+#	elif WEBVTT_CC_MSVC
+#		define WEBVTT_INLINE __forceinline
+#	elif WEBVTT_CC_GCC
+#		define WEBVTT_INLINE __inline__
 #	endif
 
 #	if WEBVTT_HAVE_STDINT
@@ -130,8 +143,8 @@ typedef enum webvtt_status_t webvtt_status;
  * Macros to filter out webvtt status returns.
  */
 
-#define WEBVTT_ENSURE_SUCCESS(status) ( status == WEBVTT_SUCCESS );
-#define WEBVTT_FAILED(status) ( status != WEBVTT_SUCCESS );
+#define WEBVTT_ENSURE_SUCCESS(status) ( (status) == WEBVTT_SUCCESS )
+#define WEBVTT_FAILED(status) ( (status) != WEBVTT_SUCCESS )
 
 enum
 webvtt_status_t
@@ -148,5 +161,44 @@ webvtt_status_t
 	WEBVTT_INVALID_TOKEN_STATE = -9,
 	WEBVTT_FAIL = -10
 };
+
+
+struct
+webvtt_refcount_t
+{
+#	if WEBVTT_OS_WIN32
+	long value;
+#	else
+	int value;
+#	endif
+};
+
+/**
+ * TODO: Replace these with atomic instructions for systems that provide it
+ */
+#	ifndef WEBVTT_ATOMIC_INC
+#		define WEBVTT_ATOMIC_INC(x) ( ++(x) )
+#	endif
+#	ifndef WEBVTT_ATOMIC_DEC
+#		define WEBVTT_ATOMIC_DEC(x) ( --(x) )
+#	endif
+
+#	if defined(WEBVTT_INLINE)
+static WEBVTT_INLINE int webvtt_ref( struct webvtt_refcount_t *ref )
+{
+	return WEBVTT_ATOMIC_INC(ref->value);
+}
+static WEBVTT_INLINE int webvtt_deref( struct webvtt_refcount_t *ref )
+{
+	return WEBVTT_ATOMIC_DEC(ref->value);
+}
+#	else
+#		define webvtt_ref(ref) ( WEBVTT_ATOMIC_INC((ref)->value) )
+#		define webvtt_deref(ref) ( WEBVTT_ATOMIC_DEC((ref)->value) )
+#	endif
+
+#if defined(__cplusplus) || defined(c_plusplus)
+}
+#endif
 
 #endif

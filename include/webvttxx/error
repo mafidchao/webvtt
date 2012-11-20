@@ -1,0 +1,29 @@
+#ifndef __WEBVTTXX_ERROR__
+#	define __WEBVTTXX_ERROR__
+#	include "base"
+#	include <webvtt/error.h>
+
+namespace WebVTT
+{
+
+class Error
+{
+public:
+	Error( uint line, uint column, webvtt_error error )
+		: _line(line), _column(column), _error(error), _message( webvtt_strerror(error) )
+	{
+	}
+	~Error()
+	{
+	}
+
+private:
+	const uint _line;
+	const uint _column;
+	const ::webvtt_error _error;
+	const char *_message;
+};
+
+}
+
+#endif

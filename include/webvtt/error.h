@@ -1,6 +1,11 @@
 #ifndef __WEBVTT_ERROR_H__
 #	define __WEBVTT_ERROR_H__
 #	include "util.h"
+
+#if defined(__cplusplus) || defined(c_plusplus)
+extern "C" {
+#endif
+
 typedef enum webvtt_error_t webvtt_error;
 
 enum
@@ -57,5 +62,9 @@ webvtt_error_t
 };
 
 WEBVTT_EXPORT const char *webvtt_strerror( webvtt_error );
+
+#if defined(__cplusplus) || defined(c_plusplus)
+}
+#endif
 
 #endif
