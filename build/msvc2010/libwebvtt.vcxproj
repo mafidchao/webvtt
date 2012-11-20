@@ -194,11 +194,11 @@
     <ClInclude Include="..\..\include\webvtt\string.h" />
     <ClInclude Include="..\..\include\webvtt\util.h" />
     <ClInclude Include="..\..\include\webvtt\parser.h" />
-    <ClInclude Include="..\..\src\libwebvtt\bytearray.h" />
-    <ClInclude Include="..\..\src\libwebvtt\cue.h" />
-    <ClInclude Include="..\..\src\libwebvtt\cuetext.h" />
-    <ClInclude Include="..\..\src\libwebvtt\parser.h" />
-    <ClInclude Include="..\..\src\libwebvtt\string.h" />
+    <ClInclude Include="..\..\src\libwebvtt\bytearray_internal.h" />
+    <ClInclude Include="..\..\src\libwebvtt\cuetext_internal.h" />
+    <ClInclude Include="..\..\src\libwebvtt\cue_internal.h" />
+    <ClInclude Include="..\..\src\libwebvtt\parser_internal.h" />
+    <ClInclude Include="..\..\src\libwebvtt\string_internal.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
