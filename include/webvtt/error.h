@@ -6,8 +6,6 @@
 extern "C" {
 #endif
 
-typedef enum webvtt_error_t webvtt_error;
-
 enum
 webvtt_error_t
 {
@@ -60,6 +58,7 @@ webvtt_error_t
 	/* A webvtt cue contains only a cue-id, and no cuetimes or payload. */
 	WEBVTT_CUE_INCOMPLETE,
 };
+typedef enum webvtt_error_t webvtt_error;
 
 WEBVTT_EXPORT const char *webvtt_strerror( webvtt_error );
 

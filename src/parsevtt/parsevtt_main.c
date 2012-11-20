@@ -1,5 +1,4 @@
 #include <webvtt/parser.h>
-#include <webvttxx/timestamp>
 #include <string.h>
 #include <stdio.h>
 #include <errno.h>
@@ -15,7 +14,7 @@ error( void *userdata, webvtt_uint line, webvtt_uint col, webvtt_error errcode )
 static void WEBVTT_CALLBACK 
 cue( void *userdata, webvtt_cue cue )
 {
-	webvtt_parse_cuetext( const_cast<const webvtt_wchar *>(webvtt_string_text(&cue->payload)), cue->node_head );
+	webvtt_parse_cuetext( (webvtt_string_text(&cue->payload)), cue->node_head );
 }
 
 int

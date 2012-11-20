@@ -13,9 +13,8 @@ typedef struct webvtt_cue_settings_t webvtt_cue_settings;
 typedef struct webvtt_node_t webvtt_node, *webvtt_node_ptr;
 typedef struct webvtt_leaf_node_t webvtt_leaf_node, *webvtt_leaf_node_ptr;
 typedef struct webvtt_internal_node_t webvtt_internal_node, *webvtt_internal_node_ptr;
-typedef enum webvtt_node_kind_t webvtt_node_kind;
-typedef enum webvtt_vertical_type webvtt_vertical_type;
-typedef enum webvtt_align_type webvtt_align_type;
+
+
 
 #define WEBVTT_AUTO (0xFFFFFFFF)
 	
@@ -54,6 +53,7 @@ webvtt_node_kind_t
 
 	WEBVTT_NODE_LEAF_END = 257
 };
+typedef enum webvtt_node_kind_t webvtt_node_kind;
 
 /**
  * Macros to assist in validating node kinds, so that C++ compilers don't complain (as long as they provide reinterpret_cast, which they should)
@@ -118,6 +118,7 @@ enum webvtt_vertical_type
 	WEBVTT_VERTICAL_LR = 1,
 	WEBVTT_VERTICAL_RL = 2
 };
+typedef enum webvtt_vertical_type webvtt_vertical_type;
 
 enum webvtt_align_type
 {
@@ -125,6 +126,7 @@ enum webvtt_align_type
 	WEBVTT_ALIGN_MIDDLE,
 	WEBVTT_ALIGN_END
 };
+typedef enum webvtt_align_type webvtt_align_type;
 
 struct
 webvtt_cue_settings_t

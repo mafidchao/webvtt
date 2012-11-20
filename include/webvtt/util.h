@@ -137,15 +137,6 @@ WEBVTT_EXPORT void *webvtt_alloc0( webvtt_uint nb );
 WEBVTT_EXPORT void webvtt_free( void *data );
 WEBVTT_EXPORT void webvtt_set_allocator( webvtt_alloc_fn_ptr alloc, webvtt_free_fn_ptr free, void *userdata );
 
-typedef enum webvtt_status_t webvtt_status;
-
-/**
- * Macros to filter out webvtt status returns.
- */
-
-#define WEBVTT_ENSURE_SUCCESS(status) ( (status) == WEBVTT_SUCCESS )
-#define WEBVTT_FAILED(status) ( (status) != WEBVTT_SUCCESS )
-
 enum
 webvtt_status_t
 {
@@ -162,6 +153,14 @@ webvtt_status_t
 	WEBVTT_FAIL = -10
 };
 
+typedef enum webvtt_status_t webvtt_status;
+
+/**
+ * Macros to filter out webvtt status returns.
+ */
+
+#define WEBVTT_ENSURE_SUCCESS(status) ( (status) == WEBVTT_SUCCESS )
+#define WEBVTT_FAILED(status) ( (status) != WEBVTT_SUCCESS )
 
 struct
 webvtt_refcount_t
