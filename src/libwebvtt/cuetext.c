@@ -147,7 +147,7 @@ webvtt_delete_cue_text_end_tag_token( webvtt_cue_text_end_tag_token_ptr end)
 }
 
 WEBVTT_INTERN void 
-webvtt_delete_cue_text_text_token(  webvtt_cue_text_text_token_ptr text )
+webvtt_delete_cue_text_text_token( webvtt_cue_text_text_token_ptr text )
 {
 	if( text )
 	{
