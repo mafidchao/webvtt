@@ -73,7 +73,22 @@ WEBVTT_EXPORT void webvtt_copy_string( webvtt_string *left, const webvtt_string 
 WEBVTT_EXPORT webvtt_status webvtt_create_string( webvtt_uint32 alloc, webvtt_string *result );
 
 /**
- * I'm sorry to impose COM-style stuff :(
+ * I've decided to add reference counting to the library, for certain classes, to better
+ * integrate them with the C++ bindings (reference counting is not atomic as of yet)
+ *
+ * Whenever someone acquires ownership of a string (EG it's included in some structure), they should increase
+ * the reference count with webvtt_ref_string( str );
+ * 
+ * When the object which has ownership of the string is finished with it, it should decrement the reference count
+ * using webvtt_release_string( str );
+ *
+ * This way, strings can be shared between multiple places, and will only be deleted when all references are released. 
+ *
+ * This effectively means that every instance of a string is a pointer to a pointer to a string (or a box containing a pointer
+ * to a string), so it's a bit more confusing. But using the C++ interface should make it fairly simple.
+ *
+ * Remember that this code is not mature and a final growable, shareable string representation has not yet been decided on.
+ *
  */
 WEBVTT_EXPORT void webvtt_ref_string( webvtt_string *str );
 WEBVTT_EXPORT void webvtt_release_string( webvtt_string *str );
