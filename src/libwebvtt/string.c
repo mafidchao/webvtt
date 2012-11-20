@@ -34,7 +34,7 @@
  * As such, the entire file is MIT-licensed.
  */
 
-#include "string.h"
+#include "string_internal.h"
 #include <stdlib.h>
 #include <string.h>
 

@@ -1,5 +1,5 @@
 #include <string.h>
-#include "bytearray.h"
+#include "bytearray_internal.h"
 
 #define CR (0x0D)
 #define LF (0x0A)

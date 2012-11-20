@@ -1,9 +1,9 @@
 #include <stdlib.h>
 #include <string.h>
-#include "parser.h"
-#include "cuetext.h"
-#include "cue.h"
-#include "string.h"
+#include "parser_internal.h"
+#include "cuetext_internal.h"
+#include "cue_internal.h"
+#include "string_internal.h"
 
 #ifdef min
 #	undef min

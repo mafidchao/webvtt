@@ -1,4 +1,4 @@
-#include "parser.h"
+#include "parser_internal.h"
 #include <string.h>
 #define FULLSTOP (0x2E)
 
