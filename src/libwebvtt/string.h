@@ -59,24 +59,24 @@
 static __WEBVTT_STRING_INLINE int
 webvtt_isalpha( webvtt_wchar ch )
 {
-	return !!( ( ( ch >= UTF16_CAPITAL_A ) && ( ch <= UTF16_CAPITAL_Z ) ) || ( ( ch >= UTF16_A ) && ( ch <= UTF16_Z ) ) );
+	return ( ( ( ch >= UTF16_CAPITAL_A ) && ( ch <= UTF16_CAPITAL_Z ) ) || ( ( ch >= UTF16_A ) && ( ch <= UTF16_Z ) ) );
 }
 static __WEBVTT_STRING_INLINE int
 webvtt_isdigit( webvtt_wchar ch )
 {
-	return !!( ( ch >= UTF16_DIGIT_ZERO ) && ( ch <= UTF16_DIGIT_NINE ) );
+	return ( ( ch >= UTF16_DIGIT_ZERO ) && ( ch <= UTF16_DIGIT_NINE ) );
 }
 
 static __WEBVTT_STRING_INLINE int
 webvtt_isalphanum( webvtt_wchar ch )
 {
-	return !!( webvtt_isalpha( ch ) || webvtt_isdigit( ch ) );
+	return ( webvtt_isalpha( ch ) || webvtt_isdigit( ch ) );
 }
 
 static __WEBVTT_STRING_INLINE int
 webvtt_iswhite( webvtt_wchar ch )
 {
-	return !!( ( ch == UTF16_CARRIAGE_RETURN ) || ( ch == UTF16_LINE_FEED ) || ( ch == UTF16_FORM_FEED ) 
+	return ( ( ch == UTF16_CARRIAGE_RETURN ) || ( ch == UTF16_LINE_FEED ) || ( ch == UTF16_FORM_FEED ) 
 			|| ( ch == UTF16_TAB ) || ( ch == UTF16_SPACE ) ) ;
 }
 

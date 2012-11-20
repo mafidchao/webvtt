@@ -403,7 +403,7 @@ webvtt_cue_text_tokenizer_escape_state( webvtt_wchar_ptr *position_pptr,
 		/**
 		 * Character is alphanumeric. This means we are in the body of the escape sequence. 
 		 */
-		else if( webvtt_isalphanum( **position_pptr ) == WEBVTT_SUCCESS )
+		else if( webvtt_isalphanum( **position_pptr ) )
 		{
 			CHECK_MEMORY_OP_JUMP( status, webvtt_string_putc( &buffer, **position_pptr ) );
 		}
@@ -437,7 +437,7 @@ webvtt_cue_text_tokenizer_tag_state( webvtt_wchar_ptr *position_pptr,
 		{
 			*token_state_ptr = START_TAG_ANNOTATION;
 		}
-		else if( webvtt_isdigit( **position_pptr ) == WEBVTT_SUCCESS )
+		else if( webvtt_isdigit( **position_pptr )  )
 		{
 			CHECK_MEMORY_OP( webvtt_string_putc( result, **position_pptr ) );
 			*token_state_ptr = TIME_STAMP_TAG;
