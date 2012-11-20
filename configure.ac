@@ -46,7 +46,6 @@ AC_ARG_ENABLE([gprof],
 AC_CHECK_HEADER([stdint.h],[],[])
 AC_CHECK_HEADER([stdlib.h],[],[AC_ERROR([error: missing 'stdlib.h'])])
 AC_CHECK_HEADER([string.h],[],[AC_ERROR([error: missing 'string.h'])])
-AC_CHECK_HEADER([limits.h],[],[AC_ERROR([error: missing 'limits.h'])])
 
 # Checks for library functions.
 AC_FUNC_ERROR_AT_LINE

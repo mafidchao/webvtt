@@ -37,7 +37,6 @@
 #include "string.h"
 #include <stdlib.h>
 #include <string.h>
-//#include <limits.h>
 
 #define REPLACEMENT_CHAR     (0xFFFD)
 #define MAXIMUM_UCS2         (0x0000FFFF)
