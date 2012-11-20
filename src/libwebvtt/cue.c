@@ -219,7 +219,7 @@ webvtt_attach_internal_node( webvtt_internal_node_ptr current_ptr, webvtt_node_p
 		return WEBVTT_INVALID_PARAM;
 	}
 
-	if( current_ptr->length + 1 <= ( current_ptr->alloc / 3 ) * 2 )
+	if( current_ptr->length + 1 >= ( current_ptr->alloc / 3 ) * 2 )
 	{
 		webvtt_node_ptr *arr, *old;
 		current_ptr->alloc = current_ptr->alloc ? current_ptr->alloc * 2 : 8;
