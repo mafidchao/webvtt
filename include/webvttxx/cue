@@ -81,7 +81,7 @@ public:
 	inline Orientation orientation() const
 	{
 		const Orientation orientations[] = { Horizontal, Vertical };
- 		return orientations[!!cue->settings.vertical];
+		return orientations[!!cue->settings.vertical];
 	}
 
 	inline Direction direction() const { return (Direction)cue->settings.vertical; }
@@ -93,8 +93,8 @@ public:
 
 	inline bool isHorizontal() const { return orientation() == Horizontal; }
 	inline bool isVertical() const { return orientation() == Vertical; }
-  	inline bool isVerticalLeftToRight() const { return direction() == LeftToRight; }
- 	inline bool isVerticalRightToLeft() const { return direction() == RightToLeft; }
+	inline bool isVerticalLeftToRight() const { return direction() == LeftToRight; }
+	inline bool isVerticalRightToLeft() const { return direction() == RightToLeft; }
 	inline bool isRelativeLinePosition() const { return !!(cue->settings.line_is_relative); }
 	inline bool isAlignedToStart() const { return alignment() == Start; }
 	inline bool isAlignedToMiddle() const { return alignment() == Middle; }

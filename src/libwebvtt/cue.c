@@ -29,6 +29,8 @@ webvtt_create_cue( webvtt_cue *pcue )
 	 *
 	 * Let cue's text track cue alignment be middle alignment.
 	 */
+	webvtt_init_string( &cue->id );
+	webvtt_init_string( &cue->payload );
 	cue->snap_to_lines = 1;
 	cue->settings.position = 50;
 	cue->settings.size = 100;
