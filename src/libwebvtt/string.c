@@ -34,10 +34,9 @@
  * As such, the entire file is MIT-licensed.
  */
 
+#include "string_internal.h"
 #include <stdlib.h>
-#include <webvtt/string.h>
 #include <string.h>
-#include <limits.h>
 
 #define REPLACEMENT_CHAR     (0xFFFD)
 #define MAXIMUM_UCS2         (0x0000FFFF)
@@ -60,69 +59,134 @@
 /* from http://source.icu-project.org/repos/icu/icu/trunk/source/common/unicode/utf.h */
 #define U_IS_SURROGATE(c) (((c)&0xfffff800)==0xd800)
 
+static webvtt_string_data empty_string =
+{
+	{ 1 },
+	0,
+	0,
+	empty_string.array,
+	{ 0x0000 }
+};
+
+WEBVTT_EXPORT void
+webvtt_init_string( webvtt_string *result )
+{
+	if( result )
+	{
+		result->d = &empty_string;
+		webvtt_ref( &result->d->refs );
+	}
+}
+
+WEBVTT_EXPORT void
+webvtt_copy_string( webvtt_string *left, const webvtt_string *right )
+{
+	if( left )
+	{
+		webvtt_string_data *d = left->d;
+		if( right )
+		{
+			left->d = right->d;
+		}
+		else
+		{
+			left->d = &empty_string;
+		}
+		webvtt_ref( &left->d->refs );
+		if( webvtt_deref( &d->refs ) == 0 )
+		{
+			/**
+			 * We don't try to check if we're freeing a static string or not.
+			 * Static strings should be initialized with a reference count of '1',
+			 * and should be ref'd or deref'd properly.
+			 *
+			 * If this is difficult, use the C++ bindings!
+			 */
+			webvtt_free( d );
+		}
+	}
+}
+
+/**
+ * "Detach" a shared string, so that it's safely mutable
+ */
+WEBVTT_EXPORT webvtt_status
+webvtt_string_detach( /* in-out */ webvtt_string *str )
+{
+	webvtt_string_data *d, *q;
+	if( !str )
+	{
+		return WEBVTT_INVALID_PARAM;
+	}
+	q = str->d;
+	if( q->refs.value == 1 )
+	{
+		return WEBVTT_SUCCESS;
+	}
+	d = (webvtt_string_data *)webvtt_alloc( sizeof( webvtt_string_data ) + ( sizeof(webvtt_wchar) * str->d->alloc ) );
+	d->refs.value = 1;
+	d->text = d->array;
+	d->alloc = q->alloc;
+	d->length = q->length;
+	memcpy( d->text, q->text, q->length );
+	str->d = d;
+	if( webvtt_deref(&q->refs) == 0 )
+	{
+		webvtt_free( q );
+	}
+	return WEBVTT_SUCCESS;
+}
+
 
 /**
  * Allocate new string.
  */
 WEBVTT_EXPORT webvtt_status
-webvtt_create_string( webvtt_uint32 alloc, webvtt_string *ppstr )
+webvtt_create_string( webvtt_uint32 alloc, webvtt_string *s )
 {
-	webvtt_string s;
-	if( !ppstr )
+	webvtt_string_data *d;
+	if( !s )
 	{
 		return WEBVTT_INVALID_PARAM;
 	}
-	s = (webvtt_string)webvtt_alloc( sizeof(struct webvtt_string_t) + (alloc*sizeof(webvtt_wchar)) );
-	if( !s )
+	d = (webvtt_string_data *)webvtt_alloc( sizeof(webvtt_string_data) + (alloc*sizeof(webvtt_wchar)) );
+	if( !d )
 	{
 		return WEBVTT_OUT_OF_MEMORY;
 	}
 	
-	s->alloc = alloc;
-	s->length = 0;
-	s->text = s->array;
-	s->text[0] = 0;
-	*ppstr = s;
+	d->alloc = alloc;
+	d->length = 0;
+	d->text = d->array;
+	d->text[0] = 0;
+	s->d = d;
 	return WEBVTT_SUCCESS;
+}
+
+WEBVTT_EXPORT void
+webvtt_ref_string( webvtt_string *str )
+{
+	if( str )
+	{
+		webvtt_ref( &str->d->refs );
+	}
 }
 
 /**
  * Delete string
  */
 WEBVTT_EXPORT void
-webvtt_delete_string( webvtt_string pstr )
+webvtt_release_string( webvtt_string *str )
 {
-	if( pstr )
+	if( str )
 	{
-		webvtt_free( pstr );
-	}
-}
-
-WEBVTT_EXPORT webvtt_status 
-webvtt_create_string_list( webvtt_string_list_ptr *string_list_pptr )
-{
-	webvtt_string_list_ptr temp_string_list_ptr = (webvtt_string_list_ptr)malloc( sizeof(*temp_string_list_ptr) );
-
-	if( !temp_string_list_ptr )
-		return WEBVTT_OUT_OF_MEMORY;
-
-	temp_string_list_ptr->alloc = 0;
-	temp_string_list_ptr->items = 0;
-	temp_string_list_ptr->list_count = NULL;
-
-	*string_list_pptr = temp_string_list_ptr;
-
-	return WEBVTT_SUCCESS;
-}
-
-WEBVTT_EXPORT void 
-webvtt_delete_string_list( webvtt_string_list_ptr string_list_ptr )
-{
-	int i;
-
-	for( i = 0; i < string_list_ptr->list_count; i++ )
-	{
-		webvtt_delete_string( string_list_ptr->items[i] );
+		webvtt_string_data *d = str->d;
+		str->d = &empty_string;
+		webvtt_ref( &str->d->refs );
+		if( webvtt_deref( &d->refs ) == 0 )
+		{
+			webvtt_free( d );
+		}
 	}
 }
 
@@ -130,7 +194,7 @@ webvtt_delete_string_list( webvtt_string_list_ptr string_list_ptr )
  * Reallocate string.
  */
 static webvtt_status
-grow( webvtt_uint need, webvtt_string *ppstr )
+grow( webvtt_uint need, webvtt_string *str )
 {
 	/**
 	 * Grow to at least 'need' characters. Power of 2 growth.
@@ -140,8 +204,8 @@ grow( webvtt_uint need, webvtt_string *ppstr )
 	 */
 	static const webvtt_uint page = 0x1000;
 	webvtt_uint32 n;
-	webvtt_string p = *ppstr, s;
-	webvtt_uint32 grow = sizeof(*p) + sizeof(webvtt_wchar) * (p->length + need);
+	webvtt_string_data *p, *d = str->d;
+	webvtt_uint32 grow = sizeof(*d) + ( sizeof(webvtt_wchar) * (d->length + need) );
 	if( grow < page )
 	{
 		n = page;
@@ -166,18 +230,23 @@ grow( webvtt_uint need, webvtt_string *ppstr )
 			n = n * 2;
 		} while ( n < grow );
 	}
-	s = (webvtt_string)webvtt_alloc( n );
-	if( !s )
+	p = (webvtt_string_data *)webvtt_alloc( n );
+	if( !p )
 	{
 		return WEBVTT_OUT_OF_MEMORY;
 	}
-	s->alloc = (n - sizeof(*p)) / sizeof(webvtt_wchar);
-	s->length = p->length;
-	s->text = s->array;
-	memcpy( s->text, p->text, sizeof(webvtt_wchar) * p->length );
-	s->text[ s->length ] = 0;
-	*ppstr = s;
-	webvtt_free( p );
+
+	p->refs.value = 1;
+	p->alloc = (n - sizeof(*p)) / sizeof(webvtt_wchar);
+	p->length = d->length;
+	p->text = p->array;
+	memcpy( p->text, d->text, sizeof(webvtt_wchar) * p->length );
+	p->text[ p->length ] = 0;
+	str->d = p;
+	if( webvtt_deref( &d->refs ) == 0 )
+	{
+		webvtt_free( d );
+	}
 	return WEBVTT_SUCCESS;
 }
 
@@ -188,13 +257,12 @@ grow( webvtt_uint need, webvtt_string *ppstr )
 	do \
 	{ \
 		webvtt_uint need = (webvtt_uint)(nchar); \
-		if( (s->length + need) >= s->alloc ) \
+		if( (str->d->length + need) >= str->d->alloc ) \
 		{ \
-			if( (result = grow( need, ppstr )) != WEBVTT_SUCCESS ) \
+			if( (result = grow( need, str )) != WEBVTT_SUCCESS ) \
 			{ \
 				goto _end; \
 			} \
-			s = *ppstr; \
 		} \
 	} while(0)
 	
@@ -224,20 +292,19 @@ static const webvtt_uint32 utf8_min_uc[] =
 /**
  * Append UTF8 text to string, reallocating as needed.
  */
-#define PUTC(ch) s->text[ s->length++ ] = (webvtt_wchar)(ch)
+#define PUTC(ch) str->d->text[ str->d->length++ ] = (webvtt_wchar)(ch)
 
 WEBVTT_EXPORT webvtt_status
-webvtt_string_append_utf8( webvtt_string *ppstr, 
+webvtt_string_append_utf8( webvtt_string *str, 
 							const webvtt_byte *buf, 
 							webvtt_uint *pos, 
 							webvtt_length len, 
 							webvtt_utf8_reader r )
 {
-	webvtt_string s;
 	webvtt_status result;
 	webvtt_uint32 uc = 0, bytes_left = 0, nc = 0, min_uc = 0;
 	const webvtt_byte *src, *end;
-	if( !ppstr || !*ppstr || !buf || !pos )
+	if( !str || !buf || !pos )
 	{
 		return WEBVTT_INVALID_PARAM;
 	}
@@ -248,7 +315,6 @@ webvtt_string_append_utf8( webvtt_string *ppstr,
 		nc = r->nc;
 		min_uc = r->min_uc;
 	}
-	s = *ppstr;
 	
 	src = buf + *pos;
 	end = buf + len;
@@ -265,7 +331,7 @@ webvtt_string_append_utf8( webvtt_string *ppstr,
 			{
 				/* ASCII character. */
 				GROW(1);
-				s->text[ s->length++ ] = (webvtt_wchar)(c);
+				str->d->text[ str->d->length++ ] = (webvtt_wchar)(c);
 			}
 			else
 			{
@@ -286,7 +352,7 @@ webvtt_string_append_utf8( webvtt_string *ppstr,
 				 * well something is wrong... let's add a replacement character and reset.
 				 */
 				GROW(1);
-				s->text[ s->length++ ] = (webvtt_wchar)(REPLACEMENT_CHAR);
+				str->d->text[ str->d->length++ ] = (webvtt_wchar)(REPLACEMENT_CHAR);
 				bytes_left = 0;
 				++nc;
 				continue;
@@ -311,15 +377,15 @@ webvtt_string_append_utf8( webvtt_string *ppstr,
 					{
 						/* fits in 16 bits */
 						GROW(1);
-						s->text[ s->length++ ] = (webvtt_wchar)(uc);
+						PUTC(uc);
 					}
 					else
 					{
 						/* write out the surrogates */
 						GROW(2);
 						uc -= HALF_BASE;
-						s->text[ s->length++ ] = (webvtt_wchar)( (uc >> HALF_SHIFT) + SURROGATE_HIGH_START );
-						s->text[ s->length++ ] = (webvtt_wchar)( (uc & HALF_MASK) + SURROGATE_LOW_START );
+						PUTC( (uc >> HALF_SHIFT) + SURROGATE_HIGH_START );
+						PUTC( (uc & HALF_MASK) + SURROGATE_LOW_START );
 					}
 				}
 			}
@@ -330,7 +396,7 @@ _end:
 	 * NULL-terminate the string (Should always be room for this as there is always one
 	 * more 16bit character than 'alloc' indicates.
 	 */
-	s->text[ s->length ] = 0x0000;
+	str->d->text[ str->d->length ] = 0x0000;
 	if( r )
 	{
 		r->uc = uc;
@@ -343,154 +409,115 @@ _end:
 }
 
 WEBVTT_EXPORT webvtt_status 
-append_wchar_to_wchar( webvtt_wchar *append_to, webvtt_uint len, webvtt_wchar *to_append, webvtt_uint start, webvtt_uint stop )
+webvtt_string_append( webvtt_string *str, const webvtt_wchar *to_append, webvtt_uint len )
 {
-	int i;
+	webvtt_status result;
 
-	if( !append_to || !to_append )
+	if( !to_append || !str )
 		return WEBVTT_INVALID_PARAM;
 
-	for(i = len; i < len + stop; i++, start++ )
-		append_to[i] = to_append[start];
-	append_to[i] = UTF16_NULL_BYTE;
+	webvtt_string_detach( str );
+
+	GROW(len);
+	memcpy( str->d->text + str->d->length, to_append, sizeof(webvtt_wchar) * len );
+	str->d->length += len;
+	str->d->text[ str->d->length ] = 0;
 
 	return WEBVTT_SUCCESS;
+_end:
+	return result;
 }
 
 WEBVTT_EXPORT webvtt_status 
-webvtt_string_append_wchar( webvtt_string *append_to, webvtt_wchar *to_append, webvtt_uint len )
+webvtt_string_putc( webvtt_string *str, webvtt_wchar to_append )
 {
-	webvtt_status status;
-
-	if( !to_append || !append_to )
-		return WEBVTT_INVALID_PARAM;
-
-	if( ( status = grow( (*append_to)->length + len, &(*append_to) ) ) != WEBVTT_SUCCESS )
-		return status;
-
-	if( ( status = append_wchar_to_wchar( (*append_to)->text, (*append_to)->length, to_append, 0, len ) ) != WEBVTT_SUCCESS )
-		return status;
-
-	(*append_to)->length += len;
-
-	return WEBVTT_SUCCESS;
-}
-
-WEBVTT_EXPORT webvtt_status 
-webvtt_string_append_single_wchar( webvtt_string *append_to, webvtt_wchar to_append )
-{
-	webvtt_wchar temp[1]; 
-
-	if( !append_to )
-		return WEBVTT_INVALID_PARAM;
-
-	temp[0] = to_append;
-
-	return webvtt_string_append_wchar( append_to, temp, 1 );
-}
-
-WEBVTT_EXPORT webvtt_status 
-webvtt_string_append_string( webvtt_string *append_to, webvtt_string to_append )
-{
-	webvtt_status status;
-
-	if( ( status = webvtt_string_append_wchar( append_to, to_append->text, to_append->length ) ) != WEBVTT_SUCCESS )
-		return status;
-
-	return WEBVTT_SUCCESS;
-}
-
-WEBVTT_EXPORT webvtt_status 
-webvtt_compare_wchars( webvtt_wchar  *one, webvtt_uint one_len, webvtt_wchar *two, webvtt_uint two_len )
-{
-	int i;
-
-	/* Should we return a webvtt_status to account for this case here? */
-	if( !one || !two )
-		return WEBVTT_INVALID_PARAM;
-	
-	if( one_len != two_len )
-		return WEBVTT_FAIL;
-
-	for( i = 0; i < one_len; i++ )
-	{
-		if( one[i] != two[i] )
-		{
-			return WEBVTT_FAIL;
-		}
-	}
-
-	return WEBVTT_SUCCESS;
-}
-
-WEBVTT_EXPORT webvtt_status 
-webvtt_compare_strings( webvtt_string one, webvtt_string two )
-{
-	if( !one || !two )
-		return WEBVTT_INVALID_PARAM;
-
-	return webvtt_compare_wchars( one->text, one->length, two->text, two->length );
-}
-
-WEBVTT_EXPORT webvtt_status 
-webvtt_add_to_string_list( webvtt_string_list_ptr string_list_ptr, webvtt_string string )
-{
-	if( !string )
+	webvtt_status result;
+	if( !str )
 	{
 		return WEBVTT_INVALID_PARAM;
 	}
 
-	if( string_list_ptr->alloc == string_list_ptr->list_count )
-		string_list_ptr->alloc += 4;
+	if( WEBVTT_FAILED(result = webvtt_string_detach( str ) ) )
+	{
+		return result;
+	}
 
-	if( !string_list_ptr->alloc == 0 )
-		string_list_ptr->items = (webvtt_string *)malloc( sizeof(webvtt_string) );
-	else
-		string_list_ptr->items = (webvtt_string *)realloc( string_list_ptr->items, sizeof(webvtt_string *) * string_list_ptr->alloc );
-	
-	if( !string_list_ptr->items )
+	GROW(1);
+	PUTC(to_append);
+	str->d->text[ str->d->length ] = 0;
+_end:
+	return result;
+}
+
+/**
+ * String lists
+ */
+WEBVTT_EXPORT webvtt_status 
+webvtt_create_string_list( webvtt_string_list_ptr *result )
+{
+	webvtt_string_list_ptr list;
+	if( !result )
+	{
+		return WEBVTT_INVALID_PARAM;
+	}
+
+	list = (webvtt_string_list_ptr)webvtt_alloc0( sizeof(*list) );
+
+	if( !list )
+	{
 		return WEBVTT_OUT_OF_MEMORY;
-	
-	string_list_ptr->items[string_list_ptr->list_count++] = string;
+	}
+
+	*result = list;
 
 	return WEBVTT_SUCCESS;
 }
 
-WEBVTT_EXPORT webvtt_status 
-webvtt_is_alphanumeric( webvtt_wchar character )
+WEBVTT_EXPORT void 
+webvtt_delete_string_list( webvtt_string_list_ptr *list )
 {
-	if( ( character >= UTF16_DIGIT_ZERO && character <= UTF16_DIGIT_NINE ) || ( character >= UTF16_CAPITAL_A && character <= UTF16_CAPITAL_Z ) ||
-		( character >= UTF16_A && character <= UTF16_Z ) )
-		return WEBVTT_SUCCESS;
-	return WEBVTT_FAIL;
+	webvtt_uint i;
+
+	if( list && *list )
+	{
+		webvtt_string_list_ptr l = *list;
+		*list = 0;
+		if( l->items )
+		{
+			for( i = 0; i < l->length; i++ )
+			{
+				webvtt_release_string( &l->items[i] );
+			}
+			webvtt_free( l->items );
+		}
+		webvtt_free( l );
+	}
 }
 
 WEBVTT_EXPORT webvtt_status 
-webvtt_is_digit( webvtt_wchar character )
+webvtt_add_to_string_list( webvtt_string_list_ptr list, webvtt_string *str )
 {
-	if( character >= UTF16_DIGIT_ZERO && character <= UTF16_DIGIT_NINE )
-		return WEBVTT_SUCCESS;
-	return WEBVTT_FAIL;
-}
-
-WEBVTT_EXPORT webvtt_status 
-webvtt_advance_past_line_ending( webvtt_wchar_ptr *position_pptr )
-{
-	int done = 0;
-
-	if( !position_pptr && !*position_pptr )
+	if( !list || !str )
 	{
 		return WEBVTT_INVALID_PARAM;
 	}
 
-	while ( !done )
+	if( list->length + 1 <= ( (list->alloc / 3) * 2 ) )
 	{
-		if( **position_pptr == UTF16_CARRIAGE_RETURN || **position_pptr == UTF16_LINE_FEED ||
-			**position_pptr == UTF16_FORM_FEED || **position_pptr == UTF16_TAB || **position_pptr == UTF16_SPACE )
-			(*position_pptr)++;
-		else
-			done = 1;
+		webvtt_string *arr, *old;
+		list->alloc = list->alloc == 0 ? 8 : list->alloc * 2;
+		arr = (webvtt_string *)webvtt_alloc0( sizeof(webvtt_string) * list->alloc );
+		if( !arr )
+		{
+			return WEBVTT_OUT_OF_MEMORY;
+		}
+		memcpy( arr, list->items, sizeof(webvtt_string) * list->length );
+		old = list->items;
+		list->items = arr;
+		webvtt_free( old );
 	}
-
+	
+	list->items[list->length].d = str->d;
+	webvtt_ref_string( list->items + list->length++ );
 	return WEBVTT_SUCCESS;
 }

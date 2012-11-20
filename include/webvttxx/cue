@@ -1,0 +1,109 @@
+#ifndef __WEBVTTXX_CUE__
+#	define __WEBVTTXX_CUE__
+
+#	include <webvtt/cue.h>
+#	include "base"
+#	include "timestamp"
+#	include "string"
+
+namespace WebVTT
+{
+
+class Cue
+{
+private:
+	friend class AbstractParser;
+	friend class CueBuilder;
+	Cue( webvtt_cue pcue );
+
+	/**
+	 * No copying okay? Because we aren't reference counting cues yet...
+	 */
+	Cue( const Cue &other );
+	Cue &operator=( const Cue &other );
+
+public:
+	enum Orientation
+	{
+		Horizontal,
+		Vertical
+	};
+
+	enum Direction
+	{
+		Default,
+		LeftToRight,
+		RightToLeft
+	};
+
+	enum Align
+	{
+		Start = WEBVTT_ALIGN_START,
+		Middle = WEBVTT_ALIGN_MIDDLE,
+		End = WEBVTT_ALIGN_END
+	};
+	inline Cue() : cue(0) {}
+
+	inline ~Cue()
+	{
+		if( cue )
+		{
+			webvtt_delete_cue(&cue);
+		}
+	}
+
+	inline Timestamp startTime() const
+	{
+		return Timestamp(cue->from);
+	}
+
+	inline Timestamp endTime() const
+	{
+		return Timestamp(cue->until);
+	}
+
+	inline const String id() const
+	{
+		return String(&cue->id);
+	}
+
+	inline const String payload() const
+	{
+		return String(&cue->payload);
+	}
+	
+	/**
+	 * Cue settings
+	 * These helper functions allow applications to query for data about how to render the cue as a whole
+	 */
+	inline bool snapToLines() const { return !!cue->snap_to_lines; }
+
+	inline Orientation orientation() const
+	{
+		const Orientation orientations[] = { Horizontal, Vertical };
+		return orientations[!!cue->settings.vertical];
+	}
+
+	inline Direction direction() const { return (Direction)cue->settings.vertical; }
+	inline float relativeLinePosition() const { return ( 1.f / 100.f ) * (float)cue->settings.line.relative_position; }
+	inline int lineNumber() const { return cue->settings.line.no; }
+	inline float textPosition() const { return ( 1.f / 100.f ) * (float)cue->settings.position; }
+	inline float size() const { return ( 1.f / 100.f ) * (float)cue->settings.size; }
+	inline Align alignment() const { return (Align)(cue->settings.align); }
+
+	inline bool isHorizontal() const { return orientation() == Horizontal; }
+	inline bool isVertical() const { return orientation() == Vertical; }
+	inline bool isVerticalLeftToRight() const { return direction() == LeftToRight; }
+	inline bool isVerticalRightToLeft() const { return direction() == RightToLeft; }
+	inline bool isRelativeLinePosition() const { return !!(cue->settings.line_is_relative); }
+	inline bool isAlignedToStart() const { return alignment() == Start; }
+	inline bool isAlignedToMiddle() const { return alignment() == Middle; }
+	inline bool isAlignedToEnd() const { return alignment() == End; }
+
+private:
+	webvtt_cue cue;
+};
+
+}
+
+#endif

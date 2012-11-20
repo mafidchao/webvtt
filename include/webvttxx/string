@@ -1,0 +1,87 @@
+#ifndef __WEBVTTXX_STRING__
+#	define __WEBVTTXX_STRING__
+
+#	include <webvtt/string.h>
+#	include "base"
+
+namespace WebVTT
+{
+
+class String
+{
+public:
+	inline String()
+	{
+		webvtt_init_string( &string );
+	}
+
+	inline String( webvtt_string *other )
+	{
+		webvtt_copy_string( &string, other );
+	}
+
+	/**
+	 * Copy constructors
+	 */
+	inline String( const String &other )
+	{
+		webvtt_copy_string( &string, &other.string );
+	}
+
+	inline String &operator=( const String &other )
+	{
+		webvtt_copy_string( &string, &other.string );
+	}
+
+	inline ~String()
+	{
+		webvtt_release_string( &string );
+	}
+
+	inline void detach()
+	{
+		webvtt_string_detach( &string );
+	}
+
+	inline const wchar *text() const
+	{
+		return webvtt_string_text(&string);
+	}
+
+	inline uint length() const
+	{
+		return webvtt_string_length(&string);
+	}
+
+	inline uint capacity() const
+	{
+		return webvtt_string_capacity(&string);
+	}
+
+	inline String &append( wchar ch )
+	{
+		webvtt_status status;
+		if( WEBVTT_FAILED(status = webvtt_string_putc( &string, ch ) ) )
+		{
+			// TODO: Throw exception on errors
+		}
+		return *this;
+	}
+
+	inline String &append( const String &other, int len = -1 )
+	{
+		webvtt_status status;
+		if( WEBVTT_FAILED(status = webvtt_string_append( &string, other.text(), len < 0 ? other.length() : (uint)len ) ) )
+		{
+			// TODO: Throw exception on errors
+		}
+		return *this;
+	}
+
+private:
+	webvtt_string string;
+};
+
+}
+
+#endif

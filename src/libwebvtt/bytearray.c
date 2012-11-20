@@ -1,5 +1,5 @@
 #include <string.h>
-#include "bytearray.h"
+#include "bytearray_internal.h"
 
 #define CR (0x0D)
 #define LF (0x0A)
@@ -15,7 +15,7 @@ webvtt_create_bytearray( webvtt_uint32 alloc, webvtt_bytearray *pba )
 	{
 		return WEBVTT_INVALID_PARAM;
 	}
-	s = webvtt_alloc( sizeof(struct webvtt_bytearray_t) + (alloc*sizeof(webvtt_byte)) );
+	s = (webvtt_bytearray)webvtt_alloc( sizeof(struct webvtt_bytearray_t) + (alloc*sizeof(webvtt_byte)) );
 	if( !s )
 	{
 		return WEBVTT_OUT_OF_MEMORY;

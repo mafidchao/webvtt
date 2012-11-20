@@ -1,7 +1,7 @@
-#ifndef __PARSER_H__
-#	define __PARSER_H__
+#ifndef __INTERN_PARSER_H__
+#	define __INTERN_PARSER_H__
 #	include <webvtt/parser.h>
-#	include "bytearray.h"
+#	include "bytearray_internal.h"
 
 typedef enum webvtt_token_t webvtt_token;
 

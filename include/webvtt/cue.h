@@ -3,15 +3,18 @@
 #	include "util.h"
 #	include <webvtt/string.h>
 
+#if defined(__cplusplus) || defined(c_plusplus)
+extern "C" {
+#endif
+
 typedef struct webvtt_cue_t *webvtt_cue;
 typedef double webvtt_timestamp_t, webvtt_timestamp;
 typedef struct webvtt_cue_settings_t webvtt_cue_settings;
 typedef struct webvtt_node_t webvtt_node, *webvtt_node_ptr;
 typedef struct webvtt_leaf_node_t webvtt_leaf_node, *webvtt_leaf_node_ptr;
 typedef struct webvtt_internal_node_t webvtt_internal_node, *webvtt_internal_node_ptr;
-typedef enum webvtt_node_kind_t webvtt_node_kind;
-typedef enum webvtt_vertical_type webvtt_vertical_type;
-typedef enum webvtt_align_type webvtt_align_type;
+
+
 
 #define WEBVTT_AUTO (0xFFFFFFFF)
 	
@@ -50,6 +53,7 @@ webvtt_node_kind_t
 
 	WEBVTT_NODE_LEAF_END = 257
 };
+typedef enum webvtt_node_kind_t webvtt_node_kind;
 
 /**
  * Macros to assist in validating node kinds, so that C++ compilers don't complain (as long as they provide reinterpret_cast, which they should)
@@ -60,7 +64,7 @@ webvtt_node_kind_t
 #	define WEBVTT_CAST(Type,Val) ((Type)(Val))
 #endif
 
-#define WEBVTT_IS_LEAF(Kind) ( (Kind) & WEBVTT_NODE_LEAF != 0 )
+#define WEBVTT_IS_LEAF(Kind) ( ((Kind) & WEBVTT_NODE_LEAF) != 0 )
 #define WEBVTT_NODE_INDEX(Kind) ( (Kind) & ~WEBVTT_NODE_LEAF )
 #define WEBVTT_IS_VALID_LEAF_NODE(Kind) ( WEBVTT_IS_LEAF(Kind) && (WEBVTT_NODE_INDEX(Kind) >= WEBVTT_NODE_LEAF_START && WEBVTT_NODE_INDEX(Kind) <= WEBVTT_NODE_LEAF_END ) )
 #define WEBVTT_IS_VALID_INTERNAL_NODE(Kind) ( (!WEBVTT_IS_LEAF(Kind)) && (WEBVTT_NODE_INDEX(Kind) >= WEBVTT_NODE_INTERNAL_START && WEBVTT_NODE_INDEX(Kind) <= WEBVTT_NODE_INTERNAL_END) )
@@ -92,7 +96,7 @@ webvtt_internal_node_t
 	webvtt_string_list_ptr css_classes_ptr;
 
 	webvtt_uint alloc;
-	webvtt_uint child_node_count;
+	webvtt_uint length;
 	webvtt_node_ptr *children;
 };
 
@@ -114,6 +118,7 @@ enum webvtt_vertical_type
 	WEBVTT_VERTICAL_LR = 1,
 	WEBVTT_VERTICAL_RL = 2
 };
+typedef enum webvtt_vertical_type webvtt_vertical_type;
 
 enum webvtt_align_type
 {
@@ -121,6 +126,7 @@ enum webvtt_align_type
 	WEBVTT_ALIGN_MIDDLE,
 	WEBVTT_ALIGN_END
 };
+typedef enum webvtt_align_type webvtt_align_type;
 
 struct
 webvtt_cue_settings_t
@@ -160,5 +166,9 @@ webvtt_cue_t
 WEBVTT_EXPORT webvtt_status webvtt_create_cue( webvtt_cue *pcue );
 WEBVTT_EXPORT void webvtt_delete_cue( webvtt_cue *pcue );
 WEBVTT_EXPORT int webvtt_validate_cue( webvtt_cue cue );
+
+#if defined(__cplusplus) || defined(c_plusplus)
+}
+#endif
 
 #endif

@@ -1,5 +1,5 @@
-#ifndef __WEBVTT_CUETEXT_H__
-#	define __WEBVTT_CUETEXT_H__
+#ifndef __INTERN_CUETEXT_H__
+#	define __INTERN_CUETEXT_H__
 #	include <webvtt/util.h>
 #	include <webvtt/string.h>
 #	include <webvtt/cue.h>
@@ -122,7 +122,7 @@ WEBVTT_INTERN void webvtt_delete_cue_text_text_token(  webvtt_cue_text_text_toke
  * I.E. tag_name of 'ruby' would create a ruby kind, etc.
  * Returns a WEBVTT_NOT_SUPPORTED if it does not find a valid tag name.
  */
-WEBVTT_INTERN webvtt_status webvtt_get_node_kind_from_tag_name( webvtt_string tag_name, webvtt_node_kind *kind );
+WEBVTT_INTERN webvtt_status webvtt_get_node_kind_from_tag_name( webvtt_string *tag_name, webvtt_node_kind *kind );
 
 /**
  * Creates a node from a valid token.

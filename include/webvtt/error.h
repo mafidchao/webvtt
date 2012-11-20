@@ -1,7 +1,10 @@
 #ifndef __WEBVTT_ERROR_H__
 #	define __WEBVTT_ERROR_H__
 #	include "util.h"
-typedef enum webvtt_error_t webvtt_error;
+
+#if defined(__cplusplus) || defined(c_plusplus)
+extern "C" {
+#endif
 
 enum
 webvtt_error_t
@@ -55,7 +58,12 @@ webvtt_error_t
 	/* A webvtt cue contains only a cue-id, and no cuetimes or payload. */
 	WEBVTT_CUE_INCOMPLETE,
 };
+typedef enum webvtt_error_t webvtt_error;
 
 WEBVTT_EXPORT const char *webvtt_strerror( webvtt_error );
+
+#if defined(__cplusplus) || defined(c_plusplus)
+}
+#endif
 
 #endif

@@ -46,7 +46,6 @@ AC_ARG_ENABLE([gprof],
 AC_CHECK_HEADER([stdint.h],[],[])
 AC_CHECK_HEADER([stdlib.h],[],[AC_ERROR([error: missing 'stdlib.h'])])
 AC_CHECK_HEADER([string.h],[],[AC_ERROR([error: missing 'string.h'])])
-AC_CHECK_HEADER([limits.h],[],[AC_ERROR([error: missing 'limits.h'])])
 
 # Checks for library functions.
 AC_FUNC_ERROR_AT_LINE
@@ -55,5 +54,6 @@ AC_CHECK_FUNC([memset],[],[AC_ERROR([error: missing function 'memset'])])
 AC_CHECK_FUNC([malloc],[],[AC_ERROR([error: missing function 'malloc'])])
 AC_CHECK_FUNC([free],[],[AC_ERROR([error: missing function 'free'])])
 AC_CHECK_FUNC([strerror],[AC_DEFINE([HAVE_STRERROR],[1],[Define if strerror() is available])])
-AC_CONFIG_FILES([Makefile include/Makefile src/Makefile src/libwebvtt/Makefile src/parsevtt/Makefile])
+AC_CONFIG_FILES([Makefile include/Makefile src/Makefile src/libwebvtt/Makefile 
+src/libwebvttxx/Makefile src/parsevtt/Makefile])
 AC_OUTPUT
