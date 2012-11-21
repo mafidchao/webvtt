@@ -45,16 +45,26 @@ AC_ARG_ENABLE([gprof],
 # Checks for libraries.
 # * Check for pthreads library.
 ACX_PTHREAD([have_pthread=yes], [heve_pthread=no])
+
+# The google test framework uses 'nanosleep' if using pthreads, and on mingw
+# nanosleep does not seem to be provided, even though pthreads is. So, if we
+# can't find nanosleep, we don't want to define GTEST_HAS_PTHREADS=1
 AC_CHECK_FUNC([nanosleep],[HAVE_NANOSLEEP="yes"],[HAVE_NANOSLEEP="no"])
 
 # Define variables for unit test using gtest
 GTEST_VERSION="1.6.0"
 if [test "x$have_pthread" = "xyes"] && [test "$HAVE_NANOSLEEP" = "yes"]; then
+# gtest can safely use the PTHREAD code
   GTEST_CPPFLAGS="-DGTEST_HAS_PTHREAD=1 $PTHREAD_CFLAGS"
   GTEST_LIBS="$PTHREAD_LIBS"
+  
+# If we're using g++ or other compilers which use -pthread rather than -lpthread,
+# we likely need to add it as a linker flag as well, in order to prevent linker
+# errors, on some platforms.
   if [[ "$PTHREAD_CFLAGS" == *-pthread* ]]; then
     GTEST_LIBS="$PTHREAD_CFLAGS $GTEST_LIBS"
   fi
+  
 else
   GTEST_CPPFLAGS=
   GTEST_LIBS=
@@ -64,7 +74,13 @@ AC_SUBST([GTEST_CPPFLAGS])
 AC_SUBST([GTEST_LIBS])
 
 # Checks for header files.
+# 	We do not want to die if stdint.h is not present, there is logic
+# 	to account for this in <webvtt/util.h>. When we know the toolchain
+# 	does not provide the C99 header, we should come up with alternatives,
+# 	if possible, and this can be done in <webvtt/util.h>
 AC_CHECK_HEADER([stdint.h],[],[])
+
+# 	We do however require some standard C headers
 AC_CHECK_HEADERS([stdlib.h string.h])
 
 # Checks for library functions.
