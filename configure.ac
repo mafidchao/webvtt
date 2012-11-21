@@ -45,24 +45,19 @@ AC_ARG_ENABLE([gprof],
 # Checks for libraries.
 # * Check for pthreads library.
 ACX_PTHREAD([have_pthread=yes], [heve_pthread=no])
+AC_CHECK_FUNC([nanosleep],[HAVE_NANOSLEEP="yes"],[HAVE_NANOSLEEP="no"])
 
 # Define variables for unit test using gtest
 GTEST_VERSION="1.6.0"
-if test "x$have_pthread" = "xyes"; then
-  GTEST_CPPFLAGS="-DGTEST_HAS_PTHREAD=1 -I\$(top_srcdir)/test/gtest"
-  GTEST_CXXFLAGS="$PTHREAD_CFLAGS"
-  GTEST_LDFLAGS="-L\$(top_builddir)/test/gtest"
+if [test "x$have_pthread" = "xyes"] && [test "$HAVE_NANOSLEEP" = "yes"]; then
+  GTEST_CPPFLAGS="-DGTEST_HAS_PTHREAD=1 $PTHREAD_CFLAGS"
   GTEST_LIBS="$PTHREAD_LIBS"
 else
-  GTEST_CPPFLAGS="-DGTEST_HAS_PTHREAD=0 -I\$(top_srcdir)/test/gtest"
-  GTEST_CXXFLAGS=
-  GTEST_LDFLAGS="-L\$(top_builddir)/test/gtest"
-  GTEST_LIBS=
+  GTEST_CPPFLAGS=""
+  GTEST_LIBS=""
 fi
 AC_SUBST([GTEST_VERSION])
 AC_SUBST([GTEST_CPPFLAGS])
-AC_SUBST([GTEST_CXXFLAGS])
-AC_SUBST([GTEST_LDFLAGS])
 AC_SUBST([GTEST_LIBS])
 
 # Checks for header files.
@@ -77,7 +72,6 @@ AC_CHECK_FUNC([memset],[],[AC_ERROR([error: missing function 'memset'])])
 AC_CHECK_FUNC([malloc],[],[AC_ERROR([error: missing function 'malloc'])])
 AC_CHECK_FUNC([free],[],[AC_ERROR([error: missing function 'free'])])
 AC_CHECK_FUNC([strerror],[AC_DEFINE([HAVE_STRERROR],[1],[Define if strerror() is available])])
-
 # Generate Makefiles
 AC_CONFIG_FILES([
   Makefile
