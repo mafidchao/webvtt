@@ -57,12 +57,13 @@ if [test "x$have_pthread" = "xyes"] && [test "$HAVE_NANOSLEEP" = "yes"]; then
 # gtest can safely use the PTHREAD code
   GTEST_CPPFLAGS="-DGTEST_HAS_PTHREAD=1 $PTHREAD_CFLAGS"
   GTEST_LIBS="$PTHREAD_LIBS"
-  
+
 # If we're using g++ or other compilers which use -pthread rather than -lpthread,
 # we likely need to add it as a linker flag as well, in order to prevent linker
-# errors, on some platforms.
+# errors, on some platforms. NOTE: this seems to cause cygwin g++ to warn about -pthread
+# but other than warning, it breaks nothing, and without it, Linux fails.
   ifelse([index(["$PTHREAD_CFLAGS"],["-pthread"])],[-1],[],[GTEST_LIBS="-pthread $GTEST_LIBS"])
-  
+
 else
   GTEST_CPPFLAGS=
   GTEST_LIBS=
