@@ -52,12 +52,12 @@ GTEST_VERSION="1.6.0"
 if [test "x$have_pthread" = "xyes"] && [test "$HAVE_NANOSLEEP" = "yes"]; then
   GTEST_CPPFLAGS="-DGTEST_HAS_PTHREAD=1 $PTHREAD_CFLAGS"
   GTEST_LIBS="$PTHREAD_LIBS"
-  if [test "$PTHREAD_CFLAGS" = "-pthread"]; then
+  if [[ "$PTHREAD_CFLAGS" == *-pthread* ]]; then
     GTEST_LIBS="$PTHREAD_CFLAGS $GTEST_LIBS"
   fi
 else
-  GTEST_CPPFLAGS=""
-  GTEST_LIBS=""
+  GTEST_CPPFLAGS=
+  GTEST_LIBS=
 fi
 AC_SUBST([GTEST_VERSION])
 AC_SUBST([GTEST_CPPFLAGS])
@@ -65,8 +65,7 @@ AC_SUBST([GTEST_LIBS])
 
 # Checks for header files.
 AC_CHECK_HEADER([stdint.h],[],[])
-AC_CHECK_HEADER([stdlib.h],[],[AC_ERROR([missing 'stdlib.h'])])
-AC_CHECK_HEADER([string.h],[],[AC_ERROR([missing 'string.h'])])
+AC_CHECK_HEADERS([stdlib.h string.h])
 
 # Checks for library functions.
 AC_FUNC_ERROR_AT_LINE
@@ -75,6 +74,7 @@ AC_CHECK_FUNC([memset],[],[AC_ERROR([missing function 'memset'])])
 AC_CHECK_FUNC([malloc],[],[AC_ERROR([missing function 'malloc'])])
 AC_CHECK_FUNC([free],[],[AC_ERROR([missing function 'free'])])
 AC_CHECK_FUNC([strerror],[AC_DEFINE([HAVE_STRERROR],[1],[Define if strerror() is available])])
+
 # Generate Makefiles
 AC_CONFIG_FILES([
   Makefile
