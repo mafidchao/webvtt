@@ -52,6 +52,9 @@ GTEST_VERSION="1.6.0"
 if [test "x$have_pthread" = "xyes"] && [test "$HAVE_NANOSLEEP" = "yes"]; then
   GTEST_CPPFLAGS="-DGTEST_HAS_PTHREAD=1 $PTHREAD_CFLAGS"
   GTEST_LIBS="$PTHREAD_LIBS"
+  if [test "$PTHREAD_CFLAGS" = "-pthread"]; then
+    GTEST_LIBS="$PTHREAD_CFLAGS $GTEST_LIBS"
+  fi
 else
   GTEST_CPPFLAGS=""
   GTEST_LIBS=""
