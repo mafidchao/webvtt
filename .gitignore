@@ -37,9 +37,11 @@ src/parsevtt/Makefile
 src/libwebvtt/Makefile
 src/libwebvtt/.deps
 src/libwebvtt/.libs
+src/libwebvttxx/.deps
+src/libwebvttxx/.libs
 src/parsevtt/.deps/
 test/gtest/.deps/
 test/unit/.deps/
 test/unit/.libs/
 src/parsevtt/parsevtt
-test/unit/node_modules/
+*_unittest
