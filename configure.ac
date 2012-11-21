@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.67])
-AC_INIT([webvtt], [0.0.2])
+AC_INIT([webvtt], [0.0.3])
 AC_CANONICAL_HOST
 
 linux="no"
@@ -19,13 +19,15 @@ AM_CONDITIONAL(OSX,test x$osx = xtrue)
 AM_CONDITIONAL(WIN32,test x$win32 = xtrue)
 
 AC_CONFIG_MACRO_DIR([build/autoconf])
-LT_INIT([win32-dll])
-AM_INIT_AUTOMAKE([foreign])
+AM_INIT_AUTOMAKE([1.11 -Wall -Wno-extra-portability foreign subdir-objects])
 AC_CONFIG_SRCDIR([src/libwebvtt/alloc.c])
 AC_CONFIG_HEADERS([config.h])
 
+LT_INIT([win32-dll])
+
 # Checks for programs.
 AC_PROG_CC
+AM_PROG_CC_C_O
 AC_PROG_CXX
 AC_PROG_SED
 AC_PROG_INSTALL
@@ -41,19 +43,63 @@ AC_ARG_ENABLE([gprof],
 	[CFLAGS='-pg'; AC_DEFINE([GPROF],[1],[Defined if using gprof profiling engine])])
 
 # Checks for libraries.
+# * Check for pthreads library.
+ACX_PTHREAD([have_pthread=yes], [heve_pthread=no])
+
+# The google test framework uses 'nanosleep' if using pthreads, and on mingw
+# nanosleep does not seem to be provided, even though pthreads is. So, if we
+# can't find nanosleep, we don't want to define GTEST_HAS_PTHREADS=1
+AC_CHECK_FUNC([nanosleep],[HAVE_NANOSLEEP="yes"],[HAVE_NANOSLEEP="no"])
+
+# Define variables for unit test using gtest
+GTEST_VERSION="1.6.0"
+if [test "x$have_pthread" = "xyes"] && [test "$HAVE_NANOSLEEP" = "yes"]; then
+# gtest can safely use the PTHREAD code
+  GTEST_CPPFLAGS="-DGTEST_HAS_PTHREAD=1 $PTHREAD_CFLAGS"
+  GTEST_LIBS="$PTHREAD_LIBS"
+  
+# If we're using g++ or other compilers which use -pthread rather than -lpthread,
+# we likely need to add it as a linker flag as well, in order to prevent linker
+# errors, on some platforms.
+  ifelse([index(["$PTHREAD_CFLAGS"],["-pthread"])],[-1],[],[GTEST_LIBS="-pthread $GTEST_LIBS"])
+  
+else
+  GTEST_CPPFLAGS=
+  GTEST_LIBS=
+fi
+AC_SUBST([GTEST_VERSION])
+AC_SUBST([GTEST_CPPFLAGS])
+AC_SUBST([GTEST_LIBS])
 
 # Checks for header files.
+# 	We do not want to die if stdint.h is not present, there is logic
+# 	to account for this in <webvtt/util.h>. When we know the toolchain
+# 	does not provide the C99 header, we should come up with alternatives,
+# 	if possible, and this can be done in <webvtt/util.h>
 AC_CHECK_HEADER([stdint.h],[],[])
-AC_CHECK_HEADER([stdlib.h],[],[AC_ERROR([error: missing 'stdlib.h'])])
-AC_CHECK_HEADER([string.h],[],[AC_ERROR([error: missing 'string.h'])])
+
+# 	We do however require some standard C headers
+AC_CHECK_HEADERS([stdlib.h string.h])
 
 # Checks for library functions.
 AC_FUNC_ERROR_AT_LINE
 AC_FUNC_MALLOC
-AC_CHECK_FUNC([memset],[],[AC_ERROR([error: missing function 'memset'])])
-AC_CHECK_FUNC([malloc],[],[AC_ERROR([error: missing function 'malloc'])])
-AC_CHECK_FUNC([free],[],[AC_ERROR([error: missing function 'free'])])
+AC_CHECK_FUNC([memset],[],[AC_ERROR([missing function 'memset'])])
+AC_CHECK_FUNC([malloc],[],[AC_ERROR([missing function 'malloc'])])
+AC_CHECK_FUNC([free],[],[AC_ERROR([missing function 'free'])])
 AC_CHECK_FUNC([strerror],[AC_DEFINE([HAVE_STRERROR],[1],[Define if strerror() is available])])
-AC_CONFIG_FILES([Makefile include/Makefile src/Makefile src/libwebvtt/Makefile 
-src/libwebvttxx/Makefile src/parsevtt/Makefile])
+
+# Generate Makefiles
+AC_CONFIG_FILES([
+  Makefile
+  include/Makefile
+  src/Makefile
+  src/libwebvtt/Makefile
+  src/libwebvttxx/Makefile
+  src/parsevtt/Makefile
+  test/Makefile
+  test/gtest/Makefile
+  test/unit/Makefile
+])
+
 AC_OUTPUT
