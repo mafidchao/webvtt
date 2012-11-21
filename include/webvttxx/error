@@ -13,10 +13,10 @@ public:
 	 * Copy constructor
 	 */
 	Error( const Error &other )
-	: _line( other._line ),
-	  _column( other._column ),
-	  _error( other._error ),
-	  _message( other._message )
+	: line( other.line ),
+	  column( other.column ),
+	  error( other.error ),
+	  message( other.message )
 	  {
 	  }
 	Error& operator=( const Error &other )
@@ -25,8 +25,8 @@ public:
 		return *this;
 	}
 	
-	Error( uint line, uint column, webvtt_error error )
-		: _line(line), _column(column), _error(error), _message( webvtt_strerror(error) )
+	Error( uint line, uint column, webvtt_error errcode )
+		: line(line), column(column), error(errcode), message( webvtt_strerror(errcode) )
 	{
 	}
 	
@@ -34,11 +34,10 @@ public:
 	{
 	}
 
-private:
-	const uint _line;
-	const uint _column;
-	const ::webvtt_error _error;
-	const char *_message;
+	const uint line;
+	const uint column;
+	const ::webvtt_error error;
+	const char *message;
 };
 
 }
