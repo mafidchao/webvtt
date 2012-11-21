@@ -14,15 +14,36 @@ class Cue
 private:
 	friend class AbstractParser;
 	friend class CueBuilder;
-	Cue( webvtt_cue pcue );
-
-	/**
-	 * No copying okay? Because we aren't reference counting cues yet...
-	 */
-	Cue( const Cue &other );
-	Cue &operator=( const Cue &other );
+	Cue( webvtt_cue pcue )
+	{
+		webvtt_ref_cue(pcue);
+		cue = pcue;
+	}
 
 public:
+	Cue( const Cue &other )
+	: cue(other.cue)
+	{
+		webvtt_ref_cue( cue );
+	}
+	
+	Cue &operator=( const Cue &other )
+	{
+		webvtt_ref_cue( other.cue );
+		webvtt_cue oldcue = 0;
+		if( cue )
+		{
+			webvtt_cue oldcue = cue;
+		}
+		cue = other.cue;
+		if( oldcue )
+		{
+			webvtt_release_cue( &oldcue );
+		}
+		
+		return *this;
+	}
+
 	enum Orientation
 	{
 		Horizontal,
@@ -42,13 +63,12 @@ public:
 		Middle = WEBVTT_ALIGN_MIDDLE,
 		End = WEBVTT_ALIGN_END
 	};
-	inline Cue() : cue(0) {}
 
 	inline ~Cue()
 	{
 		if( cue )
 		{
-			webvtt_delete_cue(&cue);
+			webvtt_release_cue(&cue);
 		}
 	}
 

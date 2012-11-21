@@ -1,4 +1,6 @@
-﻿/*
+#include "test_parser"
+
+/*
 Verifies that the parser correctly parses a "vertical" key, followed by U+003A ':',
 followed by 'rl' (indicating that the text be positioned vertically, and grows towards the left)
 
@@ -7,7 +9,19 @@ From http://dev.w3.org/html5/webvtt/#webvtt-vertical-text-cue-setting (09/28/201
 	2. A U+003A COLON character (:).
 	3. One of the following strings: "rl", "lr". 
 */
-WEBVTT
-
-00:00.000 --> 00:10.000 vertical:rl
-Payload
+TEST(WebVTTCueSettingVertical,ParseRL)
+{
+	try
+	{
+		ItemStorageParser parser("tc4001-cue_setting_vertical_01_good.vtt");
+		parser.parse();
+		
+		const Cue &cue = parser.getCue(0);
+		ASSERT_EQ(cue.isVerticalRightToLeft(),true);
+	}
+	catch( std::exception e )
+	{
+		// Something broke.
+		ASSERT_TRUE(false);
+	}
+}

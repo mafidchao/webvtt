@@ -146,6 +146,15 @@ webvtt_cue_settings_t
 struct
 webvtt_cue_t
 {
+	/**
+	 * PRIVATE.
+	 * Do not touch, okay?
+	 */
+	struct webvtt_refcount_t refs;
+	
+	/**
+	 * PUBLIC:
+	 */
 	webvtt_timestamp_t from;
 	webvtt_timestamp_t until;
 	webvtt_cue_settings settings;
@@ -164,7 +173,8 @@ webvtt_cue_t
 };
 
 WEBVTT_EXPORT webvtt_status webvtt_create_cue( webvtt_cue *pcue );
-WEBVTT_EXPORT void webvtt_delete_cue( webvtt_cue *pcue );
+WEBVTT_EXPORT void webvtt_ref_cue( webvtt_cue cue );
+WEBVTT_EXPORT void webvtt_release_cue( webvtt_cue *pcue );
 WEBVTT_EXPORT int webvtt_validate_cue( webvtt_cue cue );
 
 #if defined(__cplusplus) || defined(c_plusplus)

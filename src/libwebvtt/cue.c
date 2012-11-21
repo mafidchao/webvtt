@@ -28,6 +28,7 @@ webvtt_create_cue( webvtt_cue *pcue )
 	 *
 	 * Let cue's text track cue alignment be middle alignment.
 	 */
+	webvtt_ref( &cue->refs );
 	webvtt_init_string( &cue->id );
 	webvtt_init_string( &cue->payload );
 	cue->snap_to_lines = 1;
@@ -42,16 +43,28 @@ webvtt_create_cue( webvtt_cue *pcue )
 }
 
 WEBVTT_EXPORT void
-webvtt_delete_cue( webvtt_cue *pcue )
+webvtt_ref_cue( webvtt_cue cue )
+{
+	if( cue )
+	{
+		webvtt_ref( &cue->refs );
+	}
+}
+
+WEBVTT_EXPORT void
+webvtt_release_cue( webvtt_cue *pcue )
 {
 	if( pcue && *pcue )
 	{
 		webvtt_cue cue = *pcue;
 		*pcue = 0;
-		webvtt_release_string( &cue->id );
-		webvtt_release_string( &cue->payload );
-		webvtt_free( cue );
-		webvtt_delete_node( cue->node_head );
+		if( webvtt_deref( &cue->refs ) == 0 )
+		{
+			webvtt_release_string( &cue->id );
+			webvtt_release_string( &cue->payload );
+			webvtt_free( cue );
+			webvtt_delete_node( cue->node_head );
+		}
 	}
 }
 
