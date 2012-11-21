@@ -61,7 +61,7 @@ if [test "x$have_pthread" = "xyes"] && [test "$HAVE_NANOSLEEP" = "yes"]; then
 # If we're using g++ or other compilers which use -pthread rather than -lpthread,
 # we likely need to add it as a linker flag as well, in order to prevent linker
 # errors, on some platforms.
-  if [[ "$PTHREAD_CFLAGS" == *-pthread* ]]; then
+  if [[ `echo "$PTHREAD_CFLAGS" | grep -q "\-pthread"` ]]; then
     GTEST_LIBS="$PTHREAD_CFLAGS $GTEST_LIBS"
   fi
   
