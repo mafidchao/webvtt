@@ -1,6 +1,7 @@
 lib_LTLIBRARIES = libwebvttxx.la
 noinst_LTLIBRARIES = libwebvttxx-static.la
-WEBVTTXX_SOURCES = abstract_parser.cpp file_parser.cpp
+
+WEBVTTXX_SOURCES = abstract_parser.cpp file_parser.cpp node.cpp nodefactory.cpp
 WEBVTTXX_CFLAGS = -I$(top_builddir)/include -I$(top_srcdir)/include
 
 libwebvttxx_la_LDFLAGS = -no-undefined -shared

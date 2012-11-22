@@ -19,7 +19,9 @@ webvttxxinclude_HEADERS = \
   webvttxx/error \
   webvttxx/file_parser \
   webvttxx/string \
-  webvttxx/timestamp
+  webvttxx/timestamp \
+  webvttxx/node \
+  webvttxx/nodefactory
 
 if WIN32
 webvttinclude_HEADERS += webvtt/webvtt-config-win32.h

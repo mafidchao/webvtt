@@ -1,0 +1,86 @@
+#ifndef __WEBVTTXX_NODE__
+#	define __WEBVTTXX_NODE__
+
+#	include <webvtt/cue.h>
+#	include "string"
+#	include "timestamp"
+
+namespace WebVTT
+{
+
+class Node
+{
+public:
+	enum NodeKind
+	{
+		ClassNode = WEBVTT_CLASS,
+		ItalicNode = WEBVTT_ITALIC,
+		UnderlineNode = WEBVTT_UNDERLINE,
+		BoldNode = WEBVTT_BOLD,
+		RubyNode = WEBVTT_RUBY,
+		RubyTextNode = WEBVTT_RUBY_TEXT,
+		VoiceNode = WEBVTT_VOICE,
+		TextNode = WEBVTT_TEXT,
+		TimeStampNode = WEBVTT_TIME_STAMP
+	};
+
+	inline Node( webvtt_node_ptr otherNode ) 
+	{ 
+		nodePtr = otherNode; 
+	}
+
+	inline NodeKind kind() { return (NodeKind)nodePtr->kind; }
+	Node parentNode();
+
+	private:
+		webvtt_node_ptr nodePtr;	
+};
+
+class InternalNode : public Node
+{
+public:
+	inline InternalNode( webvtt_node_ptr otherNode )
+		: Node( otherNode )
+	{
+		internalNodePtr = (webvtt_internal_node_ptr)otherNode->concrete_node;
+	}
+
+	inline String annotation() { return String( &internalNodePtr->annotation ); }
+	inline StringList cssClasses() { return StringList( *internalNodePtr->css_classes_ptr ); }
+	inline Node childAtIndex( uint index );
+
+private:
+	webvtt_internal_node_ptr internalNodePtr;
+};
+
+class TextNode : public Node
+{
+public:
+	inline TextNode( webvtt_node_ptr otherNode )
+		: Node( otherNode )
+	{
+		leafNodePtr = (webvtt_leaf_node_ptr)otherNode->concrete_node;
+	}
+	inline String text() { return String( &leafNodePtr->text ); }
+
+private:
+	webvtt_leaf_node_ptr leafNodePtr;
+};
+
+class TimeStampNode : public Node
+{
+public:
+	inline TimeStampNode( webvtt_node_ptr otherNode )
+		: Node( otherNode )
+	{
+		leafNodePtr = (webvtt_leaf_node_ptr)otherNode->concrete_node;
+	}
+	inline Timestamp timeStamp() { return Timestamp( leafNodePtr->time_stamp ); }
+
+private:
+	webvtt_leaf_node_ptr leafNodePtr;
+};
+
+}
+
+#endif
