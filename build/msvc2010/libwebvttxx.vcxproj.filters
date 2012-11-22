@@ -4,9 +4,6 @@
     <ClCompile Include="..\..\src\libwebvttxx\abstract_parser.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\libwebvttxx\cue.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\libwebvttxx\file_parser.cpp">
       <Filter>src</Filter>
     </ClCompile>

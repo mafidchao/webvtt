@@ -83,7 +83,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\libwebvttxx\abstract_parser.cpp" />
-    <ClCompile Include="..\..\src\libwebvttxx\cue.cpp" />
     <ClCompile Include="..\..\src\libwebvttxx\file_parser.cpp" />
     <ClCompile Include="..\..\src\libwebvttxx\node.cpp" />
     <ClCompile Include="..\..\src\libwebvttxx\nodefactory.cpp" />

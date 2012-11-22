@@ -47,6 +47,7 @@ public:
 
 	inline String annotation() { return String( &internalNodePtr->annotation ); }
 	inline StringList cssClasses() { return StringList( *internalNodePtr->css_classes_ptr ); }
+	inline uint childNodeCount() { return internalNodePtr->length; }
 	inline Node childAtIndex( uint index );
 
 private:
