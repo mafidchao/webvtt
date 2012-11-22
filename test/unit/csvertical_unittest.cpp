@@ -44,7 +44,7 @@ TEST(CueSettingVertical,LR)
  *	2. A U+003A COLON character (:).
  *	3. One of the following strings: "rl", "lr". 
  */
-TEST(CueSettingVertical,BadKeyword)
+TEST(CueSettingVertical,DISABLED_BadKeyword)
 {
 	ItemStorageParser parser("cue-settings/vertical/bad-keyword.vtt");
 	parser.parse();
@@ -65,7 +65,7 @@ TEST(CueSettingVertical,BadKeyword)
  *	2. A U+003A COLON character (:).
  *	3. One of the following strings: "rl", "lr". 
  */
-TEST(CueSettingVertical,BadDelimiter)
+TEST(CueSettingVertical,DISABLED_BadDelimiter)
 {
 	ItemStorageParser parser("cue-settings/vertical/bad-delimiter.vtt");
 	parser.parse();
@@ -89,7 +89,7 @@ TEST(CueSettingVertical,BadDelimiter)
  *	2. A U+003A COLON character (:).
  *	3. One of the following strings: "rl", "lr". 
  */
-TEST(CueSettingVertical,BadValue)
+TEST(CueSettingVertical,DISABLED_BadValue)
 {
 	ItemStorageParser parser("cue-settings/vertical/bad-value.vtt");
 	parser.parse();
@@ -113,7 +113,7 @@ TEST(CueSettingVertical,BadValue)
  *	2. A U+003A COLON character (:).
  *	3. One of the following strings: "rl", "lr". 
  */
-TEST(CueSettingVertical,BadWhitespaceBeforeDelimiter)
+TEST(CueSettingVertical,DISABLED_BadWhitespaceBeforeDelimiter)
 {
 	ItemStorageParser parser("cue-settings/vertical/bad-whitespace-before-delimiter.vtt");
 	parser.parse();
@@ -137,7 +137,7 @@ TEST(CueSettingVertical,BadWhitespaceBeforeDelimiter)
  *	2. A U+003A COLON character (:).
  *	3. One of the following strings: "rl", "lr". 
  */
-TEST(CueSettingVertical,BadWhitespaceAfterDelimiter)
+TEST(CueSettingVertical,DISABLED_BadWhitespaceAfterDelimiter)
 {
 	ItemStorageParser parser("cue-settings/vertical/bad-whitespace-after-delimiter.vtt");
 	parser.parse();
