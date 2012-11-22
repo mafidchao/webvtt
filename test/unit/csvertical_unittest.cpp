@@ -15,7 +15,7 @@ TEST(CueSettingVertical,RL)
 	parser.parse();
 		
 	const Cue &cue = parser.getCue(0);
-	ASSERT_EQ(cue.isVerticalRightToLeft(),true);
+	ASSERT_EQ(true, cue.isVerticalRightToLeft());
 }
 
 /**
@@ -33,7 +33,7 @@ TEST(CueSettingVertical,LR)
 	parser.parse();
 		
 	const Cue &cue = parser.getCue(0);
-	ASSERT_EQ(cue.isVerticalLeftToRight(),true);
+	ASSERT_EQ(true, cue.isVerticalLeftToRight());
 }
 
 /**
