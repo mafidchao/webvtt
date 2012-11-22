@@ -33,4 +33,5 @@ WEBVTT_INTERN int webvtt_bytearray_getline( webvtt_bytearray *ppstr, const webvt
 	webvtt_uint *pos, webvtt_uint len, int *truncate );
 
 WEBVTT_INTERN webvtt_status webvtt_bytearray_putc( webvtt_bytearray *ppstr, webvtt_byte ch );
+
 #endif

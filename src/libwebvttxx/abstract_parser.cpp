@@ -38,6 +38,10 @@ AbstractParser::__parsedCue( void *userdata, webvtt_cue pcue )
 	AbstractParser *self = reinterpret_cast<AbstractParser *>( userdata );
 	Cue cue(pcue);
 	self->parsedCue( cue );
+	/**
+	 * Cue object increases the reference count of pcue, so we can dereference it
+	 */
+	webvtt_release_cue( &pcue );
 }
 
 int WEBVTT_CALLBACK

@@ -99,7 +99,7 @@ finish_cue( webvtt_parser self )
 		}
 		else
 		{
-			webvtt_delete_cue( (webvtt_cue *)&self->cue );
+			webvtt_release_cue( (webvtt_cue *)&self->cue );
 		}
 	}
 }
@@ -201,7 +201,7 @@ webvtt_delete_parser( webvtt_parser self )
 		}
 		if( self->cue )
 		{
-			webvtt_delete_cue( (webvtt_cue *)&self->cue );
+			webvtt_release_cue( (webvtt_cue *)&self->cue );
 		}
 		webvtt_free( self );
 	}

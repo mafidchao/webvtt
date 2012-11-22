@@ -33,7 +33,8 @@ webvtt_token_t
 	END, /* 'end' */
 	SEPARATOR, /* '-->' */
 	TIMESTAMP,
-	PERCENTAGE
+	PERCENTAGE,
+	COLON /* ':' */
 };
 
 /**
@@ -86,6 +87,11 @@ do \
 	if( !self->error || self->error(self->userdata,self->line,self->column,Code) < 0 ) \
 		return WEBVTT_PARSE_ERROR; \
 } while(0)
-
+#define ERRORC(Code,Column) \
+do \
+{ \
+	if( !self->error || self->error(self->userdata,self->line,(Column),Code) < 0 ) \
+		return WEBVTT_PARSE_ERROR; \
+} while(0)
 
 #endif
