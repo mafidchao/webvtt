@@ -183,7 +183,7 @@ webvtt_release_string( webvtt_string *str )
 		webvtt_string_data *d = str->d;
 		str->d = &empty_string;
 		webvtt_ref( &str->d->refs );
-		if( webvtt_deref( &d->refs ) == 0 )
+		if( d && webvtt_deref( &d->refs ) == 0 )
 		{
 			webvtt_free( d );
 		}
