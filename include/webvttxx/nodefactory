@@ -10,7 +10,7 @@ namespace WebVTT
 class NodeFactory
 {
 public:
-	static Node createNode( webvtt_node_ptr otherNode );
+	static Node * createNode( webvtt_node_ptr otherNode );
 };
 
 }

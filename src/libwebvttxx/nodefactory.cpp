@@ -3,14 +3,14 @@
 namespace WebVTT
 {
 
-Node NodeFactory::createNode( webvtt_node_ptr otherNode )
+Node * NodeFactory::createNode( webvtt_node_ptr otherNode )
 {
 	if ( WEBVTT_IS_VALID_INTERNAL_NODE( otherNode->kind ) )
-		return InternalNode( otherNode );
+		return new InternalNode( otherNode );
 	else if ( otherNode->kind == Node::TextNode )
-		return TextNode( otherNode );
+		return new TextNode( otherNode );
 	else if ( otherNode->kind == Node::TimeStampNode )
-		return TimeStampNode( otherNode );
+		return new TimeStampNode( otherNode );
 	return 0;
 }
 
