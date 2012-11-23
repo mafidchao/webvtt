@@ -8,29 +8,34 @@
 namespace WebVTT
 {
 
+class InternalNode;
+class TimeStampNode;
+class TextNode;
 class Node
 {
 public:
 	enum NodeKind
 	{
-		ClassNode = WEBVTT_CLASS,
-		ItalicNode = WEBVTT_ITALIC,
-		UnderlineNode = WEBVTT_UNDERLINE,
-		BoldNode = WEBVTT_BOLD,
-		RubyNode = WEBVTT_RUBY,
-		RubyTextNode = WEBVTT_RUBY_TEXT,
-		VoiceNode = WEBVTT_VOICE,
-		TextNode = WEBVTT_TEXT,
-		TimeStampNode = WEBVTT_TIME_STAMP
+		Class = WEBVTT_CLASS,
+		Italic = WEBVTT_ITALIC,
+		Underline = WEBVTT_UNDERLINE,
+		Bold = WEBVTT_BOLD,
+		Ruby = WEBVTT_RUBY,
+		RubyText = WEBVTT_RUBY_TEXT,
+		Voice = WEBVTT_VOICE,
+		Text = WEBVTT_TEXT,
+		TimeStamp = WEBVTT_TIME_STAMP
 	};
 
-	inline Node( webvtt_node_ptr otherNode ) 
-	{ 
-		nodePtr = otherNode; 
-	}
+	inline Node( webvtt_node_ptr otherNode ) { nodePtr = otherNode; }
+	inline NodeKind kind() const { return (NodeKind)nodePtr->kind; }
 
-	inline NodeKind kind() { return (NodeKind)nodePtr->kind; }
-	Node * parentNode();
+	Node * parent() const;
+	const InternalNode * toInternalNode() const;
+	const TextNode * toTextNode() const;
+	const TimeStampNode * toTimeStampNode() const;
+
+	virtual ~Node() { /* Enables using dynamic cast. */ }
 
 	private:
 		webvtt_node_ptr nodePtr;	
@@ -45,10 +50,10 @@ public:
 		internalNodePtr = (webvtt_internal_node_ptr)otherNode->concrete_node;
 	}
 
-	inline String annotation() { return String( &internalNodePtr->annotation ); }
-	inline StringList cssClasses() { return StringList( *internalNodePtr->css_classes_ptr ); }
-	inline uint childNodeCount() { return internalNodePtr->length; }
-	Node * childAtIndex( uint index );
+	inline String annotation() const { return String( &internalNodePtr->annotation ); }
+	inline StringList cssClasses() const { return StringList( *internalNodePtr->css_classes_ptr ); }
+	inline uint childCount() const { return internalNodePtr->length; }
+	Node * child( uint index ) const;
 
 private:
 	webvtt_internal_node_ptr internalNodePtr;
@@ -62,7 +67,7 @@ public:
 	{
 		leafNodePtr = (webvtt_leaf_node_ptr)otherNode->concrete_node;
 	}
-	inline String text() { return String( &leafNodePtr->text ); }
+	inline String text() const { return String( &leafNodePtr->text ); }
 
 private:
 	webvtt_leaf_node_ptr leafNodePtr;
@@ -76,7 +81,7 @@ public:
 	{
 		leafNodePtr = (webvtt_leaf_node_ptr)otherNode->concrete_node;
 	}
-	inline Timestamp timeStamp() { return Timestamp( leafNodePtr->time_stamp ); }
+	inline Timestamp timeStamp() const { return Timestamp( leafNodePtr->time_stamp ); }
 
 private:
 	webvtt_leaf_node_ptr leafNodePtr;

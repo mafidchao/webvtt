@@ -1,4 +1,4 @@
-#include "test_parser"
+#include "cue_testfixture"
 
 /**
  * Verifies that the parser correctly parses a "vertical" key, followed by U+003A ':',
@@ -9,13 +9,10 @@
  *	2. A U+003A COLON character (:).
  *	3. One of the following strings: "rl", "lr". 
  */
-TEST(CueSettingVertical,RL)
+TEST_F(CueTest,RL)
 {
-	ItemStorageParser parser("cue-settings/vertical/rl.vtt");
-	parser.parse();
-		
-	const Cue &cue = parser.getCue(0);
-	ASSERT_EQ(true, cue.isVerticalRightToLeft());
+	loadVtt( "cue-settings/vertical/rl.vtt", 1 );
+	ASSERT_TRUE( getCue( 0 ).isVerticalRightToLeft() );
 }
 
 /**
@@ -27,13 +24,10 @@ TEST(CueSettingVertical,RL)
  *	2. A U+003A COLON character (:).
  *	3. One of the following strings: "rl", "lr". 
  */
-TEST(CueSettingVertical,LR)
+TEST_F(CueTest,LR)
 {
-	ItemStorageParser parser("cue-settings/vertical/lr.vtt");
-	parser.parse();
-		
-	const Cue &cue = parser.getCue(0);
-	ASSERT_EQ(true, cue.isVerticalLeftToRight());
+	loadVtt( "cue-settings/vertical/lr.vtt", 1 );
+	ASSERT_TRUE( getCue( 0 ).isVerticalLeftToRight() );
 }
 
 /**
@@ -44,17 +38,16 @@ TEST(CueSettingVertical,LR)
  *	2. A U+003A COLON character (:).
  *	3. One of the following strings: "rl", "lr". 
  */
-TEST(CueSettingVertical,DISABLED_BadKeyword)
+TEST_F(CueTest,DISABLED_BadKeyword)
 {
-	ItemStorageParser parser("cue-settings/vertical/bad-keyword.vtt");
-	parser.parse();
-	const Error& err = parser.getError(0);
+	loadVtt( "cue-settings/vertical/bad-keyword.vtt", 1 );
+	const Error& err = getError( 0 );
 	/**
 	 * We're expecting a WEBVTT_INVALID_CUESETTING error on the 25th column of the 3rd line
 	 */
-	ASSERT_EQ(WEBVTT_INVALID_CUESETTING,err.error());
-	ASSERT_EQ(3,err.line());
-	ASSERT_EQ(25,err.column());
+	ASSERT_EQ( WEBVTT_INVALID_CUESETTING, err.error() );
+	ASSERT_EQ( 3, err.line() );
+	ASSERT_EQ( 25, err.column() );
 }
 
 /**
@@ -65,11 +58,10 @@ TEST(CueSettingVertical,DISABLED_BadKeyword)
  *	2. A U+003A COLON character (:).
  *	3. One of the following strings: "rl", "lr". 
  */
-TEST(CueSettingVertical,DISABLED_BadDelimiter)
+TEST_F(CueTest,DISABLED_BadDelimiter)
 {
-	ItemStorageParser parser("cue-settings/vertical/bad-delimiter.vtt");
-	parser.parse();
-	const Error& err = parser.getError(0);
+	loadVtt ( "cue-settings/vertical/bad-delimiter.vtt", 1 );
+	const Error& err = getError( 0 );
 
 	/**
 	 * We're expecting a WEBVTT_INVALID_CUESETTING error on the 25th column of the 3rd line
@@ -89,20 +81,19 @@ TEST(CueSettingVertical,DISABLED_BadDelimiter)
  *	2. A U+003A COLON character (:).
  *	3. One of the following strings: "rl", "lr". 
  */
-TEST(CueSettingVertical,DISABLED_BadValue)
+TEST_F(CueTest,DISABLED_BadValue)
 {
-	ItemStorageParser parser("cue-settings/vertical/bad-value.vtt");
-	parser.parse();
-	const Error& err = parser.getError(0);
+	loadVtt( "cue-settings/vertical/bad-value.vtt", 1 );
+	const Error& err = getError( 0 );
 
 	/**
 	 * We're expecting a WEBVTT_INVALID_CUESETTING error on the 25th column of the 3rd line
 	 *
 	 * This should really be changed to a different error, like WEBVTT_EXPECTED_CUESETTING_DELIMITER, or something.
 	 */
-	ASSERT_EQ(WEBVTT_VERTICAL_BAD_VALUE,err.error());
-	ASSERT_EQ(3,err.line());
-	ASSERT_EQ(34,err.column());
+	ASSERT_EQ( WEBVTT_VERTICAL_BAD_VALUE, err.error() );
+	ASSERT_EQ( 3, err.line() );
+	ASSERT_EQ( 34, err.column() );
 }
 
 /**
@@ -113,20 +104,19 @@ TEST(CueSettingVertical,DISABLED_BadValue)
  *	2. A U+003A COLON character (:).
  *	3. One of the following strings: "rl", "lr". 
  */
-TEST(CueSettingVertical,DISABLED_BadWhitespaceBeforeDelimiter)
+TEST_F(CueTest,DISABLED_BadWhitespaceBeforeDelimiter)
 {
-	ItemStorageParser parser("cue-settings/vertical/bad-whitespace-before-delimiter.vtt");
-	parser.parse();
-	const Error& err = parser.getError(0);
+	loadVtt( "cue-settings/vertical/bad-whitespace-before-delimiter.vtt", 1 );
+	const Error& err = getError( 0 );
 
 	/**
 	 * We're expecting a WEBVTT_INVALID_CUESETTING error on the 34th column of the 3rd line
 	 *
 	 * This should really be changed to a different error, like WEBVTT_EXPECTED_CUESETTING_DELIMITER, or something.
 	 */
-	ASSERT_EQ(WEBVTT_INVALID_CUESETTING,err.error());
-	ASSERT_EQ(3,err.line());
-	ASSERT_EQ(33,err.column());
+	ASSERT_EQ( WEBVTT_INVALID_CUESETTING, err.error() );
+	ASSERT_EQ( 3, err.line() );
+	ASSERT_EQ( 33, err.column() );
 }
 
 /**
@@ -137,18 +127,17 @@ TEST(CueSettingVertical,DISABLED_BadWhitespaceBeforeDelimiter)
  *	2. A U+003A COLON character (:).
  *	3. One of the following strings: "rl", "lr". 
  */
-TEST(CueSettingVertical,DISABLED_BadWhitespaceAfterDelimiter)
+TEST_F(CueTest,DISABLED_BadWhitespaceAfterDelimiter)
 {
-	ItemStorageParser parser("cue-settings/vertical/bad-whitespace-after-delimiter.vtt");
-	parser.parse();
-	const Error& err = parser.getError(0);
+	loadVtt( "cue-settings/vertical/bad-whitespace-after-delimiter.vtt", 1 );
+	const Error& err = getError( 0 );
 
 	/**
 	 * We're expecting a WEBVTT_INVALID_CUESETTING error on the 34th column of the 3rd line
 	 *
 	 * This should really be changed to a different error, like WEBVTT_EXPECTED_CUESETTING_DELIMITER, or something.
 	 */
-	ASSERT_EQ(WEBVTT_INVALID_CUESETTING,err.error());
-	ASSERT_EQ(3,err.line());
-	ASSERT_EQ(34,err.column());
+	ASSERT_EQ( WEBVTT_INVALID_CUESETTING, err.error() );
+	ASSERT_EQ( 3, err.line() );
+	ASSERT_EQ( 34, err.column() );
 }

@@ -76,7 +76,7 @@ public:
 		cues.push_back( cue );
 	}
 	
-	const Cue& getCue( int i ) const
+	const Cue& getCue( uint i ) const
 	{
 		if( uint(i) >= cues.size() )
 		{
@@ -85,7 +85,7 @@ public:
 		return cues[i];
 	}
 	
-	const Error& getError( int i ) const
+	const Error& getError( uint i ) const
 	{
 		if( uint(i) >= errors.size() )
 		{

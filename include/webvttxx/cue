@@ -94,7 +94,7 @@ public:
 		return String(&cue->payload);
 	}
 	
-	inline Node * getHead() const
+	inline Node * nodeHead() const
 	{
 		return NodeFactory::createNode( cue->node_head );
 	}
