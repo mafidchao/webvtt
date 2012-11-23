@@ -62,8 +62,8 @@ webvtt_release_cue( webvtt_cue *pcue )
 		{
 			webvtt_release_string( &cue->id );
 			webvtt_release_string( &cue->payload );
-			webvtt_free( cue );
 			webvtt_delete_node( cue->node_head );
+			webvtt_free( cue );
 		}
 	}
 }
@@ -135,6 +135,7 @@ webvtt_create_head_node( webvtt_node_ptr *node_pptr )
 	}
 
 	webvtt_init_string(&internal_node_ptr->annotation);
+	internal_node_ptr->css_classes_ptr = NULL;
 	internal_node_ptr->children = NULL;
 	internal_node_ptr->length = 0;
 	internal_node_ptr->alloc = 0;
@@ -162,7 +163,7 @@ webvtt_create_text_leaf_node( webvtt_node_ptr *node_pptr, webvtt_node_ptr parent
 {
 	webvtt_leaf_node_ptr leaf_node_ptr = (webvtt_leaf_node_ptr)malloc(sizeof(*leaf_node_ptr));
 
-	if( leaf_node_ptr )
+	if( !leaf_node_ptr )
 		return WEBVTT_OUT_OF_MEMORY;
 
 	leaf_node_ptr->text = text;

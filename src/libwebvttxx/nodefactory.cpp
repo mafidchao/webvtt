@@ -5,6 +5,9 @@ namespace WebVTT
 
 const Node * NodeFactory::createNode( webvtt_node_ptr otherNode )
 {
+	if( !otherNode )
+		throw "Attemp to create Node from non-pointer.";
+
 	if ( WEBVTT_IS_VALID_INTERNAL_NODE( otherNode->kind ) )
 		return new InternalNode( otherNode );
 	else if ( otherNode->kind == WEBVTT_TEXT )

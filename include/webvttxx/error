@@ -30,9 +30,7 @@ public:
 	{
 	}
 	
-	~Error()
-	{
-	}
+	~Error() { }
 
 	inline uint line() const { return _line; }
 	inline uint column() const { return _column; }

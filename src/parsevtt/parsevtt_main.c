@@ -11,10 +11,10 @@ error( void *userdata, webvtt_uint line, webvtt_uint col, webvtt_error errcode )
 	return -1; /* Die on all errors */
 }
 
-static void WEBVTT_CALLBACK 
+static void WEBVTT_CALLBACK
 cue( void *userdata, webvtt_cue cue )
 {
-	webvtt_parse_cuetext( (webvtt_string_text(&cue->payload)), cue->node_head );
+	webvtt_parse_cuetext( cue );
 }
 
 int

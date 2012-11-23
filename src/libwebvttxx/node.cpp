@@ -19,33 +19,26 @@ const Node * InternalNode::child( uint index ) const
 
 const InternalNode * Node::toInternalNode() const
 {
-	const InternalNode *node = dynamic_cast<const InternalNode *>( this );
-	if( node == 0 )
-	{
+	if( WEBVTT_IS_VALID_INTERNAL_NODE( this->kind() ) )
+		return (const InternalNode *)this;
+	else
 		throw "Invalid cast to InternalNode.";
-	}
-	return node;
-
 }
 
 const TextNode * Node::toTextNode() const
 {
-	const TextNode *node = dynamic_cast<const TextNode *>( this );
-	if( node == 0 )
-	{
+	if( this->kind() == WEBVTT_TEXT )
+		return (const TextNode *)this;
+	else
 		throw "Invalid cast to TextNode.";
-	}
-	return node;
 }
 
 const TimeStampNode * Node::toTimeStampNode() const
 {
-	const TimeStampNode *node = dynamic_cast<const TimeStampNode *>( this );
-	if( node == 0 )
-	{
+	if( this->kind() == WEBVTT_TIME_STAMP )
+		return (const TimeStampNode *)this;
+	else
 		throw "Invalid cast to TimeStampNode.";
-	}
-	return node;
 }
 
 }
