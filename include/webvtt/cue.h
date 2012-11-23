@@ -124,7 +124,10 @@ enum webvtt_align_type
 {
 	WEBVTT_ALIGN_START = 0,
 	WEBVTT_ALIGN_MIDDLE,
-	WEBVTT_ALIGN_END
+	WEBVTT_ALIGN_END,
+	
+	WEBVTT_ALIGN_LEFT,
+	WEBVTT_ALIGN_RIGHT
 };
 typedef enum webvtt_align_type webvtt_align_type;
 
