@@ -1,0 +1,30 @@
+#ifndef __CUE_TEXTFIXTURE_H__
+#   define __CUE_TEXTFIXTURE_H__
+
+#include "test_parser"
+
+class CueTest : public ::testing::Test
+{
+protected:
+  void loadVtt( const char *fileName, uint expectedNumberOfCues )
+  {
+     parser = new ItemStorageParser( fileName );
+     ASSERT_TRUE( parser->parse() ) << "parser.parse() failed";
+     ASSERT_EQ( expectedNumberOfCues, parser->cueCount() ) << "webvtt file contained different number of cues than expected, once parsed.";
+  }
+
+  const Cue& getCue( uint index )
+  {
+    return parser->getCue( index );
+  }
+
+  const Error& getError( uint index )
+  {
+    return parser->getError( index );
+  }
+
+private:
+  ItemStorageParser *parser;
+};
+
+#endif

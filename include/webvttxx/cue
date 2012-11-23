@@ -5,6 +5,8 @@
 #	include "base"
 #	include "timestamp"
 #	include "string"
+#	include "node"
+#	include "nodefactory"
 
 namespace WebVTT
 {
@@ -92,6 +94,11 @@ public:
 		return String(&cue->payload);
 	}
 	
+	inline const Node * nodeHead() const
+	{
+		return NodeFactory::createNode( cue->node_head );
+	}
+
 	/**
 	 * Cue settings
 	 * These helper functions allow applications to query for data about how to render the cue as a whole

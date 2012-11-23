@@ -82,6 +82,28 @@ private:
 	webvtt_string string;
 };
 
+class StringList
+{
+public:
+	inline StringList( webvtt_string_list otherStringList )
+	{
+		stringList = otherStringList;
+	}
+
+	inline String stringAtIndex( uint index )
+	{
+		if( index <= stringList.length )
+			return String( &stringList.items[index] );
+		return String();
+	}
+
+	inline uint length() { return stringList.length; }
+	inline uint alloc() { return stringList.alloc; }
+
+private:
+	webvtt_string_list stringList;
+};
+
 }
 
 #endif

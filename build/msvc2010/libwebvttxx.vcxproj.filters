@@ -4,10 +4,13 @@
     <ClCompile Include="..\..\src\libwebvttxx\abstract_parser.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\libwebvttxx\cue.cpp">
+    <ClCompile Include="..\..\src\libwebvttxx\file_parser.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\libwebvttxx\file_parser.cpp">
+    <ClCompile Include="..\..\src\libwebvttxx\node.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\libwebvttxx\nodefactory.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
@@ -31,6 +34,12 @@
       <Filter>include\webvttxx</Filter>
     </None>
     <None Include="..\..\include\webvttxx\string">
+      <Filter>include\webvttxx</Filter>
+    </None>
+    <None Include="..\..\include\webvttxx\node">
+      <Filter>include\webvttxx</Filter>
+    </None>
+    <None Include="..\..\include\webvttxx\nodefactory">
       <Filter>include\webvttxx</Filter>
     </None>
   </ItemGroup>

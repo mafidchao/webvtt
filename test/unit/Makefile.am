@@ -22,7 +22,8 @@ LDADD = $(LIBS)
 UNIT_TESTS = \
   sample_unittest \
   sample2_unittest \
-  csvertical_unittest
+  csvertical_unittest \
+  payloadnode_unittest
 
 TESTS = $(UNIT_TESTS)
 check_PROGRAMS = $(UNIT_TESTS)
@@ -32,3 +33,6 @@ sample2_unittest_SOURCES = sample2_unittest.cpp
 
 # Cue Settings tests
 csvertical_unittest_SOURCES = csvertical_unittest.cpp
+
+#Payload Tests
+payloadnode_unittest_SOURCES = payloadnode_unittest.cpp

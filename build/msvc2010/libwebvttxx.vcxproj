@@ -76,13 +76,16 @@
     <None Include="..\..\include\webvttxx\cue" />
     <None Include="..\..\include\webvttxx\error" />
     <None Include="..\..\include\webvttxx\file_parser" />
+    <None Include="..\..\include\webvttxx\node" />
+    <None Include="..\..\include\webvttxx\nodefactory" />
     <None Include="..\..\include\webvttxx\string" />
     <None Include="..\..\include\webvttxx\timestamp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\libwebvttxx\abstract_parser.cpp" />
-    <ClCompile Include="..\..\src\libwebvttxx\cue.cpp" />
     <ClCompile Include="..\..\src\libwebvttxx\file_parser.cpp" />
+    <ClCompile Include="..\..\src\libwebvttxx\node.cpp" />
+    <ClCompile Include="..\..\src\libwebvttxx\nodefactory.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

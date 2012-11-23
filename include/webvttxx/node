@@ -1,0 +1,92 @@
+#ifndef __WEBVTTXX_NODE__
+#	define __WEBVTTXX_NODE__
+
+#	include <webvtt/cue.h>
+#	include "string"
+#	include "timestamp"
+
+namespace WebVTT
+{
+
+class InternalNode;
+class TimeStampNode;
+class TextNode;
+class Node
+{
+public:
+	enum NodeKind
+	{
+		Class = WEBVTT_CLASS,
+		Italic = WEBVTT_ITALIC,
+		Underline = WEBVTT_UNDERLINE,
+		Bold = WEBVTT_BOLD,
+		Ruby = WEBVTT_RUBY,
+		RubyText = WEBVTT_RUBY_TEXT,
+		Voice = WEBVTT_VOICE,
+		Text = WEBVTT_TEXT,
+		TimeStamp = WEBVTT_TIME_STAMP
+	};
+
+	inline Node( webvtt_node_ptr otherNode ) { nodePtr = otherNode; }
+	inline NodeKind kind() const { return (NodeKind)nodePtr->kind; }
+
+	const Node * parent() const;
+	const InternalNode * toInternalNode() const;
+	const TextNode * toTextNode() const;
+	const TimeStampNode * toTimeStampNode() const;
+
+	virtual ~Node() { /* Enables using dynamic cast. */ }
+
+	private:
+		webvtt_node_ptr nodePtr;	
+};
+
+class InternalNode : public Node
+{
+public:
+	inline InternalNode( webvtt_node_ptr otherNode )
+		: Node( otherNode )
+	{
+		internalNodePtr = (webvtt_internal_node_ptr)otherNode->concrete_node;
+	}
+
+	inline String annotation() const { return String( &internalNodePtr->annotation ); }
+	inline StringList cssClasses() const { return StringList( *internalNodePtr->css_classes_ptr ); }
+	inline uint childCount() const { return internalNodePtr->length; }
+	const Node * child( uint index ) const;
+
+private:
+	webvtt_internal_node_ptr internalNodePtr;
+};
+
+class TextNode : public Node
+{
+public:
+	inline TextNode( webvtt_node_ptr otherNode )
+		: Node( otherNode )
+	{
+		leafNodePtr = (webvtt_leaf_node_ptr)otherNode->concrete_node;
+	}
+	inline String text() const { return String( &leafNodePtr->text ); }
+
+private:
+	webvtt_leaf_node_ptr leafNodePtr;
+};
+
+class TimeStampNode : public Node
+{
+public:
+	inline TimeStampNode( webvtt_node_ptr otherNode )
+		: Node( otherNode )
+	{
+		leafNodePtr = (webvtt_leaf_node_ptr)otherNode->concrete_node;
+	}
+	inline Timestamp timeStamp() const { return Timestamp( leafNodePtr->time_stamp ); }
+
+private:
+	webvtt_leaf_node_ptr leafNodePtr;
+};
+
+}
+
+#endif
