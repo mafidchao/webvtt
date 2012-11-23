@@ -19,10 +19,18 @@ LIBS = \
 
 LDADD = $(LIBS)
 
+CUESETTINGS_TESTS = \
+  csgeneric_unittest \
+  csline_unittest \
+  cssize_unittest \
+  csposition_unittest \
+  csvertical_unittest \
+  csalign_unittest
+
 UNIT_TESTS = \
   sample_unittest \
   sample2_unittest \
-  csvertical_unittest \
+  $(CUESETTINGS_TESTS) \
   payloadnode_unittest
 
 TESTS = $(UNIT_TESTS)
@@ -32,7 +40,12 @@ sample_unittest_SOURCES = sample_unittest.cpp
 sample2_unittest_SOURCES = sample2_unittest.cpp
 
 # Cue Settings tests
+csgeneric_unittest_SOURCES = csgeneric_unittest.cpp
+csline_unittest_SOURCES = csline_unittest.cpp
+cssize_unittest_SOURCES = cssize_unittest.cpp
+csposition_unittest_SOURCES = csposition_unittest.cpp
 csvertical_unittest_SOURCES = csvertical_unittest.cpp
+csalign_unittest_SOURCES = csalign_unittest.cpp
 
 #Payload Tests
 payloadnode_unittest_SOURCES = payloadnode_unittest.cpp

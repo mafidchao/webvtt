@@ -63,7 +63,9 @@ public:
 	{
 		Start = WEBVTT_ALIGN_START,
 		Middle = WEBVTT_ALIGN_MIDDLE,
-		End = WEBVTT_ALIGN_END
+		End = WEBVTT_ALIGN_END,
+		Left = WEBVTT_ALIGN_LEFT,
+		Right = WEBVTT_ALIGN_RIGHT,
 	};
 
 	inline ~Cue()
@@ -113,9 +115,12 @@ public:
 
 	inline Direction direction() const { return (Direction)cue->settings.vertical; }
 	inline float relativeLinePosition() const { return ( 1.f / 100.f ) * (float)cue->settings.line.relative_position; }
+	inline uint relativeLinePositionPercentage() const { return cue->settings.line.relative_position; }
 	inline int lineNumber() const { return cue->settings.line.no; }
 	inline float textPosition() const { return ( 1.f / 100.f ) * (float)cue->settings.position; }
+	inline uint textPositionPercentage() const { return cue->settings.position; }
 	inline float size() const { return ( 1.f / 100.f ) * (float)cue->settings.size; }
+	inline uint sizePercentage() const { return cue->settings.size; }
 	inline Align alignment() const { return (Align)(cue->settings.align); }
 
 	inline bool isHorizontal() const { return orientation() == Horizontal; }
@@ -126,7 +131,8 @@ public:
 	inline bool isAlignedToStart() const { return alignment() == Start; }
 	inline bool isAlignedToMiddle() const { return alignment() == Middle; }
 	inline bool isAlignedToEnd() const { return alignment() == End; }
-
+	inline bool isAlignedToLeft() const { return alignment() == Left; }
+	inline bool isAlignedToRight() const { return alignment() == Right; }
 private:
 	webvtt_cue cue;
 };
