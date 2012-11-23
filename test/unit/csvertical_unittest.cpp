@@ -1,5 +1,5 @@
 #include "cue_testfixture"
-class CueSetting_Vertical : public CueTest { };
+class CueSettingVertical : public CueTest { };
 
 /**
  * Verifies that the parser correctly parses a "vertical" key, followed by U+003A ':',
@@ -12,7 +12,7 @@ class CueSetting_Vertical : public CueTest { };
  *	2. A U+003A COLON character (:).
  *	3. One of the following strings: "rl", "lr". 
  */
-TEST_F(CueSetting_Vertical,RL)
+TEST_F(CueSettingVertical,RL)
 {
 	loadVtt( "cue-settings/vertical/rl.vtt", 1 );
 	ASSERT_TRUE( getCue( 0 ).isVerticalRightToLeft() );
@@ -29,7 +29,7 @@ TEST_F(CueSetting_Vertical,RL)
  *	2. A U+003A COLON character (:).
  *	3. One of the following strings: "rl", "lr". 
  */
-TEST_F(CueSetting_Vertical,LR)
+TEST_F(CueSettingVertical,LR)
 {
 	loadVtt( "cue-settings/vertical/lr.vtt", 1 );
 	ASSERT_TRUE( getCue( 0 ).isVerticalLeftToRight() );
@@ -43,7 +43,7 @@ TEST_F(CueSetting_Vertical,LR)
  *	2. A U+003A COLON character (:).
  *	3. One of the following strings: "rl", "lr". 
  */
-TEST_F(CueSetting_Vertical,DISABLED_BadKeyword)
+TEST_F(CueSettingVertical,DISABLED_BadKeyword)
 {
 	loadVtt( "cue-settings/vertical/bad-keyword.vtt", 1 );
 	const Error& err = getError( 0 );
@@ -63,7 +63,7 @@ TEST_F(CueSetting_Vertical,DISABLED_BadKeyword)
  *	2. A U+003A COLON character (:).
  *	3. One of the following strings: "rl", "lr". 
  */
-TEST_F(CueSetting_Vertical,DISABLED_BadDelimiter)
+TEST_F(CueSettingVertical,DISABLED_BadDelimiter)
 {
 	loadVtt ( "cue-settings/vertical/bad-delimiter.vtt", 1 );
 	const Error& err = getError( 0 );
@@ -87,7 +87,7 @@ TEST_F(CueSetting_Vertical,DISABLED_BadDelimiter)
  *	2. A U+003A COLON character (:).
  *	3. One of the following strings: "rl", "lr". 
  */
-TEST_F(CueSetting_Vertical,DISABLED_BadValue)
+TEST_F(CueSettingVertical,DISABLED_BadValue)
 {
 	loadVtt( "cue-settings/vertical/bad-value.vtt", 1 );
 	const Error& err = getError( 0 );
@@ -108,7 +108,7 @@ TEST_F(CueSetting_Vertical,DISABLED_BadValue)
  *	2. A U+003A COLON character (:).
  *	3. One of the following strings: "rl", "lr". 
  */
-TEST_F(CueSetting_Vertical,DISABLED_BadWhitespaceBeforeDelimiter)
+TEST_F(CueSettingVertical,DISABLED_BadWhitespaceBeforeDelimiter)
 {
 	loadVtt( "cue-settings/vertical/bad-whitespace-before-delimiter.vtt", 1 );
 	const Error& err = getError( 0 );
@@ -132,7 +132,7 @@ TEST_F(CueSetting_Vertical,DISABLED_BadWhitespaceBeforeDelimiter)
  *	2. A U+003A COLON character (:).
  *	3. One of the following strings: "rl", "lr". 
  */
-TEST_F(CueSetting_Vertical,DISABLED_BadWhitespaceAfterDelimiter)
+TEST_F(CueSettingVertical,DISABLED_BadWhitespaceAfterDelimiter)
 {
 	loadVtt( "cue-settings/vertical/bad-whitespace-after-delimiter.vtt", 1 );
 	const Error& err = getError( 0 );
