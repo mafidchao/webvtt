@@ -30,7 +30,7 @@ public:
 	inline Node( webvtt_node_ptr otherNode ) { nodePtr = otherNode; }
 	inline NodeKind kind() const { return (NodeKind)nodePtr->kind; }
 
-	Node * parent() const;
+	const Node * parent() const;
 	const InternalNode * toInternalNode() const;
 	const TextNode * toTextNode() const;
 	const TimeStampNode * toTimeStampNode() const;
@@ -53,7 +53,7 @@ public:
 	inline String annotation() const { return String( &internalNodePtr->annotation ); }
 	inline StringList cssClasses() const { return StringList( *internalNodePtr->css_classes_ptr ); }
 	inline uint childCount() const { return internalNodePtr->length; }
-	Node * child( uint index ) const;
+	const Node * child( uint index ) const;
 
 private:
 	webvtt_internal_node_ptr internalNodePtr;

@@ -3,7 +3,7 @@
 namespace WebVTT
 {
 
-Node * NodeFactory::createNode( webvtt_node_ptr otherNode )
+const Node * NodeFactory::createNode( webvtt_node_ptr otherNode )
 {
 	if ( WEBVTT_IS_VALID_INTERNAL_NODE( otherNode->kind ) )
 		return new InternalNode( otherNode );

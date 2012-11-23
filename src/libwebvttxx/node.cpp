@@ -4,12 +4,12 @@
 namespace WebVTT
 {	
 
-Node * Node::parent() const
+const Node * Node::parent() const
 {
 	return NodeFactory::createNode( nodePtr->parent );
 }
 
-Node * InternalNode::child( uint index ) const
+const Node * InternalNode::child( uint index ) const
 {
 	if( index <= internalNodePtr->length )
 		return NodeFactory::createNode( internalNodePtr->children[index] );
