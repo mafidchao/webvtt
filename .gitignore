@@ -45,3 +45,5 @@ test/unit/.deps/
 test/unit/.libs/
 src/parsevtt/parsevtt
 *_unittest
+*_unittest.exe
+*.dSYM/

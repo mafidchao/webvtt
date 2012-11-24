@@ -17,6 +17,28 @@ In Unix-like environments, we use autotools:
 
 On Windows, we use a Visual Studio Project, see files in build/msvc2010
 
+##Running Tests:
+
+All tests are written using Google Test, and run using `make check`. You can configure the tests to run with our without valgrind, for memory checking.
+
+Without valgrind:
+
+```
+./configure
+make
+make check
+```
+
+With valgrind:
+
+```
+./configure --enable-valgrind-testing
+make
+make check
+```
+
+When running tests with valgrind, any test that fails valgrind (even if it passes Google Test) will fail. See `test/unit/Makefile.am` for info on known test failures, and how to add/remove them.
+
 ##Routines available to application:
 ### Parser object routines
 	webvtt_status webvtt_create_parser( webvtt_cue_fn_ptr, webvtt_error_fn_ptr,

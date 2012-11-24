@@ -3,7 +3,10 @@ language: c
 compiler:
   - gcc
 
-script: ./bootstrap.sh && ./configure && make && make check
+before_install:
+  - sudo apt-get install valgrind
+
+script: ./bootstrap.sh && ./configure --enable-valgrind-testing && make && make check
 
 notifications:
   email:
