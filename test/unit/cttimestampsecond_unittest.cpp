@@ -33,7 +33,7 @@ class CueTimeTimestampSecond : public CueTest { };
  * 6. Three characters in the range U+0030 DIGIT ZERO (0) to U+0039 DIGIT NINE (9), representing the 
  *    thousandths of a second seconds-frac as a base ten integer.
  */
-TEST_F(CueTimeTimestampSecond,Nondigit)
+TEST_F(CueTimeTimestampSecond,NondigitTimestamp1)
 {
   loadVtt( "cue-times/timestamp/timestamp1/second/nondigit.vtt" );
   const Error& err = getError( 0 );
@@ -68,7 +68,7 @@ TEST_F(CueTimeTimestampSecond,Nondigit)
  * 6. Three characters in the range U+0030 DIGIT ZERO (0) to U+0039 DIGIT NINE (9), representing the 
  *    thousandths of a second seconds-frac as a base ten integer.
  */
-TEST_F(CueTimeTimestampSecond,OneDigit)
+TEST_F(CueTimeTimestampSecond,OneDigitTimestamp1)
 {
   loadVtt( "cue-times/timestamp/timestamp1/second/one_digit.vtt" );
   const Error& err = getError( 0 );
@@ -103,7 +103,7 @@ TEST_F(CueTimeTimestampSecond,OneDigit)
  * 6. Three characters in the range U+0030 DIGIT ZERO (0) to U+0039 DIGIT NINE (9), representing the 
  *    thousandths of a second seconds-frac as a base ten integer.
  */
-TEST_F(CueTimeTimestampSecond,GT60)
+TEST_F(CueTimeTimestampSecond,GT60Timestamp1)
 {
   loadVtt( "cue-times/timestamp/timestamp1/second/gt_60.vtt" );
   const Error& err = getError( 0 );
@@ -138,7 +138,7 @@ TEST_F(CueTimeTimestampSecond,GT60)
  * 6. Three characters in the range U+0030 DIGIT ZERO (0) to U+0039 DIGIT NINE (9), representing the 
  *    thousandths of a second seconds-frac as a base ten integer.
  */
-TEST_F(CueTimeTimestampSecond,ThreeDigits)
+TEST_F(CueTimeTimestampSecond,ThreeDigitsTimestamp1)
 {
   loadVtt( "cue-times/timestamp/timestamp1/second/three_digits.vtt" );
   const Error& err = getError( 0 );
@@ -177,7 +177,7 @@ TEST_F(CueTimeTimestampSecond,ThreeDigits)
  * 6. Three characters in the range U+0030 DIGIT ZERO (0) to U+0039 DIGIT NINE (9), representing the 
  *    thousandths of a second seconds-frac as a base ten integer.
  */
-TEST_F(CueTimeTimestampSecond,Nondigit)
+TEST_F(CueTimeTimestampSecond,NondigitTimestamp2)
 {
   loadVtt( "cue-times/timestamp/timestamp2/second/nondigit.vtt" );
   const Error& err = getError( 0 );
@@ -212,7 +212,7 @@ TEST_F(CueTimeTimestampSecond,Nondigit)
  * 6. Three characters in the range U+0030 DIGIT ZERO (0) to U+0039 DIGIT NINE (9), representing the 
  *    thousandths of a second seconds-frac as a base ten integer.
  */
-TEST_F(CueTimeTimestampSecond,OneDigit)
+TEST_F(CueTimeTimestampSecond,OneDigitTimestamp2)
 {
   loadVtt( "cue-times/timestamp/timestamp2/second/one_digit.vtt" );
   const Error& err = getError( 0 );
@@ -247,7 +247,7 @@ TEST_F(CueTimeTimestampSecond,OneDigit)
  * 6. Three characters in the range U+0030 DIGIT ZERO (0) to U+0039 DIGIT NINE (9), representing the 
  *    thousandths of a second seconds-frac as a base ten integer.
  */
-TEST_F(CueTimeTimestampSecond,GT60)
+TEST_F(CueTimeTimestampSecond,GT60Timestamp2)
 {
   loadVtt( "cue-times/timestamp/timestamp2/second/gt_60.vtt" );
   const Error& err = getError( 0 );
@@ -282,7 +282,7 @@ TEST_F(CueTimeTimestampSecond,GT60)
  * 6. Three characters in the range U+0030 DIGIT ZERO (0) to U+0039 DIGIT NINE (9), representing the 
  *    thousandths of a second seconds-frac as a base ten integer.
  */
-TEST_F(CueTimeTimestampSecond,ThreeDigits)
+TEST_F(CueTimeTimestampSecond,ThreeDigitsTimestamp2)
 {
   loadVtt( "cue-times/timestamp/timestamp2/second/three_digits.vtt" );
   const Error& err = getError( 0 );
