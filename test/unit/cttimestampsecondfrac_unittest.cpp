@@ -33,7 +33,7 @@ class CueTimeTimestampSecondFrac : public CueTest { };
  * 6. Three characters in the range U+0030 DIGIT ZERO (0) to U+0039 DIGIT NINE (9), representing the 
  *    thousandths of a second seconds-frac as a base ten integer.
  */
-TEST_F(CueTimeTimestampSecondFrac,NondigitTimestamp1)
+TEST_F(CueTimeTimestampSecondFrac,DISABLED_NondigitTimestamp1)
 {
   loadVtt( "cue-times/timestamp/timestamp1/secondfrac/nondigit.vtt" );
   const Error& err = getError( 0 );
@@ -177,7 +177,7 @@ TEST_F(CueTimeTimestampSecondFrac,FourDigitsTimestamp1)
  * 6. Three characters in the range U+0030 DIGIT ZERO (0) to U+0039 DIGIT NINE (9), representing the 
  *    thousandths of a second seconds-frac as a base ten integer.
  */
-TEST_F(CueTimeTimestampSecondFrac,NondigitTimestamp2)
+TEST_F(CueTimeTimestampSecondFrac,DISABLED_NondigitTimestamp2)
 {
   loadVtt( "cue-times/timestamp/timestamp2/secondfrac/nondigit.vtt" );
   const Error& err = getError( 0 );
