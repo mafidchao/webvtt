@@ -27,11 +27,15 @@ CUESETTINGS_TESTS = \
   csvertical_unittest \
   csalign_unittest
 
+PAYLOAD_TESTS = \
+  payloadnode_unittest \
+  payloadnodemulticomponent_unittest
+
 UNIT_TESTS = \
   sample_unittest \
   sample2_unittest \
   $(CUESETTINGS_TESTS) \
-  payloadnode_unittest
+  $(PAYLOAD_TESTS)
 
 TESTS = $(UNIT_TESTS)
 check_PROGRAMS = $(UNIT_TESTS)
@@ -49,3 +53,4 @@ csalign_unittest_SOURCES = csalign_unittest.cpp
 
 #Payload Tests
 payloadnode_unittest_SOURCES = payloadnode_unittest.cpp
+payloadnodemulticomponent_unittest_SOURCES = payloadnodemulticomponent_unittest.cpp

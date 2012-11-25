@@ -6,7 +6,7 @@ compiler:
 script: ./bootstrap.sh && ./configure && make && make check
 
 notifications:
-  email:
-    - david.humphrey@senecacollege.ca
+  email: false
+  #  - david.humphrey@senecacollege.ca
 
-  irc: "irc.mozilla.org#seneca"
+  # irc: "irc.mozilla.org#seneca"
