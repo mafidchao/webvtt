@@ -33,7 +33,7 @@ class CueTimeTimestampDelimiter : public CueTest { };
  * 6. Three characters in the range U+0030 DIGIT ZERO (0) to U+0039 DIGIT NINE (9), representing the 
  *    thousandths of a second seconds-frac as a base ten integer.
  */
-TEST_F(CueTimeTimestampDelimiter,HourMinuteBadDelimiterTimestamp1)
+TEST_F(CueTimeTimestampDelimiter,DISABLED_HourMinuteBadDelimiterTimestamp1)
 {
   loadVtt( "cue-times/timestamp/timestamp1/delimiter/hour_minute_bad_delimiter.vtt" );
   const Error& err = getError( 0 );
@@ -142,7 +142,7 @@ TEST_F(CueTimeTimestampDelimiter,SecondSecondFracBadDelimiterTimestamp1)
  * 6. Three characters in the range U+0030 DIGIT ZERO (0) to U+0039 DIGIT NINE (9), representing the 
  *    thousandths of a second seconds-frac as a base ten integer.
  */
-TEST_F(CueTimeTimestampDelimiter,HourMinuteBadDelimiterTimestamp2)
+TEST_F(CueTimeTimestampDelimiter,DISABLED_HourMinuteBadDelimiterTimestamp2)
 {
   loadVtt( "cue-times/timestamp/timestamp2/delimiter/hour_minute_bad_delimiter.vtt" );
   const Error& err = getError( 0 );
