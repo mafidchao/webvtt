@@ -9,7 +9,7 @@ http://dev.w3.org/html5/webvtt/#webvtt-cue-text
 */
 TEST_F(PayloadNodeTest, MulticomponentSeparated)
 {
-	loadVtt ("payload/samples/multicomponent/multiescape-separated.vtt", 1)
+	loadVtt ("payload/samples/multicomponent/multiescape-separated.vtt", 1);
 	
 	//Sample test to demonstrate how to work with nodes.
     //Asserts that the head node has only 4 childs.
