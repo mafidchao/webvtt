@@ -27,14 +27,16 @@ CUESETTINGS_TESTS = \
   csvertical_unittest \
   csalign_unittest
 
+CUETIMES_TESTS = \
+  ctorder_unittest \
+  ctseparator_unittest
+
 UNIT_TESTS = \
   sample_unittest \
   sample2_unittest \
   $(CUESETTINGS_TESTS) \
+  $(CUETIMES_TESTS) \
   payloadnode_unittest
-
-CUETIMES_TESTS = \
-  ctorder_unittest
 
 TESTS = $(UNIT_TESTS)
 check_PROGRAMS = $(UNIT_TESTS)
@@ -55,3 +57,4 @@ payloadnode_unittest_SOURCES = payloadnode_unittest.cpp
 
 # Cue Times tests
 ctorder_unittest_SOURCES = ctorder_unittest.cpp
+ctseparator_unittest_SOURCES = ctseparator_unittest.cpp
