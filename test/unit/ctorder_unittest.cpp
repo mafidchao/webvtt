@@ -44,9 +44,9 @@ TEST_F(CueTimeOrder,EndLTStart)
  * 5. A WebVTT timestamp representing the end time offset of the cue. The time represented by this
  *    WebVTT timestamp must be greater than the start time offset of the cue.
  */
-TEST_F(CueTimeOrder,DISABLED_StartLTPriorCue)
+TEST_F(CueTimeOrder,DISABLED_StartLTPriorCue) //currently fails, throws c++ out of bounds exception
 {
   loadVtt( "cue-times/order/start_lt_prior_cue.vtt" );
 	const Error& err = getError( 0 );
-  ASSERT_EQ( WEBVTT_INVALID_ENDTIME, err.error() ); //this should be different, but matching one found
+  ASSERT_EQ( WEBVTT_INVALID_ENDTIME, err.error() ); //this should be different, but no matching one found
 }
