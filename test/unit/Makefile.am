@@ -8,7 +8,7 @@ AM_CPPFLAGS = \
   $(GTEST_CPPFLAGS)
   
 AM_CXXFLAGS = $(AM_CPPFLAGS) $(CXXFLAGS)
-AM_LDFLAGS = -static
+AM_LDFLAGS = -static -lm
 
 LIBS = \
   $(top_builddir)/src/libwebvtt/libwebvtt-static.la \
@@ -33,6 +33,9 @@ UNIT_TESTS = \
   $(CUESETTINGS_TESTS) \
   payloadnode_unittest
 
+CUETIMES_TESTS = \
+  ctorder_unittest
+
 TESTS = $(UNIT_TESTS)
 check_PROGRAMS = $(UNIT_TESTS)
 
@@ -49,3 +52,6 @@ csalign_unittest_SOURCES = csalign_unittest.cpp
 
 #Payload Tests
 payloadnode_unittest_SOURCES = payloadnode_unittest.cpp
+
+# Cue Times tests
+ctorder_unittest_SOURCES = ctorder_unittest.cpp
