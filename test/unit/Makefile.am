@@ -6,7 +6,7 @@ AM_CPPFLAGS = \
   -I$(top_srcdir)/src/libwebvtt \
   -I$(top_srcdir)/test/gtest \
   $(GTEST_CPPFLAGS)
-  
+
 AM_CXXFLAGS = $(AM_CPPFLAGS) $(CXXFLAGS)
 AM_LDFLAGS = -static
 
@@ -33,7 +33,31 @@ UNIT_TESTS = \
   $(CUESETTINGS_TESTS) \
   payloadnode_unittest
 
+# On TravisCI, we run valgrind for unit tests with --exit-exitcode=1,
+# which means otherwise passing tests fail when valgrind fails leak-check.
+# Tests added to KNOWN_VALGRIND_TEST_FAILURES will not cause the test run
+# to fail. You can run tests with valgrind like so:
+#
+#   ./configure --enable-valgrind-testing
+#   make && make check
+KNOWN_VALGRIND_TEST_FAILURES =
+if VALGRIND_TESTING
+KNOWN_VALGRIND_TEST_FAILURES += \
+	csgeneric_unittest \
+	csline_unittest \
+	cssize_unittest \
+	csposition_unittest \
+	csvertical_unittest \
+	csalign_unittest
+endif
+
+# Tests we expect to fail (i.e., known-fails)
+XFAIL_TESTS = $(KNOWN_VALGRIND_TEST_FAILURES)
+
+# TODO: OS X needs to filer gtest valgrind warnings:
+# valgrind ... <unittest> 2>&1 | sed -e "/warning: addVar:/d"
 TESTS = $(UNIT_TESTS)
+TESTS_ENVIRONMENT = $(VALGRIND_ENVIRONMENT)
 check_PROGRAMS = $(UNIT_TESTS)
 
 sample_unittest_SOURCES = sample_unittest.cpp
