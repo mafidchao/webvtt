@@ -90,6 +90,15 @@ webvtt_bytearray_getline( webvtt_bytearray *pba, const webvtt_byte *buffer,
 	const webvtt_byte *s = buffer + *pos;
 	const webvtt_byte *p = s;
 	const webvtt_byte *n = buffer + len;
+	if( !ba )
+	{
+		if(WEBVTT_FAILED(webvtt_create_bytearray( 0x100, pba )))
+		{
+			return -1;
+		}
+		ba = *pba;
+	}
+
 	while( p < n && *p != CR && *p != LF ) 
 	{
 		++p;

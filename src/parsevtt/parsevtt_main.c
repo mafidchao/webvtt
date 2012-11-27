@@ -30,19 +30,12 @@ parse_fh(FILE *fh, webvtt_parser vtt)
 		webvtt_uint n_read = (webvtt_uint)fread( buffer, 1, sizeof(buffer), fh );
 		if( !n_read && feof( fh ) ) 
 			break; /* Read the file successfully */
-		result = webvtt_parse_chunk( vtt, buffer, n_read );
-			
-		if( result == WEBVTT_PARSE_ERROR )
+		if( WEBVTT_FAILED(result = webvtt_parse_chunk( vtt, buffer, n_read )) )
 		{
-			/**
-			 * TODO:
-			 * Acquire some detailed information from the parser (Line number in input file,
-			 * column number, specific error
-			 */
 			return 1;
 		}
 	} while( result == WEBVTT_SUCCESS );
-	if( webvtt_finish_parsing( vtt ) == WEBVTT_PARSE_ERROR )
+	if( WEBVTT_FAILED(result = webvtt_finish_parsing( vtt )) )
 	{
 		return 1;
 	}

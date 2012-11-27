@@ -5,11 +5,6 @@
 
 typedef enum webvtt_token_t webvtt_token;
 
-#define  CR (0x0D)
-#define  LF (0x0A)
-#define SPC (0x20)
-#define TAB (0x09)
-
 enum
 webvtt_token_t
 {
@@ -17,6 +12,7 @@ webvtt_token_t
 	UNFINISHED = -1, /* not-token */
 	BOM,
 	WEBVTT, /* 'WEBVTT' */
+	NOTE, /* 'NOTE' */
 	INTEGER, /* /-?\d+/ */
 	NEWLINE, /* /[\r\n]|(\r\n)/ */
 	WHITESPACE, /* /[\t ]/ */
@@ -31,9 +27,11 @@ webvtt_token_t
 	START, /* 'start' */
 	MIDDLE, /* 'middle' */
 	END, /* 'end' */
+	LEFT, /* 'left' */
+	RIGHT, /* 'right' */
 	SEPARATOR, /* '-->' */
 	TIMESTAMP,
-	PERCENTAGE,
+	PERCENTAGE, /* '\d+%' */
 	COLON /* ':' */
 };
 
@@ -46,6 +44,19 @@ webvtt_token_t
 #define READ_LINE (1<<3)
 #define READ_ALIGN (1<<4)
 
+typedef struct webvtt_state
+{
+	webvtt_uint state;
+	union
+	{
+		webvtt_cue cue;
+		webvtt_leaf_node *lf;
+		webvtt_internal_node *in;
+		webvtt_uint value;
+		void *pointer;
+	} v;
+} webvtt_state;
+
 struct
 webvtt_parser_t
 {
@@ -56,9 +67,23 @@ webvtt_parser_t
 	webvtt_cue_fn_ptr read;
 	webvtt_error_fn_ptr error;
 	void *userdata;
-	webvtt_bool mode;
+
+	/**
+	 * 'mode' can have several states, it is not boolean.
+	 */
+	webvtt_uint mode;
+
+	/**
+	 * I'm not sure 'finish' is actually needed at all.
+	 */
 	webvtt_bool finish;
 	webvtt_uint flags;
+
+	webvtt_state *top; /* Top parse state */
+	webvtt_state astack[0x100];
+	webvtt_state *stack; /* dynamically allocated stack, if 'astack' fills up */
+	webvtt_uint stack_alloc; /* item capacity in 'stack' */
+
 	/**
 	 * Current cue
 	 */
@@ -79,7 +104,7 @@ webvtt_parser_t
 	webvtt_byte token[0x100];
 };
 
-WEBVTT_INTERN webvtt_token webvtt_lex( webvtt_parser self, webvtt_byte *buffer, webvtt_uint *pos, webvtt_uint length, int finish );
+WEBVTT_INTERN webvtt_token webvtt_lex( webvtt_parser self, const webvtt_byte *buffer, webvtt_uint *pos, webvtt_uint length, int finish );
 
 #define ERROR(Code) \
 do \

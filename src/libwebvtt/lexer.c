@@ -7,23 +7,116 @@
  * TODO: Replace all char literals with hex values, just in case compiling on a machine which uses an
  * incompatible character set
  */
-#define BACKUP() do { --self->bytes; --(*pos); self->token[ --self->token_pos ] = 0; self->tstate = T_INITIAL; } while(0)
-#define BEGIN_STATE(state) case state: {
-#define END_STATE } break;
-#define STATE_IF(X,State) case X: self->tstate = State; break
-#define TOKEN_IF(X,Token) case X: self->tstate = T_INITIAL; return Token; break
-#define TOKEN_IFX(X,Token,Actions) case X: Actions self->tstate = T_INITIAL; return Token; break
-#define TOKEN_IF_WSNL(tok) do { if( (c == 0x0D) || (c == 0x0A) || (c == 0x20) || (c == 0x09) ) { BACKUP(); return tok; } } while(0)
-#define IF_DIGIT if( c >= '0' && c <= '9' ) {
-#define DO_STATE(State) self->tstate = State; continue
-#define SWITCHX(actions) switch(c) { actions }
-#define BEGIN_BYTE switch(c) {
-#define END_BYTE default: BACKUP(); return BADTOKEN; } break;
-#define END_BYTE_ }
-#define DEFAULT(actions) default: { actions } break;
-#define ELSE } else {
-#define ENDIF }
-#define RESET self->column = 0; self->token_pos = 0; self->tstate = T_INITIAL; self->token[0] = 0
+
+#define ASCII_DIGIT case 0x30: case 0x31: case 0x32: case 0x33: case 0x34: case 0x35: case 0x36: case 0x37: case 0x38: case 0x39:
+#define ASCII_WHITESPACE case 0x0D: case 0x0A: case 0x20: case 0x09:
+#define ASCII_SPACE case 0x20:
+#define ASCII_TAB case 0x09:
+#define ASCII_CR case 0x0D:
+#define ASCII_LF case 0x0A:
+
+#define ASCII_DASH case 0x2D:
+#define ASCII_PERIOD case 0x2E:
+#define ASCII_GT case 0x3E:
+#define ASCII_COLON case 0x3A:
+#define ASCII_PERCENT case 0x25:
+
+#define ASCII_0 case 0x30:
+#define ASCII_1 case 0x31:
+#define ASCII_2 case 0x32:
+#define ASCII_3 case 0x33:
+#define ASCII_4 case 0x34:
+#define ASCII_5 case 0x35:
+#define ASCII_6 case 0x36:
+#define ASCII_7 case 0x37:
+#define ASCII_8 case 0x38:
+#define ASCII_9 case 0x39:
+
+#define ASCII_a case 0x61:
+#define ASCII_b case 0x62:
+#define ASCII_c case 0x63:
+#define ASCII_d case 0x64:
+#define ASCII_e case 0x65:
+#define ASCII_f case 0x66:
+#define ASCII_g case 0x67:
+#define ASCII_h case 0x68:
+#define ASCII_i case 0x69:
+#define ASCII_j case 0x6A:
+#define ASCII_k case 0x6B:
+#define ASCII_l case 0x6C:
+#define ASCII_m case 0x6D:
+#define ASCII_n case 0x6E:
+#define ASCII_o case 0x6F:
+#define ASCII_p case 0x70:
+#define ASCII_q case 0x71:
+#define ASCII_r case 0x72:
+#define ASCII_s case 0x73:
+#define ASCII_t case 0x74:
+#define ASCII_u case 0x75:
+#define ASCII_v case 0x76:
+#define ASCII_w case 0x77:
+#define ASCII_x case 0x78:
+#define ASCII_y case 0x79:
+#define ASCII_z case 0x7A:
+
+#define ASCII_A case 0x41:
+#define ASCII_B case 0x42:
+#define ASCII_C case 0x43:
+#define ASCII_D case 0x44:
+#define ASCII_E case 0x45:
+#define ASCII_F case 0x46:
+#define ASCII_G case 0x47:
+#define ASCII_H case 0x48:
+#define ASCII_I case 0x49:
+#define ASCII_J case 0x4A:
+#define ASCII_K case 0x4B:
+#define ASCII_L case 0x4C:
+#define ASCII_M case 0x4D:
+#define ASCII_N case 0x4E:
+#define ASCII_O case 0x4F:
+#define ASCII_P case 0x50:
+#define ASCII_Q case 0x51:
+#define ASCII_R case 0x52:
+#define ASCII_S case 0x53:
+#define ASCII_T case 0x54:
+#define ASCII_U case 0x55:
+#define ASCII_V case 0x56:
+#define ASCII_W case 0x57:
+#define ASCII_X case 0x58:
+#define ASCII_Y case 0x59:
+#define ASCII_Z case 0x5A:
+
+#define UTF8_BOM0 case 0xEF:
+#define UTF8_BOM1 case 0xBB:
+#define UTF8_BOM2 case 0xBF:
+
+#define DEFAULT default:
+
+/**
+ * Just for semantic clarity
+ */
+#define OR
+#define AND
+
+#define OVERFLOW(X) \
+	if( self->token_pos >= (sizeof(self->token) - 1 ) ) \
+	{ \
+		RETURN(X) \
+	}
+
+#define BEGIN_STATE(state) case state: { switch(c) {
+#define END_STATE DEFAULT BACKUP return BADTOKEN; } } break;
+#define END_STATE_EX } } break;
+
+#define BACKUP (*pos)--; self->token[--self->token_pos] = 0; self->tstate = T_INITIAL;
+#define SET_STATE(X) self->tstate = X; break;
+#define RETURN(X) self->tstate = T_INITIAL; return X;
+#define SET_NEWLINE self->line++; self->column = 0; RETURN(NEWLINE)
+#define CONTINUE continue;
+
+#define RESET self->bytes = self->column = self->token_pos = 0; self->tstate = T_INITIAL;
+#define BREAK break;
+
 #define CHECK_BROKEN_TIMESTAMP \
 if(self->token_pos == sizeof(self->token) - 1 ) \
 { \
@@ -41,11 +134,12 @@ enum token_state_t
 	T_POSITION6, T_POSITION7, T_ALIGN0, T_ALIGN1, T_ALIGN2, T_ALIGN3, T_ALIGN4, T_L0, T_LINE1, T_LINE2, T_LINE3,
 	T_VERTICAL0, T_VERTICAL1, T_VERTICAL2, T_VERTICAL3, T_VERTICAL4, T_VERTICAL5, T_VERTICAL6, T_VERTICAL7, T_RL0,
 	T_S0, T_SIZE1, T_SIZE2, T_SIZE3, T_START1, T_START2, T_START3, T_MIDDLE0, T_MIDDLE1, T_MIDDLE2, T_MIDDLE3,
-	T_MIDDLE4, T_END0, T_END1, T_TIMESTAMP1, T_TIMESTAMP2, T_TIMESTAMP3, T_TIMESTAMP4, T_TIMESTAMP5
+	T_MIDDLE4, T_END0, T_END1, T_TIMESTAMP1, T_TIMESTAMP2, T_TIMESTAMP3, T_TIMESTAMP4, T_TIMESTAMP5, T_RIGHT1, T_RIGHT2,
+	T_RIGHT3, T_NOTE1, T_NOTE2, T_NOTE3, T_LEFT1, T_LEFT2, 
 };
 
 WEBVTT_INTERN webvtt_token
-webvtt_lex( webvtt_parser self, webvtt_byte *buffer, webvtt_uint *pos, webvtt_uint length, int finish )
+webvtt_lex( webvtt_parser self, const webvtt_byte *buffer, webvtt_uint *pos, webvtt_uint length, int finish )
 {
 	while( *pos < length )
 	{
@@ -57,359 +151,335 @@ webvtt_lex( webvtt_parser self, webvtt_byte *buffer, webvtt_uint *pos, webvtt_ui
 		switch( self->tstate )
 		{
 			BEGIN_STATE(T_INITIAL)
-				IF_DIGIT
-					DO_STATE(T_DIGIT0);
-				ELSE
-					BEGIN_BYTE
-						STATE_IF(0xEF,T_BOM0);
-						STATE_IF('W',T_WEBVTT0);
-						STATE_IF('-',T_DASH0);
-						STATE_IF(CR,T_NEWLINE0);
-						TOKEN_IFX(LF,NEWLINE,self->line++;self->column=0;);
-						STATE_IF(' ',T_WHITESPACE);
-						STATE_IF('\t',T_WHITESPACE);
-						TOKEN_IF('.',FULL_STOP);
-						STATE_IF('p',T_POSITION0);
-						STATE_IF('a',T_ALIGN0);
-						STATE_IF('l',T_L0);
-						STATE_IF('v',T_VERTICAL0);
-						STATE_IF('r',T_RL0);
-						STATE_IF('s',T_S0);
-						STATE_IF('m',T_MIDDLE0);
-						STATE_IF('e',T_END0);
-					END_BYTE
-				ENDIF
+				ASCII_DIGIT { SET_STATE(T_DIGIT0) }
+				ASCII_W  { SET_STATE(T_WEBVTT0) }
+				ASCII_DASH { SET_STATE(T_DASH0) }
+				UTF8_BOM0 { SET_STATE(T_BOM0) }
+				ASCII_LF { SET_NEWLINE }
+				ASCII_CR { SET_STATE(T_NEWLINE0) }
+				ASCII_SPACE OR ASCII_TAB { SET_STATE(T_WHITESPACE) }
+				ASCII_PERIOD { RETURN(FULL_STOP) }
+				ASCII_COLON { RETURN(COLON) }
+				ASCII_p { SET_STATE(T_POSITION0) }
+				ASCII_a { SET_STATE(T_ALIGN0) }
+				ASCII_l { SET_STATE(T_L0) }
+				ASCII_v { SET_STATE(T_VERTICAL0) }
+				ASCII_r { SET_STATE(T_RL0) }
+				ASCII_s { SET_STATE(T_S0) }
+				ASCII_m { SET_STATE(T_MIDDLE0) }
+				ASCII_e { SET_STATE(T_END0) }
+				ASCII_N { SET_STATE(T_NOTE1) }
 			END_STATE
+
 			BEGIN_STATE(T_BOM0)
-				BEGIN_BYTE
-					STATE_IF(0xBB,T_BOM1);
-				END_BYTE
+				UTF8_BOM1 { SET_STATE(T_BOM1) }
 			END_STATE
+
 			BEGIN_STATE(T_BOM1)
-				if( c == 0xBF && self->bytes == 3 ) 
-				{ 
-					/* skip BOM if it is first in file */
-					RESET; 
-				}
-				else
-				BEGIN_BYTE
-					TOKEN_IF(0xBF,BOM);
-				END_BYTE
-			END_STATE
-			BEGIN_STATE(T_WEBVTT0)
-				BEGIN_BYTE
-					STATE_IF('E',T_WEBVTT1);
-				END_BYTE
-			END_STATE
-			BEGIN_STATE(T_WEBVTT1)
-				BEGIN_BYTE
-					STATE_IF('B',T_WEBVTT2);
-				END_BYTE
-			END_STATE
-			BEGIN_STATE(T_WEBVTT2)
-				BEGIN_BYTE
-					STATE_IF('V',T_WEBVTT3);
-				END_BYTE
-			END_STATE
-			BEGIN_STATE(T_WEBVTT3)
-				BEGIN_BYTE
-					STATE_IF('T',T_WEBVTT4);
-				END_BYTE
-			END_STATE
-			BEGIN_STATE(T_WEBVTT4)
-				BEGIN_BYTE
-					STATE_IF('T',T_WEBVTT5);
-				END_BYTE
-			END_STATE
-			BEGIN_STATE(T_WEBVTT5)
-				TOKEN_IF_WSNL(WEBVTT);
-			END_STATE
-			BEGIN_STATE(T_DASH0)
-				IF_DIGIT
-					DO_STATE(T_DIGIT0);
-				ELSE
-					BEGIN_BYTE
-						STATE_IF('-',T_SEP1);
-					END_BYTE
-				ENDIF
-			END_STATE
-			BEGIN_STATE(T_SEP1)
-				BEGIN_BYTE
-					TOKEN_IF('>',SEPARATOR);
-				END_BYTE
-			END_STATE
-			BEGIN_STATE(T_DIGIT0)
-				if(self->token_pos == sizeof(self->token) - 1 ) 
+				UTF8_BOM2
 				{
-					return INTEGER;
+					if( self->bytes == 3 )
+					{
+						RESET
+						BREAK
+					}
+					RETURN(BOM)
 				}
-				IF_DIGIT
-					DO_STATE(T_DIGIT0);
-				ELSE
-					BEGIN_BYTE
-						STATE_IF(':',T_TIMESTAMP1);
-						TOKEN_IF('%',PERCENTAGE);
-						DEFAULT(BACKUP(); return INTEGER;)
-					END_BYTE_
-				ENDIF
 			END_STATE
+
+			BEGIN_STATE(T_WEBVTT0)
+				ASCII_E { SET_STATE(T_WEBVTT1) }
+			END_STATE
+
+			BEGIN_STATE(T_WEBVTT1)
+				ASCII_B { SET_STATE(T_WEBVTT2) }
+			END_STATE
+
+			BEGIN_STATE(T_WEBVTT2)
+				ASCII_V { SET_STATE(T_WEBVTT3) }
+			END_STATE
+
+			BEGIN_STATE(T_WEBVTT3)
+				ASCII_T { SET_STATE(T_WEBVTT4) }
+			END_STATE
+		
+			BEGIN_STATE(T_WEBVTT4)
+				ASCII_T { RETURN(WEBVTT) }
+			END_STATE
+		
+			BEGIN_STATE(T_DASH0)
+				ASCII_DIGIT { SET_STATE(T_DIGIT0) }
+				ASCII_DASH { SET_STATE(T_SEP1) }
+			END_STATE
+
+			BEGIN_STATE(T_SEP1)
+				ASCII_GT { RETURN(SEPARATOR) }
+			END_STATE
+
+			BEGIN_STATE(T_DIGIT0)
+				ASCII_DIGIT
+				{
+					OVERFLOW(INTEGER)
+					SET_STATE(T_DIGIT0)
+				}
+				ASCII_COLON { SET_STATE(T_TIMESTAMP1) }
+				ASCII_PERCENT { RETURN(PERCENTAGE) }
+				DEFAULT { BACKUP AND RETURN(INTEGER) }
+			END_STATE_EX
+
 			BEGIN_STATE(T_NEWLINE0)
-				BEGIN_BYTE
-					TOKEN_IFX(LF,NEWLINE,self->line++;self->column=0;);
-					DEFAULT(BACKUP(); self->line++; self->column=0; return NEWLINE;);
-				END_BYTE_
-			END_STATE
+				ASCII_LF { SET_NEWLINE }
+				DEFAULT { BACKUP AND SET_NEWLINE }
+			END_STATE_EX
+
 			BEGIN_STATE(T_WHITESPACE)
-				BEGIN_BYTE
-					STATE_IF(' ',T_WHITESPACE);
-					STATE_IF('\t',T_WHITESPACE);
-					DEFAULT(BACKUP(); return WHITESPACE;);
-				END_BYTE_
-			END_STATE
+				ASCII_SPACE OR ASCII_TAB { OVERFLOW(WHITESPACE) SET_STATE(T_WHITESPACE) }
+				DEFAULT { BACKUP RETURN(WHITESPACE) }
+			END_STATE_EX
+
 			BEGIN_STATE(T_POSITION0)
-				BEGIN_BYTE
-					STATE_IF('o',T_POSITION1);
-				END_BYTE
+				ASCII_o { SET_STATE(T_POSITION1) }
 			END_STATE
+
 			BEGIN_STATE(T_POSITION1)
-				BEGIN_BYTE
-					STATE_IF('s',T_POSITION2);
-				END_BYTE
+				ASCII_s { SET_STATE(T_POSITION2) }
 			END_STATE
+
 			BEGIN_STATE(T_POSITION2)
-				BEGIN_BYTE
-					STATE_IF('i',T_POSITION3);
-				END_BYTE
+				ASCII_i { SET_STATE(T_POSITION3) }
 			END_STATE
+
 			BEGIN_STATE(T_POSITION3)
-				BEGIN_BYTE
-					STATE_IF('t',T_POSITION4);
-				END_BYTE
+				ASCII_t { SET_STATE(T_POSITION4) }
 			END_STATE
+
 			BEGIN_STATE(T_POSITION4)
-				BEGIN_BYTE
-					STATE_IF('i',T_POSITION5);
-				END_BYTE
+				ASCII_i { SET_STATE(T_POSITION5) }
 			END_STATE
+
 			BEGIN_STATE(T_POSITION5)
-				BEGIN_BYTE
-					STATE_IF('o',T_POSITION6);
-				END_BYTE
+				ASCII_o { SET_STATE(T_POSITION6) }
 			END_STATE
+
 			BEGIN_STATE(T_POSITION6)
-				BEGIN_BYTE
-					STATE_IF('n',T_POSITION7);
-				END_BYTE
+				ASCII_n { RETURN(POSITION) }
 			END_STATE
-			BEGIN_STATE(T_POSITION7)
-				BEGIN_BYTE
-					TOKEN_IF(':',POSITION);
-				END_BYTE
-			END_STATE
+
 			BEGIN_STATE(T_ALIGN0)
-				BEGIN_BYTE
-					STATE_IF('l',T_ALIGN1);
-				END_BYTE
+				ASCII_l { SET_STATE(T_ALIGN1) }
 			END_STATE
+
 			BEGIN_STATE(T_ALIGN1)
-				BEGIN_BYTE
-					STATE_IF('i',T_ALIGN2);
-				END_BYTE
+				ASCII_i { SET_STATE(T_ALIGN2) }
 			END_STATE
+
 			BEGIN_STATE(T_ALIGN2)
-				BEGIN_BYTE
-					STATE_IF('g',T_ALIGN3);
-				END_BYTE
+				ASCII_g { SET_STATE(T_ALIGN3) }
 			END_STATE
+
 			BEGIN_STATE(T_ALIGN3)
-				BEGIN_BYTE
-					STATE_IF('n',T_ALIGN4);
-				END_BYTE
+				ASCII_n { SET_STATE(T_ALIGN4) }
 			END_STATE
-			BEGIN_STATE(T_ALIGN4)
-				BEGIN_BYTE
-					TOKEN_IF(':',ALIGN);
-				END_BYTE
-			END_STATE
+
 			BEGIN_STATE(T_L0)
-				BEGIN_BYTE
-					TOKEN_IF('r',LR);
-					STATE_IF('i',T_LINE1);
-				END_BYTE
+				ASCII_r { RETURN(LR) }
+				ASCII_i { SET_STATE(T_LINE1) }
+				ASCII_e { SET_STATE(T_LEFT1) }
 			END_STATE
+
 			BEGIN_STATE(T_LINE1)
-				BEGIN_BYTE
-					STATE_IF('n',T_LINE2);
-				END_BYTE
+				ASCII_n { SET_STATE(T_LINE2) }
 			END_STATE
+
 			BEGIN_STATE(T_LINE2)
-				BEGIN_BYTE
-					STATE_IF('e',T_LINE3);
-				END_BYTE
+				ASCII_e { RETURN(LINE) }
 			END_STATE
-			BEGIN_STATE(T_LINE3)
-				BEGIN_BYTE
-					TOKEN_IF(':',LINE);
-				END_BYTE
+
+			BEGIN_STATE(T_LEFT1)
+				ASCII_f { SET_STATE(T_LEFT2) }
 			END_STATE
+
+			BEGIN_STATE(T_LEFT2)
+				ASCII_t { RETURN(LEFT) }
+			END_STATE
+
 			BEGIN_STATE(T_VERTICAL0)
-				BEGIN_BYTE
-					STATE_IF('e',T_VERTICAL1);
-				END_BYTE
+				ASCII_e { SET_STATE(T_VERTICAL1) }
 			END_STATE
+
 			BEGIN_STATE(T_VERTICAL1)
-				BEGIN_BYTE
-					STATE_IF('r',T_VERTICAL2);
-				END_BYTE
+				ASCII_r { SET_STATE(T_VERTICAL2) }
 			END_STATE
+
 			BEGIN_STATE(T_VERTICAL2)
-				BEGIN_BYTE
-					STATE_IF('t',T_VERTICAL3);
-				END_BYTE
+				ASCII_t { SET_STATE(T_VERTICAL3) }
 			END_STATE
+
 			BEGIN_STATE(T_VERTICAL3)
-				BEGIN_BYTE
-					STATE_IF('i',T_VERTICAL4);
-				END_BYTE
+				ASCII_i { SET_STATE(T_VERTICAL4) }
 			END_STATE
+
 			BEGIN_STATE(T_VERTICAL4)
-				BEGIN_BYTE
-					STATE_IF('c',T_VERTICAL5);
-				END_BYTE
+				ASCII_c { SET_STATE(T_VERTICAL5) }
 			END_STATE
+
 			BEGIN_STATE(T_VERTICAL5)
-				BEGIN_BYTE
-					STATE_IF('a',T_VERTICAL6);
-				END_BYTE
+				ASCII_a { SET_STATE(T_VERTICAL6) }
 			END_STATE
+
 			BEGIN_STATE(T_VERTICAL6)
-				BEGIN_BYTE
-					STATE_IF('l',T_VERTICAL7);
-				END_BYTE
+				ASCII_l { RETURN(VERTICAL) }
 			END_STATE
-			BEGIN_STATE(T_VERTICAL7)
-				BEGIN_BYTE
-					TOKEN_IF(':',VERTICAL);
-				END_BYTE
-			END_STATE
+			
 			BEGIN_STATE(T_RL0)
-				BEGIN_BYTE
-					TOKEN_IF('l',RL);
-				END_BYTE
+				ASCII_l { RETURN(RL) }
+				ASCII_i { SET_STATE(T_RIGHT1) }
 			END_STATE
+
+			BEGIN_STATE(T_RIGHT1)
+				ASCII_g { SET_STATE(T_RIGHT2) }
+			END_STATE
+
+			BEGIN_STATE(T_RIGHT2)
+				ASCII_h { SET_STATE(T_RIGHT3) }
+			END_STATE
+
+			BEGIN_STATE(T_RIGHT3)
+				ASCII_t { RETURN(RIGHT) }
+			END_STATE
+
 			BEGIN_STATE(T_S0)
-				BEGIN_BYTE
-					STATE_IF('t',T_START1);
-					STATE_IF('i',T_SIZE1);
-				END_BYTE
+				ASCII_t { SET_STATE(T_START1) }
+				ASCII_i { SET_STATE(T_SIZE1) }
 			END_STATE
+
 			BEGIN_STATE(T_SIZE1)
-				BEGIN_BYTE
-					STATE_IF('z',T_SIZE2);
-				END_BYTE
+				ASCII_z { SET_STATE(T_SIZE2) }
 			END_STATE
+
 			BEGIN_STATE(T_SIZE2)
-				BEGIN_BYTE
-					STATE_IF('e',T_SIZE3);
-				END_BYTE
+				ASCII_e { RETURN(SIZE) }
 			END_STATE
-			BEGIN_STATE(T_SIZE3)
-				BEGIN_BYTE
-					TOKEN_IF(':',SIZE);
-				END_BYTE
-			END_STATE
+
 			BEGIN_STATE(T_START1)
-				BEGIN_BYTE
-					STATE_IF('a',T_START2);
-				END_BYTE
+				ASCII_a { SET_STATE(T_START2) }
 			END_STATE
+
 			BEGIN_STATE(T_START2)
-				BEGIN_BYTE
-					STATE_IF('r',T_START3);
-				END_BYTE
+				ASCII_r { SET_STATE(T_START3) }
 			END_STATE
+
 			BEGIN_STATE(T_START3)
-				BEGIN_BYTE
-					TOKEN_IF('t',START);
-				END_BYTE
+				ASCII_t { RETURN(START) }
 			END_STATE
+
 			BEGIN_STATE(T_MIDDLE0)
-				BEGIN_BYTE
-					STATE_IF('i',T_MIDDLE1);
-				END_BYTE
+				ASCII_i { SET_STATE(T_MIDDLE1) }
 			END_STATE
+
 			BEGIN_STATE(T_MIDDLE1)
-				BEGIN_BYTE
-					STATE_IF('d',T_MIDDLE2);
-				END_BYTE
+				ASCII_d { SET_STATE(T_MIDDLE2) }
 			END_STATE
+
 			BEGIN_STATE(T_MIDDLE2)
-				BEGIN_BYTE
-					STATE_IF('d',T_MIDDLE3);
-				END_BYTE
+				ASCII_d { SET_STATE(T_MIDDLE3) }
 			END_STATE
+
 			BEGIN_STATE(T_MIDDLE3)
-				BEGIN_BYTE
-					STATE_IF('l',T_MIDDLE4);
-				END_BYTE
+				ASCII_l { SET_STATE(T_MIDDLE4) }
 			END_STATE
+
 			BEGIN_STATE(T_MIDDLE4)
-				BEGIN_BYTE
-					TOKEN_IF('e',MIDDLE);
-				END_BYTE
+				ASCII_e { RETURN(MIDDLE) }
 			END_STATE
+
 			BEGIN_STATE(T_END0)
-				BEGIN_BYTE
-					STATE_IF('n',T_END1);
-				END_BYTE
+				ASCII_n { SET_STATE(T_END1) }
 			END_STATE
+
 			BEGIN_STATE(T_END1)
-				BEGIN_BYTE
-					TOKEN_IF('d',END);
-				END_BYTE
+				ASCII_d { RETURN(END) }
 			END_STATE
+
 			BEGIN_STATE(T_TIMESTAMP1)
-				IF_DIGIT DO_STATE(T_TIMESTAMP1); ENDIF
-				BEGIN_BYTE
-					STATE_IF(':',T_TIMESTAMP2);
-					STATE_IF('.',T_TIMESTAMP3);
-				END_BYTE
+				ASCII_DIGIT
+				{
+					OVERFLOW(BADTOKEN)
+					SET_STATE(T_TIMESTAMP1)
+				}
+				ASCII_COLON
+				{
+					OVERFLOW(BADTOKEN)
+					SET_STATE(T_TIMESTAMP2)
+				}
+				ASCII_PERIOD
+				{
+					OVERFLOW(BADTOKEN)
+					SET_STATE(T_TIMESTAMP3)
+				}
 			END_STATE
+
 			BEGIN_STATE(T_TIMESTAMP2)
-				IF_DIGIT DO_STATE(T_TIMESTAMP2); ENDIF
-				BEGIN_BYTE
-					STATE_IF('.',T_TIMESTAMP3);
-				END_BYTE
+				ASCII_DIGIT
+				{
+					OVERFLOW(BADTOKEN)
+					SET_STATE(T_TIMESTAMP2)
+				}
+				ASCII_PERIOD
+				{
+					OVERFLOW(BADTOKEN)
+					SET_STATE(T_TIMESTAMP3)
+				}
 			END_STATE
+
 			BEGIN_STATE(T_TIMESTAMP3)
-				IF_DIGIT DO_STATE(T_TIMESTAMP4); 
-				ELSE
-					BACKUP();
-					return BADTOKEN;
-				ENDIF
+				ASCII_DIGIT
+				{
+					OVERFLOW(BADTOKEN)
+					SET_STATE(T_TIMESTAMP4)
+				}
 			END_STATE
+				
 			BEGIN_STATE(T_TIMESTAMP4)
-				IF_DIGIT DO_STATE(T_TIMESTAMP5); 
-				ELSE
-					BACKUP();
-					return BADTOKEN;
-				ENDIF
+				ASCII_DIGIT
+				{
+					OVERFLOW(BADTOKEN)
+					SET_STATE(T_TIMESTAMP5)
+				}
 			END_STATE
+
 			BEGIN_STATE(T_TIMESTAMP5)
-				IF_DIGIT
-					self->tstate = T_INITIAL; 
-					return TIMESTAMP;
-				ELSE
-					BACKUP(); 
-					return TIMESTAMP;
-				ENDIF
+				ASCII_DIGIT
+				{
+					OVERFLOW(BADTOKEN)
+					RETURN(TIMESTAMP)
+				}
+			END_STATE
+
+			BEGIN_STATE(T_NOTE1)
+				ASCII_O { SET_STATE(T_NOTE2) }
+			END_STATE
+			
+			BEGIN_STATE(T_NOTE2)
+				ASCII_T { SET_STATE(T_NOTE3) }
+			END_STATE
+
+			BEGIN_STATE(T_NOTE3)
+				ASCII_E { RETURN(NOTE) }
 			END_STATE
 		}
 	}
-	if( self->tstate == T_DIGIT0 && finish )
+
+	/**
+	 * If we got here, we've reached the end of the buffer.
+	 * We therefore can attempt to finish up
+	 */
+	if( finish )
 	{
-		self->tstate = T_INITIAL;
-		return INTEGER;
+		switch( self->tstate )
+		{
+			case T_DIGIT0: RETURN(INTEGER)
+		}
 	}
 	return self->token_pos ? UNFINISHED : BADTOKEN;
 }
