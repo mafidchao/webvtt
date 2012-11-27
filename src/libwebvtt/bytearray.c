@@ -109,7 +109,7 @@ webvtt_bytearray_getline( webvtt_bytearray *pba, const webvtt_byte *buffer,
 	}
 	len = (webvtt_uint)( p - s );
 	*pos += len;
-	if( ba->length + len >= ba->alloc )
+	if( ba->length + len + 1 >= ba->alloc )
 	{
 		if( truncate && ba->alloc >= WEBVTT_MAX_LINE )
 		{
