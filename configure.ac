@@ -90,7 +90,7 @@ if [ test "x${ac_enable_valgrind}" = xyes ]; then
   if [ test "x$HAVE_VALGRIND" = xyes ]; then
     VALGRIND_TESTING="1"
     if [ test -n $OSX ]; then
-      VALGRIND_ENVIRONMENT="valgrind -q --leak-check=full --read-var-info=yes --track-origins=yes --num-callers=50 --error-exitcode=1 --dsymutil=yes"
+      VALGRIND_ENVIRONMENT="valgrind -q --leak-check=full --track-origins=yes --num-callers=50 --error-exitcode=1 --dsymutil=yes"
     else
       VALGRIND_ENVIRONMENT="valgrind -q --leak-check=full --read-var-info=yes --track-origins=yes --num-callers=50 --error-exitcode=1"
     fi
