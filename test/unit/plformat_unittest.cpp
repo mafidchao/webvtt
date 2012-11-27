@@ -2,21 +2,9 @@
 class PayloadFormat : public PayloadTest {};
 
 /*
-This test is to verify that no cue text is valid.
-Based on the WebVTT cue text span specification as of October 3, 2012.
-http://dev.w3.org/html5/webvtt/#webvtt-cue-text-span
-*/
-TEST_F(PayloadFormat,DISABLED_NoCueText)
-{
-	loadVtt( "payload/payload-format/no-cue-text.vtt", 1 );
-	/* Expect error. ? */
-}
-
-/*
-Verifies that just a cue text span will work.
-Based on the WebVTT cue text span specification as of October 3, 2012.
-http://dev.w3.org/html5/webvtt/#webvtt-cue-text-span
-*/
+ * Verifies that a cue text span with no tags will parse correctly.
+ * From http://dev.w3.org/html5/webvtt/#webvtt-cue-text-span (11/27/2012)
+ */
 TEST_F(PayloadFormat,DISABLED_BasicCueText)
 {
 	loadVtt( "payload/payload-format/basic-cue-text.vtt", 1 );
@@ -24,21 +12,9 @@ TEST_F(PayloadFormat,DISABLED_BasicCueText)
 }
 
 /*
-Verifies that just a cue text span with multiple lines will work.
-Based on the WebVTT cue text span specification as of October 3, 2012.
-http://dev.w3.org/html5/webvtt/#webvtt-cue-text-span
-*/
-TEST_F(PayloadFormat,DISABLED_MultilineBasicCueText)
-{
-	loadVtt( "payload/payload-format/multiline-basic-cue-text.vtt", 1 );
-	ASSERT_EQ( Node::Text, getHeadOfCue( 0 )->child( 0 )->kind() );
-}
-
-/*
-Verifies that multiple cue components can be put in one line.
-Based on the WebVTT cue components specification as of October 3, 2012.
-http://dev.w3.org/html5/webvtt/#webvtt-cue-components
-*/
+ * Verifies that multiple cue components can be put in one line.
+ * http://dev.w3.org/html5/webvtt/#webvtt-cue-components
+ */
 TEST_F(PayloadFormat,DISABLED_MultipleCueTextTag)
 {
 	loadVtt( "payload/payload-format/multiple-cue-tag.vtt", 1 );
@@ -46,10 +22,27 @@ TEST_F(PayloadFormat,DISABLED_MultipleCueTextTag)
 }
 
 /*
-Verifies that multiple cue component are parsed correctly.
-Based on the WebVTT cue components specification as of October 3, 2012.
-http://dev.w3.org/html5/webvtt/#webvtt-cue-components
-*/
+ * Verifies that a cue text span with multiple lines will work.
+ * From http://dev.w3.org/html5/webvtt/#webvtt-cue-text (11/27/2012)
+ *	Cue text text consists of one or more cue text components optionally separated by a single line terminator which can be: 
+ *		1. CR (U+000D)
+ *		2. LF (U+000A)
+ *		3. CRLF pair
+ */
+TEST_F(PayloadFormat,DISABLED_MultilineBasicCueText)
+{
+	loadVtt( "payload/payload-format/multiline-basic-cue-text.vtt", 1 );
+	ASSERT_EQ( Node::Text, getHeadOfCue( 0 )->child( 0 )->kind() );
+}
+
+/*
+ * Verifies that cue text with single line feed characters will be parsed.
+ * From http://dev.w3.org/html5/webvtt/#webvtt-cue-text (11/27/2012)
+ *	Cue text text consists of one or more cue text components optionally separated by a single line terminator which can be: 
+ *		1. CR (U+000D)
+ *		2. LF (U+000A)
+ *		3. CRLF pair
+ */
 TEST_F(PayloadFormat,DISABLED_MultilineCueText)
 {
 	loadVtt( "payload/payload-format/multiline-cue-text.vtt", 1 );
@@ -57,10 +50,13 @@ TEST_F(PayloadFormat,DISABLED_MultilineCueText)
 }
 
 /*
-This test is to verify that multiple cue components can be nested within eachother with line terminators between them.
-Based on the WebVTT cue components specification as of October 3, 2012.
-http://dev.w3.org/html5/webvtt/#webvtt-cue-components
-*/
+ * Verifies that multiple cue component are parsed correctly.
+ * From http://dev.w3.org/html5/webvtt/#webvtt-cue-text (11/27/2012)
+ *	Cue text text consists of one or more cue text components optionally separated by a single line terminator which can be: 
+ *		1. CR (U+000D)
+ *		2. LF (U+000A)
+ *		3. CRLF pair
+ */
 TEST_F(PayloadFormat,DISABLED_MultilineMultipleCueTextTag)
 {
 	loadVtt( "payload/payload-format/multiline-multiple-cue-text-tag.vtt" );
