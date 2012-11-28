@@ -33,6 +33,10 @@ AC_PROG_SED
 AC_PROG_INSTALL
 AC_PROG_MKDIR_P
 
+# Check for valgrind, which we run with tests if possible
+AC_PATH_PROG(VALGRIND, valgrind, no)
+AM_CONDITIONAL(HAVE_VALGRIND, test "x$VALGRIND" != "xno")
+
 # Enable debugging (currently only gdb)
 AC_ARG_ENABLE([debug],
     [  --enable-debug           build with additional debugging code],
@@ -71,6 +75,29 @@ fi
 AC_SUBST([GTEST_VERSION])
 AC_SUBST([GTEST_CPPFLAGS])
 AC_SUBST([GTEST_LIBS])
+
+# Check for valgrind if configuring with --enable-valgrind-testing.
+# NOTE: on OS X we also have to pass --dsymutil in order to get line number info.
+VALGRIND_ENVIRONMENT=
+ac_enable_valgrind=no
+AC_ARG_ENABLE(valgrind-testing,
+     [  --enable-valgrind-testing     enable running tests under valgrind],
+     [ ac_enable_valgrind=yes ],
+     [ ac_enable_valgrind=no] )
+
+if [ test "x${ac_enable_valgrind}" = xyes ]; then
+  AC_CHECK_PROG(HAVE_VALGRIND, valgrind, yes, no)
+  if [ test "x$HAVE_VALGRIND" = xyes ]; then
+    VALGRIND_TESTING="1"
+    if [ test -n $OSX ]; then
+      VALGRIND_ENVIRONMENT="valgrind -q --leak-check=full --track-origins=yes --num-callers=50 --error-exitcode=1 --dsymutil=yes"
+    else
+      VALGRIND_ENVIRONMENT="valgrind -q --leak-check=full --read-var-info=yes --track-origins=yes --num-callers=50 --error-exitcode=1"
+    fi
+  fi
+fi
+AC_SUBST([VALGRIND_ENVIRONMENT])
+AM_CONDITIONAL([VALGRIND_TESTING], [test -n "$VALGRIND_ENVIRONMENT"])
 
 # Checks for header files.
 # 	We do not want to die if stdint.h is not present, there is logic

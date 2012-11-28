@@ -15,5 +15,6 @@ configure.ac text eol=lf
 configure text eol=lf
 *.m4 text eol=lf
 test/spec/*/*.test -text
+test/spec/*/*crlf.test -text eol=crlf
 *.vtt -text
 *.sh text eol=lf
