@@ -2,13 +2,13 @@
 class CueTimeTimestampSecondFrac : public CueTest { };
 
 /***************************************************************************************/
-/*                                     TIMESTAMP 1                                     */
+/*                                        FROM                                         */
 /***************************************************************************************/
 
 /**
  * Test expecting parser to fail when a 4 component timestamp's 'seconds-frac' component contains
  * a non-digit
- * TIMESTAMP 1
+ *    FROM    
  *
  * From http://dev.w3.org/html5/webvtt/#webvtt-timestamp (10/15/2012):
  * A WebVTT timestamp representing hours hours, minutes minutes, seconds seconds,
@@ -35,7 +35,7 @@ class CueTimeTimestampSecondFrac : public CueTest { };
  */
 TEST_F(CueTimeTimestampSecondFrac,DISABLED_NondigitTimestamp1)//C++ exception "std::bad_alloc"
 {
-  loadVtt( "cue-times/timestamp/timestamp1/secondfrac/nondigit.vtt" );
+  loadVtt( "cue-times/timestamp/from/secondfrac/nondigit.vtt" );
   const Error& err = getError( 0 );
   ASSERT_EQ( WEBVTT_MALFORMED_TIMESTAMP, err.error() );
 }
@@ -43,7 +43,7 @@ TEST_F(CueTimeTimestampSecondFrac,DISABLED_NondigitTimestamp1)//C++ exception "s
 /**
  * Test expecting parser to fail when a 4 component timestamp's 'seconds-frac' component
  * consists of a single digit between the range of allowed values (00-59)
- * TIMESTAMP 1
+ *    FROM    
  *
  * From http://dev.w3.org/html5/webvtt/#webvtt-timestamp (10/15/2012):
  * A WebVTT timestamp representing hours hours, minutes minutes, seconds seconds,
@@ -70,7 +70,7 @@ TEST_F(CueTimeTimestampSecondFrac,DISABLED_NondigitTimestamp1)//C++ exception "s
  */
 TEST_F(CueTimeTimestampSecondFrac,DISABLED_OneDigitTimestamp1)//C++ exception "std::bad_alloc"
 {
-  loadVtt( "cue-times/timestamp/timestamp1/secondfrac/one_digit.vtt" );
+  loadVtt( "cue-times/timestamp/from/secondfrac/one_digit.vtt" );
   const Error& err = getError( 0 );
   ASSERT_EQ( WEBVTT_MALFORMED_TIMESTAMP, err.error() );
 }
@@ -78,7 +78,7 @@ TEST_F(CueTimeTimestampSecondFrac,DISABLED_OneDigitTimestamp1)//C++ exception "s
 /**
  * Test expecting parser to fail when a 4 component timestamp's 'second-frac' component
  * consists of only two digits
- * TIMESTAMP 1
+ *    FROM    
  *
  * From http://dev.w3.org/html5/webvtt/#webvtt-timestamp (10/15/2012):
  * A WebVTT timestamp representing hours hours, minutes minutes, seconds seconds,
@@ -105,7 +105,7 @@ TEST_F(CueTimeTimestampSecondFrac,DISABLED_OneDigitTimestamp1)//C++ exception "s
  */
 TEST_F(CueTimeTimestampSecondFrac,TwoDigitsTimestamp1)
 {
-  loadVtt( "cue-times/timestamp/timestamp1/secondfrac/two_digits.vtt" );
+  loadVtt( "cue-times/timestamp/from/secondfrac/two_digits.vtt" );
   const Error& err = getError( 0 );
   ASSERT_EQ( WEBVTT_MALFORMED_TIMESTAMP, err.error() );
 }
@@ -113,7 +113,7 @@ TEST_F(CueTimeTimestampSecondFrac,TwoDigitsTimestamp1)
 /**
  * Test expecting parser to fail when a 4 component timestamp's 'seconds' component
  * consists of greater than 3 digits
- * TIMESTAMP 1
+ *    FROM    
  *
  * From http://dev.w3.org/html5/webvtt/#webvtt-timestamp (10/15/2012):
  * A WebVTT timestamp representing hours hours, minutes minutes, seconds seconds,
@@ -140,19 +140,19 @@ TEST_F(CueTimeTimestampSecondFrac,TwoDigitsTimestamp1)
  */
 TEST_F(CueTimeTimestampSecondFrac,DISABLED_FourDigitsTimestamp1)//C++ exception "std::bad_alloc"
 {
-  loadVtt( "cue-times/timestamp/timestamp1/secondfrac/four_digits.vtt" );
+  loadVtt( "cue-times/timestamp/from/secondfrac/four_digits.vtt" );
   const Error& err = getError( 0 );
   ASSERT_EQ( WEBVTT_MALFORMED_TIMESTAMP, err.error() );
 }
 
 /***************************************************************************************/
-/*                                     TIMESTAMP 2                                     */
+/*                                        UNTIL                                        */
 /***************************************************************************************/
 
 /**
  * Test expecting parser to fail when a 4 component timestamp's 'seconds-frac' component contains
  * a non-digit
- * TIMESTAMP 2
+ *    UNTIL   
  *
  * From http://dev.w3.org/html5/webvtt/#webvtt-timestamp (10/15/2012):
  * A WebVTT timestamp representing hours hours, minutes minutes, seconds seconds,
@@ -179,7 +179,7 @@ TEST_F(CueTimeTimestampSecondFrac,DISABLED_FourDigitsTimestamp1)//C++ exception 
  */
 TEST_F(CueTimeTimestampSecondFrac,DISABLED_NondigitTimestamp2)//C++ exception "std::bad_alloc"
 {
-  loadVtt( "cue-times/timestamp/timestamp2/secondfrac/nondigit.vtt" );
+  loadVtt( "cue-times/timestamp/until/secondfrac/nondigit.vtt" );
   const Error& err = getError( 0 );
   ASSERT_EQ( WEBVTT_MALFORMED_TIMESTAMP, err.error() );
 }
@@ -187,7 +187,7 @@ TEST_F(CueTimeTimestampSecondFrac,DISABLED_NondigitTimestamp2)//C++ exception "s
 /**
  * Test expecting parser to fail when a 4 component timestamp's 'seconds-frac' component
  * consists of a single digit between the range of allowed values (00-59)
- * TIMESTAMP 2
+ *    UNTIL   
  *
  * From http://dev.w3.org/html5/webvtt/#webvtt-timestamp (10/15/2012):
  * A WebVTT timestamp representing hours hours, minutes minutes, seconds seconds,
@@ -214,7 +214,7 @@ TEST_F(CueTimeTimestampSecondFrac,DISABLED_NondigitTimestamp2)//C++ exception "s
  */
 TEST_F(CueTimeTimestampSecondFrac,DISABLED_OneDigitTimestamp2)//C++ exception "std::bad_alloc"
 {
-  loadVtt( "cue-times/timestamp/timestamp2/secondfrac/one_digit.vtt" );
+  loadVtt( "cue-times/timestamp/until/secondfrac/one_digit.vtt" );
   const Error& err = getError( 0 );
   ASSERT_EQ( WEBVTT_MALFORMED_TIMESTAMP, err.error() );
 }
@@ -222,7 +222,7 @@ TEST_F(CueTimeTimestampSecondFrac,DISABLED_OneDigitTimestamp2)//C++ exception "s
 /**
  * Test expecting parser to fail when a 4 component timestamp's 'second-frac' component
  * consists of only two digits
- * TIMESTAMP 2
+ *    UNTIL   
  *
  * From http://dev.w3.org/html5/webvtt/#webvtt-timestamp (10/15/2012):
  * A WebVTT timestamp representing hours hours, minutes minutes, seconds seconds,
@@ -249,7 +249,7 @@ TEST_F(CueTimeTimestampSecondFrac,DISABLED_OneDigitTimestamp2)//C++ exception "s
  */
 TEST_F(CueTimeTimestampSecondFrac,DISABLED_TwoDigitsTimestamp2)//C++ exception "std::bad_alloc"
 {
-  loadVtt( "cue-times/timestamp/timestamp2/secondfrac/two_digits.vtt" );
+  loadVtt( "cue-times/timestamp/until/secondfrac/two_digits.vtt" );
   const Error& err = getError( 0 );
   ASSERT_EQ( WEBVTT_MALFORMED_TIMESTAMP, err.error() );
 }
@@ -257,7 +257,7 @@ TEST_F(CueTimeTimestampSecondFrac,DISABLED_TwoDigitsTimestamp2)//C++ exception "
 /**
  * Test expecting parser to fail when a 4 component timestamp's 'seconds' component
  * consists of greater than 3 digits
- * TIMESTAMP 2
+ *    UNTIL   
  *
  * From http://dev.w3.org/html5/webvtt/#webvtt-timestamp (10/15/2012):
  * A WebVTT timestamp representing hours hours, minutes minutes, seconds seconds,
@@ -284,7 +284,7 @@ TEST_F(CueTimeTimestampSecondFrac,DISABLED_TwoDigitsTimestamp2)//C++ exception "
  */
 TEST_F(CueTimeTimestampSecondFrac,FourDigitsTimestamp2)
 {
-  loadVtt( "cue-times/timestamp/timestamp2/secondfrac/four_digits.vtt" );
+  loadVtt( "cue-times/timestamp/until/secondfrac/four_digits.vtt" );
   const Error& err = getError( 0 );
   ASSERT_EQ( WEBVTT_EXPECTED_WHITESPACE, err.error() );//not sure if this error is the one it should be
 }

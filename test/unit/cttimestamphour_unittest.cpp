@@ -2,13 +2,13 @@
 class CueTimeTimestampHour : public CueTest { };
 
 /***************************************************************************************/
-/*                                     TIMESTAMP 1                                     */
+/*                                        FROM                                         */
 /***************************************************************************************/
 
 /**
  * Test expecting parser to fail when a 4 component timestamp's 'hours' component consists
  * of a non-digit
- * TIMESTAMP 1
+ *    FROM    
  *
  * From http://dev.w3.org/html5/webvtt/#webvtt-timestamp (10/15/2012):
  * A WebVTT timestamp representing hours hours, minutes minutes, seconds seconds,
@@ -35,19 +35,19 @@ class CueTimeTimestampHour : public CueTest { };
  */
 TEST_F(CueTimeTimestampHour,DISABLED_NondigitTimestamp1)//C++ exception "std::bad_alloc"
 {
-  loadVtt( "cue-times/timestamp/timestamp1/hour/nondigit.vtt" );
+  loadVtt( "cue-times/timestamp/from/hour/nondigit.vtt" );
   const Error& err = getError( 0 );
   ASSERT_EQ( WEBVTT_MALFORMED_TIMESTAMP, err.error() );
 }
 
 /***************************************************************************************/
-/*                                     TIMESTAMP 2                                     */
+/*                                        UNTIL                                        */
 /***************************************************************************************/
 
 /**
  * Test expecting parser to fail when a 4 component timestamp's 'hours' component consists
  * of a non-digit
- * TIMESTAMP 2
+ *    UNTIL   
  *
  * From http://dev.w3.org/html5/webvtt/#webvtt-timestamp (10/15/2012):
  * A WebVTT timestamp representing hours hours, minutes minutes, seconds seconds,
@@ -74,7 +74,7 @@ TEST_F(CueTimeTimestampHour,DISABLED_NondigitTimestamp1)//C++ exception "std::ba
  */
 TEST_F(CueTimeTimestampHour,DISABLED_NondigitTimestamp2)//C++ exception "std::bad_alloc"
 {
-  loadVtt( "cue-times/timestamp/timestamp2/hour/nondigit.vtt" );
+  loadVtt( "cue-times/timestamp/until/hour/nondigit.vtt" );
   const Error& err = getError( 0 );
   ASSERT_EQ( WEBVTT_MALFORMED_TIMESTAMP, err.error() );
 }

@@ -2,13 +2,13 @@
 class CueTimeTimestampDelimiter : public CueTest { };
 
 /***************************************************************************************/
-/*                                     TIMESTAMP 1                                     */
+/*                                        FROM                                         */
 /***************************************************************************************/
 
 /**
  * Test expecting parser to fail when a 4 component timestamp's 'hour' component
  * is separated from the 'minute' component by a character other than U+003A (COLON)
- * TIMESTAMP 1
+ *    FROM    
  *
  * From http://dev.w3.org/html5/webvtt/#webvtt-timestamp (10/15/2012):
  * A WebVTT timestamp representing hours hours, minutes minutes, seconds seconds,
@@ -35,7 +35,7 @@ class CueTimeTimestampDelimiter : public CueTest { };
  */
 TEST_F(CueTimeTimestampDelimiter,DISABLED_HourMinuteBadDelimiterTimestamp1)//C++ exception "std::bad_alloc"
 {
-  loadVtt( "cue-times/timestamp/timestamp1/delimiter/hour_minute_bad_delimiter.vtt" );
+  loadVtt( "cue-times/timestamp/from/delimiter/hour_minute_bad_delimiter.vtt" );
   const Error& err = getError( 0 );
   ASSERT_EQ( WEBVTT_MALFORMED_TIMESTAMP, err.error() );
 }
@@ -43,7 +43,7 @@ TEST_F(CueTimeTimestampDelimiter,DISABLED_HourMinuteBadDelimiterTimestamp1)//C++
 /**
  * Test expecting parser to fail when a 4 component timestamp's 'minute' component
  * is separated from the 'second' component by a character other than U+003A (COLON)
- * TIMESTAMP 1
+ *    FROM    
  *
  * From http://dev.w3.org/html5/webvtt/#webvtt-timestamp (10/15/2012):
  * A WebVTT timestamp representing hours hours, minutes minutes, seconds seconds,
@@ -70,7 +70,7 @@ TEST_F(CueTimeTimestampDelimiter,DISABLED_HourMinuteBadDelimiterTimestamp1)//C++
  */
 TEST_F(CueTimeTimestampDelimiter,DISABLED_MinuteSecondBadDelimiterTimestamp1)//C++ exception "std::bad_alloc"
 {
-  loadVtt( "cue-times/timestamp/timestamp1/delimiter/minute_second_bad_delimiter.vtt" );
+  loadVtt( "cue-times/timestamp/from/delimiter/minute_second_bad_delimiter.vtt" );
   const Error& err = getError( 0 );
   ASSERT_EQ( WEBVTT_MALFORMED_TIMESTAMP, err.error() );
 }
@@ -78,7 +78,7 @@ TEST_F(CueTimeTimestampDelimiter,DISABLED_MinuteSecondBadDelimiterTimestamp1)//C
 /**
  * Test expecting parser to fail when a 4 component timestamp's 'second' component
  * is separated from the 'second-frac' component by a character other than U+002E (FULL STOP)
- * TIMESTAMP 1
+ *    FROM    
  *
  * From http://dev.w3.org/html5/webvtt/#webvtt-timestamp (10/15/2012):
  * A WebVTT timestamp representing hours hours, minutes minutes, seconds seconds,
@@ -105,19 +105,19 @@ TEST_F(CueTimeTimestampDelimiter,DISABLED_MinuteSecondBadDelimiterTimestamp1)//C
  */
 TEST_F(CueTimeTimestampDelimiter,DISABLED_SecondSecondFracBadDelimiterTimestamp1)//C++ exception "std::bad_alloc"
 {
-  loadVtt( "cue-times/timestamp/timestamp1/delimiter/second_secondfrac_bad_delimiter.vtt" );
+  loadVtt( "cue-times/timestamp/from/delimiter/second_secondfrac_bad_delimiter.vtt" );
   const Error& err = getError( 0 );
   ASSERT_EQ( WEBVTT_MALFORMED_TIMESTAMP, err.error() );
 }
 
 /***************************************************************************************/
-/*                                     TIMESTAMP 2                                     */
+/*                                        UNTIL                                        */
 /***************************************************************************************/
 
 /**
  * Test expecting parser to fail when a 4 component timestamp's 'hour' component
  * is separated from the 'minute' component by a character other than U+003A (COLON)
- * TIMESTAMP 2
+ *    UNTIL   
  *
  * From http://dev.w3.org/html5/webvtt/#webvtt-timestamp (10/15/2012):
  * A WebVTT timestamp representing hours hours, minutes minutes, seconds seconds,
@@ -144,7 +144,7 @@ TEST_F(CueTimeTimestampDelimiter,DISABLED_SecondSecondFracBadDelimiterTimestamp1
  */
 TEST_F(CueTimeTimestampDelimiter,DISABLED_HourMinuteBadDelimiterTimestamp2)//C++ exception "std::bad_alloc"
 {
-  loadVtt( "cue-times/timestamp/timestamp2/delimiter/hour_minute_bad_delimiter.vtt" );
+  loadVtt( "cue-times/timestamp/until/delimiter/hour_minute_bad_delimiter.vtt" );
   const Error& err = getError( 0 );
   ASSERT_EQ( WEBVTT_MALFORMED_TIMESTAMP, err.error() );
 }
@@ -152,7 +152,7 @@ TEST_F(CueTimeTimestampDelimiter,DISABLED_HourMinuteBadDelimiterTimestamp2)//C++
 /**
  * Test expecting parser to fail when a 4 component timestamp's 'minute' component
  * is separated from the 'second' component by a character other than U+003A (COLON)
- * TIMESTAMP 2
+ *    UNTIL   
  *
  * From http://dev.w3.org/html5/webvtt/#webvtt-timestamp (10/15/2012):
  * A WebVTT timestamp representing hours hours, minutes minutes, seconds seconds,
@@ -179,7 +179,7 @@ TEST_F(CueTimeTimestampDelimiter,DISABLED_HourMinuteBadDelimiterTimestamp2)//C++
  */
 TEST_F(CueTimeTimestampDelimiter,DISABLED_MinuteSecondBadDelimiterTimestamp2)//C++ exception "std::bad_alloc"
 {
-  loadVtt( "cue-times/timestamp/timestamp2/delimiter/minute_second_bad_delimiter.vtt" );
+  loadVtt( "cue-times/timestamp/until/delimiter/minute_second_bad_delimiter.vtt" );
   const Error& err = getError( 0 );
   ASSERT_EQ( WEBVTT_MALFORMED_TIMESTAMP, err.error() );
 }
@@ -187,7 +187,7 @@ TEST_F(CueTimeTimestampDelimiter,DISABLED_MinuteSecondBadDelimiterTimestamp2)//C
 /**
  * Test expecting parser to fail when a 4 component timestamp's 'second' component
  * is separated from the 'second-frac' component by a character other than U+002E (FULL STOP)
- * TIMESTAMP 2
+ *    UNTIL   
  *
  * From http://dev.w3.org/html5/webvtt/#webvtt-timestamp (10/15/2012):
  * A WebVTT timestamp representing hours hours, minutes minutes, seconds seconds,
@@ -214,7 +214,7 @@ TEST_F(CueTimeTimestampDelimiter,DISABLED_MinuteSecondBadDelimiterTimestamp2)//C
  */
 TEST_F(CueTimeTimestampDelimiter,DISABLED_SecondSecondFracBadDelimiterTimestamp2)//C++ exception "std::bad_alloc"
 {
-  loadVtt( "cue-times/timestamp/timestamp2/delimiter/second_secondfrac_bad_delimiter.vtt" );
+  loadVtt( "cue-times/timestamp/until/delimiter/second_secondfrac_bad_delimiter.vtt" );
   const Error& err = getError( 0 );
   ASSERT_EQ( WEBVTT_MALFORMED_TIMESTAMP, err.error() );
 }
