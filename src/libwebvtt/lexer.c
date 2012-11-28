@@ -108,13 +108,13 @@
 #define END_STATE DEFAULT BACKUP return BADTOKEN; } } break;
 #define END_STATE_EX } } break;
 
-#define BACKUP (*pos)--; self->token[--self->token_pos] = 0; self->tstate = T_INITIAL;
+#define BACKUP (*pos)--; --self->column; self->token[--self->token_pos] = 0; self->tstate = T_INITIAL;
 #define SET_STATE(X) self->tstate = X; break;
 #define RETURN(X) self->tstate = T_INITIAL; return X;
-#define SET_NEWLINE self->line++; self->column = 0; RETURN(NEWLINE)
+#define SET_NEWLINE self->line++; self->column = 1; RETURN(NEWLINE)
 #define CONTINUE continue;
 
-#define RESET self->bytes = self->column = self->token_pos = 0; self->tstate = T_INITIAL;
+#define RESET self->column = 1; self->bytes = self->token_pos = 0; self->tstate = T_INITIAL;
 #define BREAK break;
 
 #define CHECK_BROKEN_TIMESTAMP \
@@ -131,9 +131,9 @@ enum token_state_t
 {
 	T_INITIAL = 0, T_BOM0, T_BOM1, T_WEBVTT0, T_WEBVTT1, T_WEBVTT2, T_WEBVTT3, T_WEBVTT4, T_WEBVTT5, T_DASH0, T_SEP1,
 	T_DIGIT0, T_NEWLINE0, T_WHITESPACE, T_POSITION0, T_POSITION1, T_POSITION2, T_POSITION3, T_POSITION4, T_POSITION5, 
-	T_POSITION6, T_POSITION7, T_ALIGN0, T_ALIGN1, T_ALIGN2, T_ALIGN3, T_ALIGN4, T_L0, T_LINE1, T_LINE2, T_LINE3,
-	T_VERTICAL0, T_VERTICAL1, T_VERTICAL2, T_VERTICAL3, T_VERTICAL4, T_VERTICAL5, T_VERTICAL6, T_VERTICAL7, T_RL0,
-	T_S0, T_SIZE1, T_SIZE2, T_SIZE3, T_START1, T_START2, T_START3, T_MIDDLE0, T_MIDDLE1, T_MIDDLE2, T_MIDDLE3,
+	T_POSITION6, T_ALIGN0, T_ALIGN1, T_ALIGN2, T_ALIGN3, T_L0, T_LINE1, T_LINE2, T_LINE3,
+	T_VERTICAL0, T_VERTICAL1, T_VERTICAL2, T_VERTICAL3, T_VERTICAL4, T_VERTICAL5, T_VERTICAL6, T_RL0,
+	T_S0, T_SIZE1, T_SIZE2, T_START1, T_START2, T_START3, T_MIDDLE0, T_MIDDLE1, T_MIDDLE2, T_MIDDLE3,
 	T_MIDDLE4, T_END0, T_END1, T_TIMESTAMP1, T_TIMESTAMP2, T_TIMESTAMP3, T_TIMESTAMP4, T_TIMESTAMP5, T_RIGHT1, T_RIGHT2,
 	T_RIGHT3, T_NOTE1, T_NOTE2, T_NOTE3, T_LEFT1, T_LEFT2, 
 };
@@ -278,7 +278,7 @@ webvtt_lex( webvtt_parser self, const webvtt_byte *buffer, webvtt_uint *pos, web
 			END_STATE
 
 			BEGIN_STATE(T_ALIGN3)
-				ASCII_n { SET_STATE(T_ALIGN4) }
+				ASCII_n { RETURN(ALIGN) }
 			END_STATE
 
 			BEGIN_STATE(T_L0)

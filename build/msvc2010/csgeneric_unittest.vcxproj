@@ -5,7 +5,6 @@
       <Configuration>development</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
-
     <ProjectConfiguration Include="development|x64">
       <Configuration>development</Configuration>
       <Platform>x64</Platform>
@@ -22,11 +21,11 @@
   <ItemGroup>
     <ClCompile Include="..\..\test\gtest\gtest-all.cc" />
     <ClCompile Include="..\..\test\gtest\gtest_main.cc" />
-    <ClCompile Include="..\..\test\unit\csvertical_unittest.cpp" />
+    <ClCompile Include="..\..\test\unit\csgeneric_unittest.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{C6DD2D7B-63CE-4C3D-B06C-A80057844A68}</ProjectGuid>
-    <RootNamespace>csvertical_unittest</RootNamespace>
+    <ProjectGuid>{EA373DC9-9B85-470E-B15E-A2B7DD817808}</ProjectGuid>
+    <RootNamespace>csgeneric_unittest</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='development|Win32'" Label="Configuration">

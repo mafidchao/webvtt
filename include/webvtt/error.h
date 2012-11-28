@@ -37,6 +37,8 @@ webvtt_error_t
 	WEBVTT_INVALID_ENDTIME,
 	/* Invalid cue-setting */
 	WEBVTT_INVALID_CUESETTING,
+	/* valid-looking cuesetting with no keyword */
+	WEBVTT_MISSING_CUESETTING_KEYWORD,
 	/* 'vertical' setting already exists for this cue. */
 	WEBVTT_VERTICAL_ALREADY_SET,
 	/* Bad 'vertical' value */

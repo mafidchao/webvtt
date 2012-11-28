@@ -14,10 +14,10 @@
     <ClCompile Include="..\..\test\gtest\gtest_main.cc">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\test\unit\csvertical_unittest.cpp">
+    <ClCompile Include="..\..\test\gtest\gtest-all.cc">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\test\gtest\gtest-all.cc">
+    <ClCompile Include="..\..\test\unit\csalign_unittest.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>

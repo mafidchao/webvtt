@@ -16,6 +16,7 @@ static const char *errstr[] =
 	/* WEBVTT_INVALID_CUESETTING_DELIMITER */ "invalid webvtt-cuesetting key:value delimiter. expected `:'",
 	/* WEBVTT_INVALID_ENDTIME */ "webvtt-cue end-time must have value greater than start-time",
 	/* WEBVTT_INVALID_CUESETTING */ "unrecognized webvtt-cue-setting",
+	/* WEBVTT_MISSING_CUESETTING_KEYWORD */ "missing setting keyword for value",
 	/* WEBVTT_VERTICAL_ALREADY_SET */ "'vertical' cue-setting already used",
 	/* WEBVTT_VERTICAL_BAD_VALUE */ "'vertical' setting must have a value of either 'lr' or 'rl'",
 	/* WEBVTT_LINE_ALREADY_SET */ "'line' cue-setting already used",

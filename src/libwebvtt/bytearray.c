@@ -103,6 +103,7 @@ webvtt_bytearray_getline( webvtt_bytearray *pba, const webvtt_byte *buffer,
 	{
 		++p;
 	}
+
 	if( p < n )
 	{
 		ret = 1; /* indicate that we found EOL */
