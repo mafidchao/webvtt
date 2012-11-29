@@ -33,7 +33,6 @@ PAYLOAD_TESTS = \
   plescapecharacter_unittest \
   plformat_unittest \
   plitalictag_unittest \
-  plrubytag_unittest \
   pltagformat_unittest \
   pltimestamp_unittest \
   plunderlinetag_unittest \
@@ -89,7 +88,6 @@ plclasstag_unittest_SOURCES = plclasstag_unittest.cpp
 plescapecharacter_unittest_SOURCES = plescapecharacter_unittest.cpp
 plformat_unittest_SOURCES  = plformat_unittest.cpp
 plitalictag_unittest_SOURCES = plitalictag_unittest.cpp
-plrubytag_unittest_SOURCES = plrubytag_unittest.cpp
 pltagformat_unittest_SOURCES = pltagformat_unittest.cpp
 pltimestamp_unittest_SOURCES = pltimestamp_unittest.cpp
 plunderlinetag_unittest_SOURCES = plunderlinetag_unittest.cpp
