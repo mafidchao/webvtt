@@ -63,8 +63,8 @@ TEST_F(CueTimeOrder,ENDGTStart)
 Test expecting the parser to pass with two cues that start at the same time (inline) but end at different times
 that are greater than the starting time.
 */
-TEST_F(CueTimeOrder,ENDGTStart)
+TEST_F(CueTimeOrder,ENDGTStartWithInline)
 {
-    loadVtt("cue-times/order/in_line_cue_good.vtt");
+    loadVtt("cue-times/order/end_gt_start_with_inline.vtt");
     ASSERT_EQ( 0, errorCount() );
 }
