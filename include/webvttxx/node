@@ -35,8 +35,6 @@ public:
 	const TextNode * toTextNode() const;
 	const TimeStampNode * toTimeStampNode() const;
 
-	virtual ~Node() { /* Enables using dynamic cast. */ }
-
 	private:
 		webvtt_node_ptr nodePtr;	
 };
@@ -67,7 +65,7 @@ public:
 	{
 		leafNodePtr = (webvtt_leaf_node_ptr)otherNode->concrete_node;
 	}
-	inline String text() const { return String( &leafNodePtr->text ); }
+	inline String content() const { return String( &leafNodePtr->text ); }
 
 private:
 	webvtt_leaf_node_ptr leafNodePtr;
