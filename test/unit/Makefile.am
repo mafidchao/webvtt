@@ -36,12 +36,24 @@ CUETIMES_TESTS = \
   cttimestampsecond_unittest \
   cttimestampsecondfrac_unittest
 
+PAYLOAD_TESTS = \
+  plboldtag_unittest \
+  plclasstag_unittest \
+  plescapecharacter_unittest \
+  plformat_unittest \
+  plitalictag_unittest \
+  pltagformat_unittest \
+  pltimestamp_unittest \
+  plunderlinetag_unittest \
+  plvoicetag_unittest
+  
 UNIT_TESTS = \
   sample_unittest \
   sample2_unittest \
   $(CUESETTINGS_TESTS) \
   $(CUETIMES_TESTS) \
   payloadnode_unittest
+  $(PAYLOAD_TESTS) 
 
 # On TravisCI, we run valgrind for unit tests with --exit-exitcode=1,
 # which means otherwise passing tests fail when valgrind fails leak-check.
@@ -81,9 +93,6 @@ csposition_unittest_SOURCES = csposition_unittest.cpp
 csvertical_unittest_SOURCES = csvertical_unittest.cpp
 csalign_unittest_SOURCES = csalign_unittest.cpp
 
-#Payload Tests
-payloadnode_unittest_SOURCES = payloadnode_unittest.cpp
-
 # Cue Times tests
 ctorder_unittest_SOURCES = ctorder_unittest.cpp
 ctseparator_unittest_SOURCES = ctseparator_unittest.cpp
@@ -92,3 +101,15 @@ cttimestamphour_unittest_SOURCES = cttimestamphour_unittest.cpp
 cttimestampminute_unittest_SOURCES = cttimestampminute_unittest.cpp
 cttimestampsecond_unittest_SOURCES = cttimestampsecond_unittest.cpp
 cttimestampsecondfrac_unittest_SOURCES = cttimestampsecondfrac_unittest.cpp
+
+#Payload Tests
+payloadnode_unittest_SOURCES = payloadnode_unittest.cpp
+plboldtag_unittest_SOURCES = plboldtag_unittest.cpp
+plclasstag_unittest_SOURCES = plclasstag_unittest.cpp
+plescapecharacter_unittest_SOURCES = plescapecharacter_unittest.cpp
+plformat_unittest_SOURCES  = plformat_unittest.cpp
+plitalictag_unittest_SOURCES = plitalictag_unittest.cpp
+pltagformat_unittest_SOURCES = pltagformat_unittest.cpp
+pltimestamp_unittest_SOURCES = pltimestamp_unittest.cpp
+plunderlinetag_unittest_SOURCES = plunderlinetag_unittest.cpp
+plvoicetag_unittest_SOURCES = plvoicetag_unittest.cpp

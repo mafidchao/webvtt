@@ -707,20 +707,40 @@ webvtt_cue_text_tokenizer( webvtt_wchar_ptr *position_pptr, webvtt_cue_text_toke
  * Don't think pnode_length is needed as nodes track there list count internally.
  */
 WEBVTT_EXPORT webvtt_status
-webvtt_parse_cuetext( const webvtt_wchar *cue_text, webvtt_node_ptr node_ptr )
+webvtt_parse_cuetext( webvtt_cue cue )
 {
-	webvtt_wchar_ptr position_ptr = (webvtt_wchar_ptr)cue_text;
-	webvtt_node_ptr current_node_ptr = NULL, temp_node_ptr = NULL;
-	webvtt_cue_text_token_ptr token_ptr = NULL;
+
+    const webvtt_wchar *cue_text;
+	webvtt_status status;
+	webvtt_wchar_ptr position_ptr;
+	webvtt_node_ptr node_head;
+    webvtt_node_ptr current_node_ptr;
+    webvtt_node_ptr temp_node_ptr;
+	webvtt_cue_text_token_ptr token_ptr;
 	webvtt_node_kind kind;
-	
+
+    if( !cue )
+	{
+		return WEBVTT_INVALID_PARAM;
+	}
+
+    cue_text = webvtt_string_text( &cue->payload );
+
 	if( !cue_text )
-			return WEBVTT_INVALID_PARAM;
+	{
+        return WEBVTT_INVALID_PARAM;
+	}
 
-	if ( webvtt_create_head_node( &node_ptr ) != WEBVTT_SUCCESS )
-		return WEBVTT_OUT_OF_MEMORY;
+	if ( WEBVTT_FAILED(status = webvtt_create_head_node( &cue->node_head ) ) )
+	{
+		return status;
+	}
 
-	current_node_ptr = node_ptr;
+	position_ptr = (webvtt_wchar_ptr)cue_text;
+	node_head = cue->node_head;
+    current_node_ptr = node_head;
+    temp_node_ptr = NULL;
+	token_ptr = NULL;
 
 	/**
 	 * Routine taken from the W3C specification - http://dev.w3.org/html5/webvtt/#webvtt-cue-text-parsing-rules
@@ -755,7 +775,7 @@ webvtt_parse_cuetext( const webvtt_wchar *cue_text, webvtt_node_ptr node_ptr )
 				/**
 				 * We have encountered an end token but it is not in a format that is supported, throw away the token.
 				 */
-				if( webvtt_get_node_kind_from_tag_name( &((webvtt_cue_text_end_tag_token *) token_ptr->concrete_token)->tag_name, &kind )
+				if( webvtt_get_node_kind_from_tag_name( &(((webvtt_cue_text_end_tag_token *) token_ptr->concrete_token)->tag_name), &kind )
 						== WEBVTT_INVALID_TAG_NAME )
 				{
 					continue;
@@ -784,14 +804,13 @@ webvtt_parse_cuetext( const webvtt_wchar *cue_text, webvtt_node_ptr node_ptr )
 				else
 				{
 					webvtt_attach_internal_node( (webvtt_internal_node_ptr)current_node_ptr->concrete_node, temp_node_ptr );
-
 					if( WEBVTT_IS_VALID_INTERNAL_NODE( temp_node_ptr->kind ) )
 						current_node_ptr = temp_node_ptr;					
 				}
 			}
 			break;
 		}
-
+		webvtt_skipwhite( &position_ptr );
 	}
 
 	return WEBVTT_SUCCESS;

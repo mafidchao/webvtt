@@ -4,6 +4,10 @@
 #	include <webvtt/string.h>
 #	include "base"
 
+#	define UTF16_LEFT_TO_RIGHT   (0x200E)
+#	define UTF16_RIGHT_TO_LEFT   (0x200F)
+#	define UTF16_NO_BREAK_SPACE  (0x00A0)
+
 namespace WebVTT
 {
 
@@ -20,6 +24,14 @@ public:
 		webvtt_copy_string( &string, other );
 	}
 
+	inline String( const byte *buffer, uint len )
+	{
+		if( WEBVTT_FAILED( webvtt_string_from_utf8( &string, buffer, len ) ) )
+		{
+			// TODO: Throw exception on errors.
+		}
+	}
+
 	/**
 	 * Copy constructors
 	 */
@@ -31,6 +43,7 @@ public:
 	inline String &operator=( const String &other )
 	{
 		webvtt_copy_string( &string, &other.string );
+		return *this;
 	}
 
 	inline ~String()

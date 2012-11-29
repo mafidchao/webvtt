@@ -163,6 +163,19 @@ webvtt_create_string( webvtt_uint32 alloc, webvtt_string *s )
 	return WEBVTT_SUCCESS;
 }
 
+WEBVTT_EXPORT webvtt_status 
+webvtt_string_from_utf8( webvtt_string *result, const webvtt_byte *buffer, webvtt_uint len )
+{
+	webvtt_uint pos = 0; 
+
+	webvtt_init_string( result );
+
+	if( !result )
+		return WEBVTT_OUT_OF_MEMORY;
+
+	return webvtt_string_append_utf8( result, buffer, &pos, len, 0 );
+}
+
 WEBVTT_EXPORT void
 webvtt_ref_string( webvtt_string *str )
 {
@@ -502,7 +515,7 @@ webvtt_add_to_string_list( webvtt_string_list_ptr list, webvtt_string *str )
 		return WEBVTT_INVALID_PARAM;
 	}
 
-	if( list->length + 1 <= ( (list->alloc / 3) * 2 ) )
+	if( list->length + 1 >= ( (list->alloc / 3) * 2 ) )
 	{
 		webvtt_string *arr, *old;
 		list->alloc = list->alloc == 0 ? 8 : list->alloc * 2;
