@@ -46,14 +46,14 @@ PAYLOAD_TESTS = \
   pltimestamp_unittest \
   plunderlinetag_unittest \
   plvoicetag_unittest
-  
+
 UNIT_TESTS = \
   sample_unittest \
   sample2_unittest \
   $(CUESETTINGS_TESTS) \
   $(CUETIMES_TESTS) \
-  payloadnode_unittest
-  $(PAYLOAD_TESTS) 
+  payloadnode_unittest \
+	$(PAYLOAD_TESTS)
 
 # On TravisCI, we run valgrind for unit tests with --exit-exitcode=1,
 # which means otherwise passing tests fail when valgrind fails leak-check.
