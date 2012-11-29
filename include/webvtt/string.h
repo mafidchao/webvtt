@@ -38,25 +38,25 @@ webvtt_string_t
 static WEBVTT_INLINE const webvtt_wchar *
 webvtt_string_text(const webvtt_string *s)
 {
-	return s->d->text;
+	return s->d ? s->d->text : 0;
 }
 
 static WEBVTT_INLINE const webvtt_uint32
 webvtt_string_length(const webvtt_string *s)
 {
-	return s->d->length;
+	return s->d ? s->d->length : 0;
 }
 
 static WEBVTT_INLINE const webvtt_uint32
 webvtt_string_capacity(const webvtt_string *s)
 {
-	return s->d->alloc;
+	return s->d ? s->d->alloc : 0;
 }
 
 #	else
-#		define webvtt_string_text(s) ((s)->d->text)
-#		define webvtt_string_length(s) ((s)->d->length)
-#		define webvtt_string_capacity(s) ((s)->d->alloc)
+#		define webvtt_string_text(s) ((s)->d ? (s)->d->text : 0)
+#		define webvtt_string_length(s) ( (s)->d ? (s)->d->length : 0)
+#		define webvtt_string_capacity(s) ((s)->d ? (s)->d->alloc : 0)
 #	endif
 
 struct
@@ -71,6 +71,7 @@ webvtt_utf8_reader_t
 WEBVTT_EXPORT void webvtt_init_string( webvtt_string *result );
 WEBVTT_EXPORT void webvtt_copy_string( webvtt_string *left, const webvtt_string *right );
 WEBVTT_EXPORT webvtt_status webvtt_create_string( webvtt_uint32 alloc, webvtt_string *result );
+WEBVTT_EXPORT webvtt_status webvtt_string_from_utf8( webvtt_string *result, const webvtt_byte *buffer, webvtt_uint len );
 
 /**
  * I've decided to add reference counting to the library, for certain classes, to better
