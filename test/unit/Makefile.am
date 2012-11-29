@@ -107,7 +107,6 @@ cttimestampsecond_unittest_SOURCES = cttimestampsecond_unittest.cpp
 cttimestampsecondfrac_unittest_SOURCES = cttimestampsecondfrac_unittest.cpp
 
 #Payload Tests
-payloadnode_unittest_SOURCES = payloadnode_unittest.cpp
 plboldtag_unittest_SOURCES = plboldtag_unittest.cpp
 plclasstag_unittest_SOURCES = plclasstag_unittest.cpp
 plescapecharacter_unittest_SOURCES = plescapecharacter_unittest.cpp
