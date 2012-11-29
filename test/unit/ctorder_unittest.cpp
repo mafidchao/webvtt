@@ -50,3 +50,21 @@ TEST_F(CueTimeOrder,DISABLED_StartLTPriorCue) //currently fails, throws c++ out 
 	const Error& err = getError( 0 );
   ASSERT_EQ( WEBVTT_INVALID_ENDTIME, err.error() ); //this should be different, but no matching one found
 }
+/*
+Test expecting the parser to pass when a start timestamp has a value less than an end timestamp
+*/
+TEST_F(CueTimeOrder,ENDGTStart)
+{
+    loadVtt("cue-times/order/end_gt_start.vtt");
+    ASSERT_EQ( 0, errorCount() );
+}
+
+/*
+Test expecting the parser to pass with two cues that start at the same time (inline) but end at different times
+that are greater than the starting time.
+*/
+TEST_F(CueTimeOrder,ENDGTStart)
+{
+    loadVtt("cue-times/order/in_line_cue_good.vtt");
+    ASSERT_EQ( 0, errorCount() );
+}
