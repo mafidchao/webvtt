@@ -403,6 +403,8 @@ _recheck:
 				if( !parse_timestamp( self, self->token, &SP->v.cue->from ) )
 				{
 					ERROR_AT_COLUMN(WEBVTT_MALFORMED_TIMESTAMP,last_column);
+					POP();
+					webvtt_release_cue( &SP->v.cue );
 					*mode = M_SKIP_CUE;
 				}
 				PUSH( T_SEP_LEFT, SP->v.cue );
@@ -414,6 +416,7 @@ _recheck:
 				 */
 				ERROR_AT_COLUMN(  token != SEPARATOR ? WEBVTT_MALFORMED_TIMESTAMP : WEBVTT_EXPECTED_TIMESTAMP,last_column);
 				POP();
+				webvtt_release_cue( &SP->v.cue );
 				*mode = M_SKIP_CUE;
 				goto _finish;
 				break;
