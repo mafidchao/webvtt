@@ -19,7 +19,7 @@ class CueTimeOrder : public CueTest { };
  * 5. A WebVTT timestamp representing the end time offset of the cue. The time represented by this
  *    WebVTT timestamp must be greater than the start time offset of the cue.
  */
-TEST_F(CueTimeOrder,EndLTStart)
+TEST_F(CueTimeOrder,DISABLED_EndLTStart)
 {
   loadVtt( "cue-times/order/end_lt_start.vtt" );
 	const Error& err = getError( 0 );
