@@ -406,6 +406,7 @@ _recheck:
 					POP();
 					webvtt_release_cue( &SP->v.cue );
 					*mode = M_SKIP_CUE;
+					goto _finish;
 				}
 				PUSH( T_SEP_LEFT, SP->v.cue );
 				break;
