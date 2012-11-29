@@ -479,6 +479,12 @@ webvtt_lex( webvtt_parser self, const webvtt_byte *buffer, webvtt_uint *pos, web
 		switch( self->tstate )
 		{
 			case T_DIGIT0: RETURN(INTEGER)
+			default:
+				if(self->token_pos)
+				{
+					RESET
+					return BADTOKEN;
+				}
 		}
 	}
 	return self->token_pos ? UNFINISHED : BADTOKEN;
