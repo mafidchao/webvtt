@@ -402,9 +402,9 @@ _recheck:
 				}
 				if( !parse_timestamp( self, self->token, &SP->v.cue->from ) )
 				{
+					webvtt_release_cue( &SP->v.cue );
 					ERROR_AT_COLUMN(WEBVTT_MALFORMED_TIMESTAMP,last_column);
 					POP();
-					webvtt_release_cue( &SP->v.cue );
 					*mode = M_SKIP_CUE;
 					goto _finish;
 				}
@@ -415,10 +415,10 @@ _recheck:
 				/**
 				 * Some garbage non-timestamp garbage was found. If it starts with an integer, lets say it's malformed.
 				 */
-				ERROR_AT_COLUMN(  token != SEPARATOR ? WEBVTT_MALFORMED_TIMESTAMP : WEBVTT_EXPECTED_TIMESTAMP,last_column);
-				POP();
 				webvtt_release_cue( &SP->v.cue );
+				ERROR_AT_COLUMN(  token != SEPARATOR ? WEBVTT_MALFORMED_TIMESTAMP : WEBVTT_EXPECTED_TIMESTAMP,last_column);
 				*mode = M_SKIP_CUE;
+				POP();
 				goto _finish;
 				break;
 			}
