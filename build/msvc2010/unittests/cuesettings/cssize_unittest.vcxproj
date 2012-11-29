@@ -19,13 +19,13 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\test\gtest\gtest-all.cc" />
-    <ClCompile Include="..\..\test\gtest\gtest_main.cc" />
-    <ClCompile Include="..\..\test\unit\csline_unittest.cpp" />
+    <ClCompile Include="..\..\..\..\test\gtest\gtest-all.cc" />
+    <ClCompile Include="..\..\..\..\test\gtest\gtest_main.cc" />
+    <ClCompile Include="..\..\..\..\test\unit\cssize_unittest.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{310B75FB-022B-4AF5-BB79-164E4E57E7C2}</ProjectGuid>
-    <RootNamespace>csline_unittest</RootNamespace>
+    <ProjectGuid>{FCCCF209-599C-40AE-89A9-E48EC21DC918}</ProjectGuid>
+    <RootNamespace>cssize_unittest</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='development|Win32'" Label="Configuration">

@@ -8,83 +8,83 @@
  * incompatible character set
  */
 
-#define ASCII_DIGIT case 0x30: case 0x31: case 0x32: case 0x33: case 0x34: case 0x35: case 0x36: case 0x37: case 0x38: case 0x39:
-#define ASCII_WHITESPACE case 0x0D: case 0x0A: case 0x20: case 0x09:
-#define ASCII_SPACE case 0x20:
-#define ASCII_TAB case 0x09:
-#define ASCII_CR case 0x0D:
-#define ASCII_LF case 0x0A:
+#define UTF8_DIGIT case 0x30: case 0x31: case 0x32: case 0x33: case 0x34: case 0x35: case 0x36: case 0x37: case 0x38: case 0x39:
+#define UTF8_WHITESPACE case 0x0D: case 0x0A: case 0x20: case 0x09:
+#define UTF8_SPACE case 0x20:
+#define UTF8_TAB case 0x09:
+#define UTF8_CR case 0x0D:
+#define UTF8_LF case 0x0A:
 
-#define ASCII_DASH case 0x2D:
-#define ASCII_PERIOD case 0x2E:
-#define ASCII_GT case 0x3E:
-#define ASCII_COLON case 0x3A:
-#define ASCII_PERCENT case 0x25:
+#define UTF8_DASH case 0x2D:
+#define UTF8_PERIOD case 0x2E:
+#define UTF8_GT case 0x3E:
+#define UTF8_COLON case 0x3A:
+#define UTF8_PERCENT case 0x25:
 
-#define ASCII_0 case 0x30:
-#define ASCII_1 case 0x31:
-#define ASCII_2 case 0x32:
-#define ASCII_3 case 0x33:
-#define ASCII_4 case 0x34:
-#define ASCII_5 case 0x35:
-#define ASCII_6 case 0x36:
-#define ASCII_7 case 0x37:
-#define ASCII_8 case 0x38:
-#define ASCII_9 case 0x39:
+#define UTF8_0 case 0x30:
+#define UTF8_1 case 0x31:
+#define UTF8_2 case 0x32:
+#define UTF8_3 case 0x33:
+#define UTF8_4 case 0x34:
+#define UTF8_5 case 0x35:
+#define UTF8_6 case 0x36:
+#define UTF8_7 case 0x37:
+#define UTF8_8 case 0x38:
+#define UTF8_9 case 0x39:
 
-#define ASCII_a case 0x61:
-#define ASCII_b case 0x62:
-#define ASCII_c case 0x63:
-#define ASCII_d case 0x64:
-#define ASCII_e case 0x65:
-#define ASCII_f case 0x66:
-#define ASCII_g case 0x67:
-#define ASCII_h case 0x68:
-#define ASCII_i case 0x69:
-#define ASCII_j case 0x6A:
-#define ASCII_k case 0x6B:
-#define ASCII_l case 0x6C:
-#define ASCII_m case 0x6D:
-#define ASCII_n case 0x6E:
-#define ASCII_o case 0x6F:
-#define ASCII_p case 0x70:
-#define ASCII_q case 0x71:
-#define ASCII_r case 0x72:
-#define ASCII_s case 0x73:
-#define ASCII_t case 0x74:
-#define ASCII_u case 0x75:
-#define ASCII_v case 0x76:
-#define ASCII_w case 0x77:
-#define ASCII_x case 0x78:
-#define ASCII_y case 0x79:
-#define ASCII_z case 0x7A:
+#define UTF8_a case 0x61:
+#define UTF8_b case 0x62:
+#define UTF8_c case 0x63:
+#define UTF8_d case 0x64:
+#define UTF8_e case 0x65:
+#define UTF8_f case 0x66:
+#define UTF8_g case 0x67:
+#define UTF8_h case 0x68:
+#define UTF8_i case 0x69:
+#define UTF8_j case 0x6A:
+#define UTF8_k case 0x6B:
+#define UTF8_l case 0x6C:
+#define UTF8_m case 0x6D:
+#define UTF8_n case 0x6E:
+#define UTF8_o case 0x6F:
+#define UTF8_p case 0x70:
+#define UTF8_q case 0x71:
+#define UTF8_r case 0x72:
+#define UTF8_s case 0x73:
+#define UTF8_t case 0x74:
+#define UTF8_u case 0x75:
+#define UTF8_v case 0x76:
+#define UTF8_w case 0x77:
+#define UTF8_x case 0x78:
+#define UTF8_y case 0x79:
+#define UTF8_z case 0x7A:
 
-#define ASCII_A case 0x41:
-#define ASCII_B case 0x42:
-#define ASCII_C case 0x43:
-#define ASCII_D case 0x44:
-#define ASCII_E case 0x45:
-#define ASCII_F case 0x46:
-#define ASCII_G case 0x47:
-#define ASCII_H case 0x48:
-#define ASCII_I case 0x49:
-#define ASCII_J case 0x4A:
-#define ASCII_K case 0x4B:
-#define ASCII_L case 0x4C:
-#define ASCII_M case 0x4D:
-#define ASCII_N case 0x4E:
-#define ASCII_O case 0x4F:
-#define ASCII_P case 0x50:
-#define ASCII_Q case 0x51:
-#define ASCII_R case 0x52:
-#define ASCII_S case 0x53:
-#define ASCII_T case 0x54:
-#define ASCII_U case 0x55:
-#define ASCII_V case 0x56:
-#define ASCII_W case 0x57:
-#define ASCII_X case 0x58:
-#define ASCII_Y case 0x59:
-#define ASCII_Z case 0x5A:
+#define UTF8_A case 0x41:
+#define UTF8_B case 0x42:
+#define UTF8_C case 0x43:
+#define UTF8_D case 0x44:
+#define UTF8_E case 0x45:
+#define UTF8_F case 0x46:
+#define UTF8_G case 0x47:
+#define UTF8_H case 0x48:
+#define UTF8_I case 0x49:
+#define UTF8_J case 0x4A:
+#define UTF8_K case 0x4B:
+#define UTF8_L case 0x4C:
+#define UTF8_M case 0x4D:
+#define UTF8_N case 0x4E:
+#define UTF8_O case 0x4F:
+#define UTF8_P case 0x50:
+#define UTF8_Q case 0x51:
+#define UTF8_R case 0x52:
+#define UTF8_S case 0x53:
+#define UTF8_T case 0x54:
+#define UTF8_U case 0x55:
+#define UTF8_V case 0x56:
+#define UTF8_W case 0x57:
+#define UTF8_X case 0x58:
+#define UTF8_Y case 0x59:
+#define UTF8_Z case 0x5A:
 
 #define UTF8_BOM0 case 0xEF:
 #define UTF8_BOM1 case 0xBB:
@@ -151,24 +151,24 @@ webvtt_lex( webvtt_parser self, const webvtt_byte *buffer, webvtt_uint *pos, web
 		switch( self->tstate )
 		{
 			BEGIN_STATE(T_INITIAL)
-				ASCII_DIGIT { SET_STATE(T_DIGIT0) }
-				ASCII_W  { SET_STATE(T_WEBVTT0) }
-				ASCII_DASH { SET_STATE(T_DASH0) }
+				UTF8_DIGIT { SET_STATE(T_DIGIT0) }
+				UTF8_W  { SET_STATE(T_WEBVTT0) }
+				UTF8_DASH { SET_STATE(T_DASH0) }
 				UTF8_BOM0 { SET_STATE(T_BOM0) }
-				ASCII_LF { SET_NEWLINE }
-				ASCII_CR { SET_STATE(T_NEWLINE0) }
-				ASCII_SPACE OR ASCII_TAB { SET_STATE(T_WHITESPACE) }
-				ASCII_PERIOD { RETURN(FULL_STOP) }
-				ASCII_COLON { RETURN(COLON) }
-				ASCII_p { SET_STATE(T_POSITION0) }
-				ASCII_a { SET_STATE(T_ALIGN0) }
-				ASCII_l { SET_STATE(T_L0) }
-				ASCII_v { SET_STATE(T_VERTICAL0) }
-				ASCII_r { SET_STATE(T_RL0) }
-				ASCII_s { SET_STATE(T_S0) }
-				ASCII_m { SET_STATE(T_MIDDLE0) }
-				ASCII_e { SET_STATE(T_END0) }
-				ASCII_N { SET_STATE(T_NOTE1) }
+				UTF8_LF { SET_NEWLINE }
+				UTF8_CR { SET_STATE(T_NEWLINE0) }
+				UTF8_SPACE OR UTF8_TAB { SET_STATE(T_WHITESPACE) }
+				UTF8_PERIOD { RETURN(FULL_STOP) }
+				UTF8_COLON { RETURN(COLON) }
+				UTF8_p { SET_STATE(T_POSITION0) }
+				UTF8_a { SET_STATE(T_ALIGN0) }
+				UTF8_l { SET_STATE(T_L0) }
+				UTF8_v { SET_STATE(T_VERTICAL0) }
+				UTF8_r { SET_STATE(T_RL0) }
+				UTF8_s { SET_STATE(T_S0) }
+				UTF8_m { SET_STATE(T_MIDDLE0) }
+				UTF8_e { SET_STATE(T_END0) }
+				UTF8_N { SET_STATE(T_NOTE1) }
 			END_STATE
 
 			BEGIN_STATE(T_BOM0)
@@ -188,231 +188,231 @@ webvtt_lex( webvtt_parser self, const webvtt_byte *buffer, webvtt_uint *pos, web
 			END_STATE
 
 			BEGIN_STATE(T_WEBVTT0)
-				ASCII_E { SET_STATE(T_WEBVTT1) }
+				UTF8_E { SET_STATE(T_WEBVTT1) }
 			END_STATE
 
 			BEGIN_STATE(T_WEBVTT1)
-				ASCII_B { SET_STATE(T_WEBVTT2) }
+				UTF8_B { SET_STATE(T_WEBVTT2) }
 			END_STATE
 
 			BEGIN_STATE(T_WEBVTT2)
-				ASCII_V { SET_STATE(T_WEBVTT3) }
+				UTF8_V { SET_STATE(T_WEBVTT3) }
 			END_STATE
 
 			BEGIN_STATE(T_WEBVTT3)
-				ASCII_T { SET_STATE(T_WEBVTT4) }
+				UTF8_T { SET_STATE(T_WEBVTT4) }
 			END_STATE
 		
 			BEGIN_STATE(T_WEBVTT4)
-				ASCII_T { RETURN(WEBVTT) }
+				UTF8_T { RETURN(WEBVTT) }
 			END_STATE
 		
 			BEGIN_STATE(T_DASH0)
-				ASCII_DIGIT { SET_STATE(T_DIGIT0) }
-				ASCII_DASH { SET_STATE(T_SEP1) }
+				UTF8_DIGIT { SET_STATE(T_DIGIT0) }
+				UTF8_DASH { SET_STATE(T_SEP1) }
 			END_STATE
 
 			BEGIN_STATE(T_SEP1)
-				ASCII_GT { RETURN(SEPARATOR) }
+				UTF8_GT { RETURN(SEPARATOR) }
 			END_STATE
 
 			BEGIN_STATE(T_DIGIT0)
-				ASCII_DIGIT
+				UTF8_DIGIT
 				{
 					OVERFLOW(INTEGER)
 					SET_STATE(T_DIGIT0)
 				}
-				ASCII_COLON { SET_STATE(T_TIMESTAMP1) }
-				ASCII_PERCENT { RETURN(PERCENTAGE) }
+				UTF8_COLON { SET_STATE(T_TIMESTAMP1) }
+				UTF8_PERCENT { RETURN(PERCENTAGE) }
 				DEFAULT { BACKUP AND RETURN(INTEGER) }
 			END_STATE_EX
 
 			BEGIN_STATE(T_NEWLINE0)
-				ASCII_LF { SET_NEWLINE }
+				UTF8_LF { SET_NEWLINE }
 				DEFAULT { BACKUP AND SET_NEWLINE }
 			END_STATE_EX
 
 			BEGIN_STATE(T_WHITESPACE)
-				ASCII_SPACE OR ASCII_TAB { OVERFLOW(WHITESPACE) SET_STATE(T_WHITESPACE) }
+				UTF8_SPACE OR UTF8_TAB { OVERFLOW(WHITESPACE) SET_STATE(T_WHITESPACE) }
 				DEFAULT { BACKUP RETURN(WHITESPACE) }
 			END_STATE_EX
 
 			BEGIN_STATE(T_POSITION0)
-				ASCII_o { SET_STATE(T_POSITION1) }
+				UTF8_o { SET_STATE(T_POSITION1) }
 			END_STATE
 
 			BEGIN_STATE(T_POSITION1)
-				ASCII_s { SET_STATE(T_POSITION2) }
+				UTF8_s { SET_STATE(T_POSITION2) }
 			END_STATE
 
 			BEGIN_STATE(T_POSITION2)
-				ASCII_i { SET_STATE(T_POSITION3) }
+				UTF8_i { SET_STATE(T_POSITION3) }
 			END_STATE
 
 			BEGIN_STATE(T_POSITION3)
-				ASCII_t { SET_STATE(T_POSITION4) }
+				UTF8_t { SET_STATE(T_POSITION4) }
 			END_STATE
 
 			BEGIN_STATE(T_POSITION4)
-				ASCII_i { SET_STATE(T_POSITION5) }
+				UTF8_i { SET_STATE(T_POSITION5) }
 			END_STATE
 
 			BEGIN_STATE(T_POSITION5)
-				ASCII_o { SET_STATE(T_POSITION6) }
+				UTF8_o { SET_STATE(T_POSITION6) }
 			END_STATE
 
 			BEGIN_STATE(T_POSITION6)
-				ASCII_n { RETURN(POSITION) }
+				UTF8_n { RETURN(POSITION) }
 			END_STATE
 
 			BEGIN_STATE(T_ALIGN0)
-				ASCII_l { SET_STATE(T_ALIGN1) }
+				UTF8_l { SET_STATE(T_ALIGN1) }
 			END_STATE
 
 			BEGIN_STATE(T_ALIGN1)
-				ASCII_i { SET_STATE(T_ALIGN2) }
+				UTF8_i { SET_STATE(T_ALIGN2) }
 			END_STATE
 
 			BEGIN_STATE(T_ALIGN2)
-				ASCII_g { SET_STATE(T_ALIGN3) }
+				UTF8_g { SET_STATE(T_ALIGN3) }
 			END_STATE
 
 			BEGIN_STATE(T_ALIGN3)
-				ASCII_n { RETURN(ALIGN) }
+				UTF8_n { RETURN(ALIGN) }
 			END_STATE
 
 			BEGIN_STATE(T_L0)
-				ASCII_r { RETURN(LR) }
-				ASCII_i { SET_STATE(T_LINE1) }
-				ASCII_e { SET_STATE(T_LEFT1) }
+				UTF8_r { RETURN(LR) }
+				UTF8_i { SET_STATE(T_LINE1) }
+				UTF8_e { SET_STATE(T_LEFT1) }
 			END_STATE
 
 			BEGIN_STATE(T_LINE1)
-				ASCII_n { SET_STATE(T_LINE2) }
+				UTF8_n { SET_STATE(T_LINE2) }
 			END_STATE
 
 			BEGIN_STATE(T_LINE2)
-				ASCII_e { RETURN(LINE) }
+				UTF8_e { RETURN(LINE) }
 			END_STATE
 
 			BEGIN_STATE(T_LEFT1)
-				ASCII_f { SET_STATE(T_LEFT2) }
+				UTF8_f { SET_STATE(T_LEFT2) }
 			END_STATE
 
 			BEGIN_STATE(T_LEFT2)
-				ASCII_t { RETURN(LEFT) }
+				UTF8_t { RETURN(LEFT) }
 			END_STATE
 
 			BEGIN_STATE(T_VERTICAL0)
-				ASCII_e { SET_STATE(T_VERTICAL1) }
+				UTF8_e { SET_STATE(T_VERTICAL1) }
 			END_STATE
 
 			BEGIN_STATE(T_VERTICAL1)
-				ASCII_r { SET_STATE(T_VERTICAL2) }
+				UTF8_r { SET_STATE(T_VERTICAL2) }
 			END_STATE
 
 			BEGIN_STATE(T_VERTICAL2)
-				ASCII_t { SET_STATE(T_VERTICAL3) }
+				UTF8_t { SET_STATE(T_VERTICAL3) }
 			END_STATE
 
 			BEGIN_STATE(T_VERTICAL3)
-				ASCII_i { SET_STATE(T_VERTICAL4) }
+				UTF8_i { SET_STATE(T_VERTICAL4) }
 			END_STATE
 
 			BEGIN_STATE(T_VERTICAL4)
-				ASCII_c { SET_STATE(T_VERTICAL5) }
+				UTF8_c { SET_STATE(T_VERTICAL5) }
 			END_STATE
 
 			BEGIN_STATE(T_VERTICAL5)
-				ASCII_a { SET_STATE(T_VERTICAL6) }
+				UTF8_a { SET_STATE(T_VERTICAL6) }
 			END_STATE
 
 			BEGIN_STATE(T_VERTICAL6)
-				ASCII_l { RETURN(VERTICAL) }
+				UTF8_l { RETURN(VERTICAL) }
 			END_STATE
 			
 			BEGIN_STATE(T_RL0)
-				ASCII_l { RETURN(RL) }
-				ASCII_i { SET_STATE(T_RIGHT1) }
+				UTF8_l { RETURN(RL) }
+				UTF8_i { SET_STATE(T_RIGHT1) }
 			END_STATE
 
 			BEGIN_STATE(T_RIGHT1)
-				ASCII_g { SET_STATE(T_RIGHT2) }
+				UTF8_g { SET_STATE(T_RIGHT2) }
 			END_STATE
 
 			BEGIN_STATE(T_RIGHT2)
-				ASCII_h { SET_STATE(T_RIGHT3) }
+				UTF8_h { SET_STATE(T_RIGHT3) }
 			END_STATE
 
 			BEGIN_STATE(T_RIGHT3)
-				ASCII_t { RETURN(RIGHT) }
+				UTF8_t { RETURN(RIGHT) }
 			END_STATE
 
 			BEGIN_STATE(T_S0)
-				ASCII_t { SET_STATE(T_START1) }
-				ASCII_i { SET_STATE(T_SIZE1) }
+				UTF8_t { SET_STATE(T_START1) }
+				UTF8_i { SET_STATE(T_SIZE1) }
 			END_STATE
 
 			BEGIN_STATE(T_SIZE1)
-				ASCII_z { SET_STATE(T_SIZE2) }
+				UTF8_z { SET_STATE(T_SIZE2) }
 			END_STATE
 
 			BEGIN_STATE(T_SIZE2)
-				ASCII_e { RETURN(SIZE) }
+				UTF8_e { RETURN(SIZE) }
 			END_STATE
 
 			BEGIN_STATE(T_START1)
-				ASCII_a { SET_STATE(T_START2) }
+				UTF8_a { SET_STATE(T_START2) }
 			END_STATE
 
 			BEGIN_STATE(T_START2)
-				ASCII_r { SET_STATE(T_START3) }
+				UTF8_r { SET_STATE(T_START3) }
 			END_STATE
 
 			BEGIN_STATE(T_START3)
-				ASCII_t { RETURN(START) }
+				UTF8_t { RETURN(START) }
 			END_STATE
 
 			BEGIN_STATE(T_MIDDLE0)
-				ASCII_i { SET_STATE(T_MIDDLE1) }
+				UTF8_i { SET_STATE(T_MIDDLE1) }
 			END_STATE
 
 			BEGIN_STATE(T_MIDDLE1)
-				ASCII_d { SET_STATE(T_MIDDLE2) }
+				UTF8_d { SET_STATE(T_MIDDLE2) }
 			END_STATE
 
 			BEGIN_STATE(T_MIDDLE2)
-				ASCII_d { SET_STATE(T_MIDDLE3) }
+				UTF8_d { SET_STATE(T_MIDDLE3) }
 			END_STATE
 
 			BEGIN_STATE(T_MIDDLE3)
-				ASCII_l { SET_STATE(T_MIDDLE4) }
+				UTF8_l { SET_STATE(T_MIDDLE4) }
 			END_STATE
 
 			BEGIN_STATE(T_MIDDLE4)
-				ASCII_e { RETURN(MIDDLE) }
+				UTF8_e { RETURN(MIDDLE) }
 			END_STATE
 
 			BEGIN_STATE(T_END0)
-				ASCII_n { SET_STATE(T_END1) }
+				UTF8_n { SET_STATE(T_END1) }
 			END_STATE
 
 			BEGIN_STATE(T_END1)
-				ASCII_d { RETURN(END) }
+				UTF8_d { RETURN(END) }
 			END_STATE
 
 			BEGIN_STATE(T_TIMESTAMP1)
-				ASCII_DIGIT
+				UTF8_DIGIT
 				{
 					OVERFLOW(BADTOKEN)
 					SET_STATE(T_TIMESTAMP1)
 				}
-				ASCII_COLON
+				UTF8_COLON
 				{
 					OVERFLOW(BADTOKEN)
 					SET_STATE(T_TIMESTAMP2)
 				}
-				ASCII_PERIOD
+				UTF8_PERIOD
 				{
 					OVERFLOW(BADTOKEN)
 					SET_STATE(T_TIMESTAMP3)
@@ -420,12 +420,12 @@ webvtt_lex( webvtt_parser self, const webvtt_byte *buffer, webvtt_uint *pos, web
 			END_STATE
 
 			BEGIN_STATE(T_TIMESTAMP2)
-				ASCII_DIGIT
+				UTF8_DIGIT
 				{
 					OVERFLOW(BADTOKEN)
 					SET_STATE(T_TIMESTAMP2)
 				}
-				ASCII_PERIOD
+				UTF8_PERIOD
 				{
 					OVERFLOW(BADTOKEN)
 					SET_STATE(T_TIMESTAMP3)
@@ -433,7 +433,7 @@ webvtt_lex( webvtt_parser self, const webvtt_byte *buffer, webvtt_uint *pos, web
 			END_STATE
 
 			BEGIN_STATE(T_TIMESTAMP3)
-				ASCII_DIGIT
+				UTF8_DIGIT
 				{
 					OVERFLOW(BADTOKEN)
 					SET_STATE(T_TIMESTAMP4)
@@ -441,7 +441,7 @@ webvtt_lex( webvtt_parser self, const webvtt_byte *buffer, webvtt_uint *pos, web
 			END_STATE
 				
 			BEGIN_STATE(T_TIMESTAMP4)
-				ASCII_DIGIT
+				UTF8_DIGIT
 				{
 					OVERFLOW(BADTOKEN)
 					SET_STATE(T_TIMESTAMP5)
@@ -449,23 +449,28 @@ webvtt_lex( webvtt_parser self, const webvtt_byte *buffer, webvtt_uint *pos, web
 			END_STATE
 
 			BEGIN_STATE(T_TIMESTAMP5)
-				ASCII_DIGIT
+				UTF8_DIGIT
 				{
+					if( *pos != length && ASCII_ISDIGIT(buffer[*pos]) )
+					{
+						BACKUP
+						return BADTOKEN;
+					}
 					OVERFLOW(BADTOKEN)
 					RETURN(TIMESTAMP)
 				}
 			END_STATE
 
 			BEGIN_STATE(T_NOTE1)
-				ASCII_O { SET_STATE(T_NOTE2) }
+				UTF8_O { SET_STATE(T_NOTE2) }
 			END_STATE
 			
 			BEGIN_STATE(T_NOTE2)
-				ASCII_T { SET_STATE(T_NOTE3) }
+				UTF8_T { SET_STATE(T_NOTE3) }
 			END_STATE
 
 			BEGIN_STATE(T_NOTE3)
-				ASCII_E { RETURN(NOTE) }
+				UTF8_E { RETURN(NOTE) }
 			END_STATE
 		}
 	}

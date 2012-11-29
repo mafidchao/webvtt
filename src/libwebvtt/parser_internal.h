@@ -5,6 +5,10 @@
 
 typedef enum webvtt_token_t webvtt_token;
 
+#define ASCII_0 (0x30)
+#define ASCII_9 (0x39)
+#define ASCII_ISDIGIT(c) ( ((c) >= ASCII_0) && ((c) <= ASCII_9) )
+
 enum
 webvtt_token_t
 {

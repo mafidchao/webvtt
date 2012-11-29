@@ -11,13 +11,13 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\test\gtest\gtest_main.cc">
+    <ClCompile Include="..\..\..\..\test\unit\csline_unittest.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\test\gtest\gtest-all.cc">
+    <ClCompile Include="..\..\..\..\test\gtest\gtest_main.cc">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\test\unit\csline_unittest.cpp">
+    <ClCompile Include="..\..\..\..\test\gtest\gtest-all.cc">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>

@@ -68,10 +68,6 @@ enum parse_state_t
 	 */
 };
 
-
-#define ASCII_0 (0x30)
-#define ASCII_9 (0x39)
-#define ASCII_ISDIGIT(c) ( ((c) >= ASCII_0) && ((c) <= ASCII_9) )
 #define ASCII_DASH (0x2D)
 #define ASCII_COLON  (0x3A)
 
@@ -384,6 +380,14 @@ _recheck:
 			 */
 			switch(token)
 			{
+			case WHITESPACE:
+				if( !skip_error )
+				{
+					ERROR_AT_COLUMN(WEBVTT_UNEXPECTED_WHITESPACE,last_column);
+					skip_error = 1;
+				}
+				break;
+
 			case TIMESTAMP:
 				if( !SP->v.cue )
 				{
@@ -398,10 +402,21 @@ _recheck:
 				}
 				if( !parse_timestamp( self, self->token, &SP->v.cue->from ) )
 				{
-					_ERROR(WEBVTT_MALFORMED_TIMESTAMP);
+					ERROR_AT_COLUMN(WEBVTT_MALFORMED_TIMESTAMP,last_column);
 					*mode = M_SKIP_CUE;
 				}
 				PUSH( T_SEP_LEFT, SP->v.cue );
+				break;
+
+			default:
+				/**
+				 * Some garbage non-timestamp garbage was found. If it starts with an integer, lets say it's malformed.
+				 */
+				ERROR_AT_COLUMN(  token != SEPARATOR ? WEBVTT_MALFORMED_TIMESTAMP : WEBVTT_EXPECTED_TIMESTAMP,last_column);
+				POP();
+				*mode = M_SKIP_CUE;
+				goto _finish;
+				break;
 			}
 			break;
 
@@ -472,8 +487,14 @@ _until:
 					webvtt_cue cue = (webvtt_cue)SP->v.cue;
 					if( !parse_timestamp( self, self->token, &cue->until ) )
 					{
-						_ERROR(WEBVTT_MALFORMED_TIMESTAMP);
+						ERROR_AT_COLUMN(WEBVTT_MALFORMED_TIMESTAMP,last_column);
 						*mode = M_SKIP_CUE;
+						POP(); /* T_UNTIL */
+						POP(); /* T_SEP_RIGHT */
+						POP(); /* T_SEP */
+						POP(); /* T_SEP_LEFT */
+						POP(); /* T_FROM */
+						goto _finish;
 					}
 					POP(); /* T_UNTIL */
 					POP(); /* T_SEP_RIGHT */
@@ -482,6 +503,39 @@ _until:
 					POP(); /* T_FROM */
 					PUSH( T_PRECUESETTING, cue );
 				}
+				break;
+
+			case VERTICAL:
+			case LINE:
+			case ALIGN:
+			case SIZE:
+			case POSITION:
+			case COLON:
+				/**
+				 * A cuesetting identifier was detected, but isn't expected yet. report as an error.
+				 */
+				ERROR_AT_COLUMN( WEBVTT_EXPECTED_TIMESTAMP,last_column);
+				POP(); /* T_UNTIL */
+				POP(); /* T_SEP_RIGHT */
+				POP(); /* T_SEP */
+				POP(); /* T_SEP_LEFT */
+				POP(); /* T_FROM */
+				*mode = M_SKIP_CUE;
+				goto _finish;
+				break;
+
+			default:
+				/**
+				 * Some garbage non-timestamp garbage was found. If it starts with an integer, lets say it's malformed.
+				 */
+				ERROR_AT_COLUMN( WEBVTT_MALFORMED_TIMESTAMP,last_column);
+				POP(); /* T_UNTIL */
+				POP(); /* T_SEP_RIGHT */
+				POP(); /* T_SEP */
+				POP(); /* T_SEP_LEFT */
+				POP(); /* T_FROM */
+				*mode = M_SKIP_CUE;
+				goto _finish;
 				break;
 			}
 			break;
@@ -918,6 +972,10 @@ _finish:
 				POP();
 			}
 		}
+		/**
+		 * If we're finished, we shouldn't be coming back to this buffer, so make sure that pos = len
+		 */
+		pos = len;
 	}
 	*ppos = pos;
 	return status;
@@ -1013,6 +1071,8 @@ webvtt_parse_chunk( webvtt_parser self, const void *buffer, webvtt_uint len )
 			}
 #endif
 			finish_cue( self, SP->v.cue );
+			webvtt_delete_bytearray( &self->line_buffer );
+			self->mode = M_WEBVTT;
 			break;
 
 		case M_SKIP_CUE:
@@ -1050,13 +1110,17 @@ webvtt_parse_chunk( webvtt_parser self, const void *buffer, webvtt_uint len )
 							/**
 							 * This should be webvtt-cuetimes, so we need to activate cuetime parsing mode.
 							 */
+							webvtt_uint linepos = 0;
 							PUSH(T_FROM,0);
-							if( WEBVTT_FAILED(status = parse_webvtt( self, self->line_buffer->text, &self->line_pos, self->line_buffer->length, 
+							if( WEBVTT_FAILED(status = parse_webvtt( self, self->line_buffer->text, &linepos, self->line_buffer->length, 
 								&self->mode, 1 )) )
 							{
 								return status;
 							}
-							self->mode =  M_WEBVTT;
+							if( self->mode != M_SKIP_CUE )
+							{
+								self->mode =  M_WEBVTT;
+							}
 						}
 						else
 						{
@@ -1065,8 +1129,8 @@ webvtt_parse_chunk( webvtt_parser self, const void *buffer, webvtt_uint len )
 							 * get the first token from the line. If it's NOTE,
 							 * then read out a comment.
 							 */
-							webvtt_uint line_pos = 0;
-							webvtt_uint line_tok = webvtt_lex( self, self->line_buffer->text, &line_pos, self->line_buffer->length, 0 );
+							webvtt_uint linepos = 0;
+							webvtt_uint line_tok = webvtt_lex( self, self->line_buffer->text, &linepos, self->line_buffer->length, 0 );
 							if( line_tok == NOTE )
 							{
 								PUSH(T_COMMENT,0);
@@ -1199,7 +1263,7 @@ parse_timestamp( webvtt_parser self, const webvtt_byte *b, webvtt_timestamp *res
 	   read the next value */
 	if (have_hours || (*b == ASCII_COLON))
 	{
-		if( *b++ != COLON )
+		if( *b++ != ASCII_COLON )
 		{
 			goto _malformed;
 		}

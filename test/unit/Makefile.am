@@ -28,13 +28,7 @@ CUESETTINGS_TESTS = \
   csalign_unittest
 
 CUETIMES_TESTS = \
-  ctorder_unittest \
-  ctseparator_unittest \
-  cttimestampdelimiter_unittest \
-  cttimestamphour_unittest \
-  cttimestampminute_unittest \
-  cttimestampsecond_unittest \
-  cttimestampsecondfrac_unittest
+  cuetimes_unittest
 
 PAYLOAD_TESTS = \
   plboldtag_unittest \
@@ -63,12 +57,7 @@ UNIT_TESTS = \
 #   make && make check
 KNOWN_VALGRIND_TEST_FAILURES =
 if VALGRIND_TESTING
-KNOWN_VALGRIND_TEST_FAILURES += \
-	ctorder_unittest \
-	ctseparator_unittest \
-	cttimestampminute_unittest \
-	cttimestampsecond_unittest \
-	cttimestampsecondfrac_unittest
+KNOWN_VALGRIND_TEST_FAILURES +=
 endif
 
 # Tests we expect to fail (i.e., known-fails)
@@ -92,13 +81,7 @@ csvertical_unittest_SOURCES = csvertical_unittest.cpp
 csalign_unittest_SOURCES = csalign_unittest.cpp
 
 # Cue Times tests
-ctorder_unittest_SOURCES = ctorder_unittest.cpp
-ctseparator_unittest_SOURCES = ctseparator_unittest.cpp
-cttimestampdelimiter_unittest_SOURCES = cttimestampdelimiter_unittest.cpp
-cttimestamphour_unittest_SOURCES = cttimestamphour_unittest.cpp
-cttimestampminute_unittest_SOURCES = cttimestampminute_unittest.cpp
-cttimestampsecond_unittest_SOURCES = cttimestampsecond_unittest.cpp
-cttimestampsecondfrac_unittest_SOURCES = cttimestampsecondfrac_unittest.cpp
+cuetimes_unittest_SOURCES = cuetimes_unittest.cpp
 
 #Payload Tests
 plboldtag_unittest_SOURCES = plboldtag_unittest.cpp
