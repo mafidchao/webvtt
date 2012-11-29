@@ -8,7 +8,7 @@ AM_CPPFLAGS = \
   $(GTEST_CPPFLAGS)
 
 AM_CXXFLAGS = $(AM_CPPFLAGS) $(CXXFLAGS)
-AM_LDFLAGS = -static
+AM_LDFLAGS = -static -lm
 
 LIBS = \
   $(top_builddir)/src/libwebvtt/libwebvtt-static.la \
@@ -27,6 +27,15 @@ CUESETTINGS_TESTS = \
   csvertical_unittest \
   csalign_unittest
 
+CUETIMES_TESTS = \
+  ctorder_unittest \
+  ctseparator_unittest \
+  cttimestampdelimiter_unittest \
+  cttimestamphour_unittest \
+  cttimestampminute_unittest \
+  cttimestampsecond_unittest \
+  cttimestampsecondfrac_unittest
+
 PAYLOAD_TESTS = \
   plboldtag_unittest \
   plclasstag_unittest \
@@ -37,12 +46,13 @@ PAYLOAD_TESTS = \
   pltimestamp_unittest \
   plunderlinetag_unittest \
   plvoicetag_unittest
-  
+
 UNIT_TESTS = \
   sample_unittest \
   sample2_unittest \
   $(CUESETTINGS_TESTS) \
-  $(PAYLOAD_TESTS) 
+  $(CUETIMES_TESTS) \
+  $(PAYLOAD_TESTS)
 
 # On TravisCI, we run valgrind for unit tests with --exit-exitcode=1,
 # which means otherwise passing tests fail when valgrind fails leak-check.
@@ -59,7 +69,12 @@ KNOWN_VALGRIND_TEST_FAILURES += \
 	cssize_unittest \
 	csposition_unittest \
 	csvertical_unittest \
-	csalign_unittest
+	csalign_unittest \
+  ctorder_unittest \
+  ctseparator_unittest \
+  cttimestampminute_unittest \
+  cttimestampsecond_unittest \
+  cttimestampsecondfrac_unittest
 endif
 
 # Tests we expect to fail (i.e., known-fails)
@@ -81,6 +96,15 @@ cssize_unittest_SOURCES = cssize_unittest.cpp
 csposition_unittest_SOURCES = csposition_unittest.cpp
 csvertical_unittest_SOURCES = csvertical_unittest.cpp
 csalign_unittest_SOURCES = csalign_unittest.cpp
+
+# Cue Times tests
+ctorder_unittest_SOURCES = ctorder_unittest.cpp
+ctseparator_unittest_SOURCES = ctseparator_unittest.cpp
+cttimestampdelimiter_unittest_SOURCES = cttimestampdelimiter_unittest.cpp
+cttimestamphour_unittest_SOURCES = cttimestamphour_unittest.cpp
+cttimestampminute_unittest_SOURCES = cttimestampminute_unittest.cpp
+cttimestampsecond_unittest_SOURCES = cttimestampsecond_unittest.cpp
+cttimestampsecondfrac_unittest_SOURCES = cttimestampsecondfrac_unittest.cpp
 
 #Payload Tests
 plboldtag_unittest_SOURCES = plboldtag_unittest.cpp
