@@ -129,7 +129,6 @@
     <ClCompile Include="..\..\test\unit\plescapecharacter_unittest.cpp" />
     <ClCompile Include="..\..\test\unit\plformat_unittest.cpp" />
     <ClCompile Include="..\..\test\unit\plitalictag_unittest.cpp" />
-    <ClCompile Include="..\..\test\unit\plrubytag_unittest.cpp" />
     <ClCompile Include="..\..\test\unit\pltagformat_unittest.cpp" />
     <ClCompile Include="..\..\test\unit\pltimestamp_unittest.cpp" />
     <ClCompile Include="..\..\test\unit\plunderlinetag_unittest.cpp" />
