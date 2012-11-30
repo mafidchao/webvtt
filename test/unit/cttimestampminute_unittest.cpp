@@ -316,9 +316,9 @@ TEST_F(CueTimeTimestampMinute,ThreeDigitsTimestamp2)
  * 6. Three characters in the range U+0030 DIGIT ZERO (0) to U+0039 DIGIT NINE (9), representing the 
  *    thousandths of a second seconds-frac as a base ten integer.
  */
-TEST_F(CueTimeTimestampSecond,SecondsCheck)
+TEST_F(CueTimeTimestampMinute,MinutesCheck)
 {
-  loadVtt( "cue-times/timestamp/from/minutes/good.vtt" );
-  ASSERT_EQ( 25, getCue(0).startTime().minutes() );
-  EXPECT_EQ( 27, getCue(0).endTime().minutes() );
+  loadVtt( "cue-times/timestamp/from/minute/good.vtt" );
+  ASSERT_EQ( 1, getCue(0).startTime().minutes() );
+  EXPECT_EQ( 2, getCue(0).endTime().minutes() );
 }
