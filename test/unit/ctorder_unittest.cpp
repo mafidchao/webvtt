@@ -51,8 +51,23 @@ TEST_F(CueTimeOrder,DISABLED_StartLTPriorCue) //currently fails, throws c++ out 
   ASSERT_EQ( WEBVTT_INVALID_ENDTIME, err.error() ); //this should be different, but no matching one found
 }
 /*
-Test expecting the parser to pass when a start timestamp has a value less than an end timestamp
-*/
+ *Test expecting the parser to pass when a start timestamp has a value less than an end timestamp
+ *
+ * From http://dev.w3.org/html5/webvtt/#webvtt-cue-timings (10/15/2012):
+ * The WebVTT cue timings part of a WebVTT cue consists of the following components, in the given order:
+ *
+ * 1. A WebVTT timestamp representing the start time offset of the cue. The time represented by this
+ *    WebVTT timestamp must be greater than or equal to the start time offsets of all previous cues in the file.
+ *
+ * 2. One or more U+0020 SPACE characters or U+0009 CHARACTER TABULATION (tab) characters.
+ *
+ * 3. The string "-->" (U+002D HYPHEN-MINUS, U+002D HYPHEN-MINUS, U+003E GREATER-THAN SIGN).
+ *
+ * 4. One or more U+0020 SPACE characters or U+0009 CHARACTER TABULATION (tab) characters.
+ *
+ * 5. A WebVTT timestamp representing the end time offset of the cue. The time represented by this
+ *    WebVTT timestamp must be greater than the start time offset of the cue.
+ */
 TEST_F(CueTimeOrder,EndGTStart)
 {
     loadVtt("cue-times/order/end_gt_start.vtt");
@@ -60,8 +75,23 @@ TEST_F(CueTimeOrder,EndGTStart)
 }
 
 /*
-Test expecting the parser to pass with two cues that start at the same time (inline) but end at different times
-that are greater than the starting time.
+ *Test expecting the parser to pass with two cues that start at the same time (inline) but end at different times
+ *that are greater than the starting time.
+ *
+ * From http://dev.w3.org/html5/webvtt/#webvtt-cue-timings (10/15/2012):
+ * The WebVTT cue timings part of a WebVTT cue consists of the following components, in the given order:
+ *
+ * 1. A WebVTT timestamp representing the start time offset of the cue. The time represented by this
+ *    WebVTT timestamp must be greater than or equal to the start time offsets of all previous cues in the file.
+ *
+ * 2. One or more U+0020 SPACE characters or U+0009 CHARACTER TABULATION (tab) characters.
+ *
+ * 3. The string "-->" (U+002D HYPHEN-MINUS, U+002D HYPHEN-MINUS, U+003E GREATER-THAN SIGN).
+ *
+ * 4. One or more U+0020 SPACE characters or U+0009 CHARACTER TABULATION (tab) characters.
+ *
+ * 5. A WebVTT timestamp representing the end time offset of the cue. The time represented by this
+ *    WebVTT timestamp must be greater than the start time offset of the cue. 
 */
 TEST_F(CueTimeOrder,EndGTStartWithInline)
 {
@@ -70,8 +100,23 @@ TEST_F(CueTimeOrder,EndGTStartWithInline)
 }
 
 /*
-Test expecting the parser to pass with two cues that start immediately after each other.
-*/
+ *Test expecting the parser to pass with two cues that start immediately after each other.
+ *
+ * From http://dev.w3.org/html5/webvtt/#webvtt-cue-timings (10/15/2012):
+ * The WebVTT cue timings part of a WebVTT cue consists of the following components, in the given order:
+ *
+ * 1. A WebVTT timestamp representing the start time offset of the cue. The time represented by this
+ *    WebVTT timestamp must be greater than or equal to the start time offsets of all previous cues in the file.
+ *
+ * 2. One or more U+0020 SPACE characters or U+0009 CHARACTER TABULATION (tab) characters.
+ *
+ * 3. The string "-->" (U+002D HYPHEN-MINUS, U+002D HYPHEN-MINUS, U+003E GREATER-THAN SIGN).
+ *
+ * 4. One or more U+0020 SPACE characters or U+0009 CHARACTER TABULATION (tab) characters.
+ *
+ * 5. A WebVTT timestamp representing the end time offset of the cue. The time represented by this
+ *    WebVTT timestamp must be greater than the start time offset of the cue.
+ */
 TEST_F(CueTimeOrder, SecondCueStartsAfterFirst)
 {
     loadVtt("cue-times/order/two_cues_good.vtt");
@@ -79,8 +124,23 @@ TEST_F(CueTimeOrder, SecondCueStartsAfterFirst)
 }
 
 /*
-Test expecting the parser to pass with two cues, one which starts during the 1st cue.
-*/
+ *Test expecting the parser to pass with two cues, one which starts during the 1st cue.
+ *
+ * From http://dev.w3.org/html5/webvtt/#webvtt-cue-timings (10/15/2012):
+ * The WebVTT cue timings part of a WebVTT cue consists of the following components, in the given order:
+ *
+ * 1. A WebVTT timestamp representing the start time offset of the cue. The time represented by this
+ *    WebVTT timestamp must be greater than or equal to the start time offsets of all previous cues in the file.
+ *
+ * 2. One or more U+0020 SPACE characters or U+0009 CHARACTER TABULATION (tab) characters.
+ *
+ * 3. The string "-->" (U+002D HYPHEN-MINUS, U+002D HYPHEN-MINUS, U+003E GREATER-THAN SIGN).
+ *
+ * 4. One or more U+0020 SPACE characters or U+0009 CHARACTER TABULATION (tab) characters.
+ *
+ * 5. A WebVTT timestamp representing the end time offset of the cue. The time represented by this
+ *    WebVTT timestamp must be greater than the start time offset of the cue.
+ */
 TEST_F(CueTimeOrder, SecondCueDuringFirst)
 {
     loadVtt("cue-times/order/second_cue_during_first.vtt");
