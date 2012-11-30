@@ -108,7 +108,7 @@ TEST_F(CueTimeTimestampHour,DISABLED_NondigitTimestamp2)//C++ exception "std::ba
  */
 TEST_F(CueTimeTimestampHour,HoursCheck)
 {
-  loadVtt( "cue-times/timestamp/from/hour/good.vtt" );
+  loadVtt( "cue-times/timestamp/from/hour/good.vtt", 1 );
   ASSERT_EQ( 2, getCue(0).startTime().hours() );
   EXPECT_EQ( 10, getCue(0).endTime().hours() );
 }

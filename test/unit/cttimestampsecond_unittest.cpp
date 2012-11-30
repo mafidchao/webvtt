@@ -318,7 +318,7 @@ TEST_F(CueTimeTimestampSecond,ThreeDigitsTimestamp2)
  */
 TEST_F(CueTimeTimestampSecond,SecondsCheck)
 {
-  loadVtt( "cue-times/timestamp/from/second/good.vtt" );
+  loadVtt( "cue-times/timestamp/from/second/good.vtt", 1 );
   ASSERT_EQ( 25, getCue(0).startTime().seconds() );
   EXPECT_EQ( 27, getCue(0).endTime().seconds() );
 }
