@@ -71,7 +71,11 @@ TEST_F(CueTimeOrder,DISABLED_StartLTPriorCue) //currently fails, throws c++ out 
 TEST_F(CueTimeOrder,EndGTStart)
 {
     loadVtt("cue-times/order/end_gt_start.vtt");
+    const Cue& cue = getCue(0);
+    cue.startTime().hours();
     ASSERT_EQ( 0, errorCount() );
+    ASSERT_EQ( 1, cueCount());
+    EXPECT_EQ( 25, cue.startTime().seconds());
 }
 
 /*
