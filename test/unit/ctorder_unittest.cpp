@@ -53,7 +53,7 @@ TEST_F(CueTimeOrder,DISABLED_StartLTPriorCue) //currently fails, throws c++ out 
 /*
 Test expecting the parser to pass when a start timestamp has a value less than an end timestamp
 */
-TEST_F(CueTimeOrder,ENDGTStart)
+TEST_F(CueTimeOrder,EndGTStart)
 {
     loadVtt("cue-times/order/end_gt_start.vtt");
     ASSERT_EQ( 0, errorCount() );
@@ -63,8 +63,26 @@ TEST_F(CueTimeOrder,ENDGTStart)
 Test expecting the parser to pass with two cues that start at the same time (inline) but end at different times
 that are greater than the starting time.
 */
-TEST_F(CueTimeOrder,ENDGTStartWithInline)
+TEST_F(CueTimeOrder,EndGTStartWithInline)
 {
     loadVtt("cue-times/order/end_gt_start_with_inline.vtt");
+    ASSERT_EQ( 0, errorCount() );
+}
+
+/*
+Test expecting the parser to pass with two cues that start immediately after each other.
+*/
+TEST_F(CueTimeOrder, SecondCueStartsAfterFirst)
+{
+    loadVtt("cue-times/order/two_cues_good.vtt");
+    ASSERT_EQ( 0, errorCount() );
+}
+
+/*
+Test expecting the parser to pass with two cues, one which starts during the 1st cue.
+*/
+TEST_F(CueTimeOrder, SecondCueDuringFirst)
+{
+    loadVtt("cue-times/order/second_cue_during_first.vtt");
     ASSERT_EQ( 0, errorCount() );
 }
