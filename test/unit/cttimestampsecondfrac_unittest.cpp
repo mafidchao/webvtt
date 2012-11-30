@@ -319,7 +319,6 @@ TEST_F(CueTimeTimestampSecondFrac,FourDigitsTimestamp2)
 TEST_F(CueTimeTimestampSecondFrac,MillisecondsCheck)
 {
   loadVtt( "cue-times/timestamp/from/secondfrac/good.vtt" );
-  const uint64 milliseconds = getCue(0).startTime().milliseconds();
   ASSERT_EQ( 111, getCue(0).startTime().milliseconds() );
   EXPECT_EQ( 222, getCue(0).endTime().milliseconds() );
 }
