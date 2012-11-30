@@ -290,7 +290,7 @@ TEST_F(CueTimeTimestampSecond,ThreeDigitsTimestamp2)
 }
 
 /**
- * Test expecting parser to pass and checks the millisecond compent of the time stamp
+ * Test expecting parser to pass and checks the second component of the time stamp
  *    UNTIL   
  *
  * From http://dev.w3.org/html5/webvtt/#webvtt-timestamp (10/15/2012):
