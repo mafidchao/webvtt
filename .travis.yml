@@ -3,13 +3,19 @@ language: c
 compiler:
   - gcc
 
-before_install:
-  - sudo apt-get install valgrind
+env:
+  - BUILD_TYPE="Normal GCC build with tests" ANALYSIS="" ANALYSIS_ARGS="" AC_OPTIONS=""
+  - BUILD_TYPE="Valgrind Unit Test Analysis" ANALYSIS="" ANALYSIS_ARGS="" AC_OPTIONS="--enable-valgrind-testing"
+  - BUILD_TYPE="Analysis clang scan-build (without --status-bugs)" ANALYSIS="scan-build" ANALYSIS_ARGS="-v -v -k" AC_OPTIONS=""
 
-script: ./bootstrap.sh && ./configure --enable-valgrind-testing && make && make check
+before_install:
+  - sudo apt-get install valgrind clang
+
+script:
+  - "./bootstrap.sh"
+  - "${ANALYSIS} ./configure ${AC_OPTIONS}"
+  - "${ANALYSIS} ${ANALYSIS_ARGS} make"
+  - "${ANALYSIS} ${ANALYSIS_ARGS} make check"
 
 notifications:
-  email:
-    - david.humphrey@senecacollege.ca
-
   irc: "irc.mozilla.org#seneca"
