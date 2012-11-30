@@ -176,7 +176,6 @@ TEST_F(PayloadRubyTag,DISABLED_NoRubyText)
   ASSERT_EQ( Node::Text, head0->child( 1 )->toInternalNode()->child( 0 )->kind());
   ASSERT_EQ( Node::RubyText, head0->child( 1 )->toInternalNode()->child( 1 )->kind());
   ASSERT_TRUE( head0->child( 1 )->toInternalNode()->child( 1 )->toInternalNode()->childCount() == 0 );
-  
 
   ASSERT_EQ( Node::Ruby, head1->child( 1 )->kind() );
   ASSERT_EQ( Node::Text, head1->child( 1 )->toInternalNode()->child( 0 )->kind());
