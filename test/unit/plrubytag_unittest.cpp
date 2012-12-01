@@ -23,15 +23,12 @@ class PayloadRubyTag : public PayloadTest {};
  */
 TEST_F(PayloadRubyTag,DISABLED_ValidRuby)
 {
-  loadVtt( "payload/ruby-tag/ruby-cue-component.vtt", 2);
+  loadVtt( "payload/ruby-tag/ruby-cue-component.vtt");
 
   const InternalNode *head0 = getHeadOfCue( 0 );
-  const InternalNode *head1 = getHeadOfCue( 1 );
 
   ASSERT_EQ( Node::Ruby, head0->child( 0 )->kind() );
   ASSERT_EQ( Node::RubyText, head0->child( 1 )->toInternalNode()->child( 1 )->kind() );
-  ASSERT_EQ( Node::Ruby, head1->child( 0 )->kind() );
-  ASSERT_EQ( Node::RubyText, head1->child( 1 )->toInternalNode()->child( 1 )->kind() );
 }
 
 /**
