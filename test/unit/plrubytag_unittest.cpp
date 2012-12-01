@@ -55,7 +55,7 @@ TEST_F(PayloadRubyTag,DISABLED_RubyAnnotation)
 
   const InternalNode *head = getHeadOfCue( 0 );
 
-  ASSERT( 0, head->child( 1 )->toInternalNode()->annotation().length() );
+  ASSERT_EQ( 0, head->child( 1 )->toInternalNode()->annotation().length() );
   
 }
 
@@ -83,7 +83,7 @@ TEST_F(PayloadRubyTag,DISABLED_RubyTextAnnotation)
 
   const InternalNode *head = getHeadOfCue( 0 );
 
-  ASSERT( 0, head->child( 1 )->toInternalNode()->annotation().length() );
+  ASSERT_EQ( 0, head->child( 1 )->toInternalNode()->annotation().length() );
 }
 
 /**
