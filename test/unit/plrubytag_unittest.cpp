@@ -23,7 +23,7 @@ class PayloadRubyTag : public PayloadTest {};
  */
 TEST_F(PayloadRubyTag,DISABLED_ValidRuby)
 {
-  loadVtt( "payload/ruby-tag/ruby-cue-component.vtt");
+  loadVtt( "payload/ruby-tag/ruby-cue-component.vtt", 2);
 
   const InternalNode *head0 = getHeadOfCue( 0 );
   const InternalNode *head1 = getHeadOfCue( 1 );
@@ -58,7 +58,7 @@ TEST_F(PayloadRubyTag,DISABLED_RubyAnnotation)
 
   const InternalNode *head = getHeadOfCue( 0 );
 
-  ASSERT_TRUE( head->child( 1 )->toInternalNode()->annotation().text() == NULL );
+  ASSERT( 0, head->child( 1 )->toInternalNode()->annotation().length() );
   
 }
 
@@ -86,7 +86,7 @@ TEST_F(PayloadRubyTag,DISABLED_RubyTextAnnotation)
 
   const InternalNode *head = getHeadOfCue( 0 );
 
-  ASSERT_TRUE( head->child( 1 )->toInternalNode()->child( 1 )->toInternalNode()->annotation().text() == NULL );
+  ASSERT( 0, head->child( 1 )->toInternalNode()->annotation().length() );
 }
 
 /**
