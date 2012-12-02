@@ -120,8 +120,8 @@ TEST_F(PayloadFormat,AmpersandAndBoldTag)
 	loadVtt( "payload/payload-format/component-and-escape-together.vtt" );
 	const InternalNode *head = getHeadOfCue( 0 );
 	const TextNode *node = getHeadOfCue( 0 )->child( 0 )->toTextNode();
-	//ASSERT_TRUE( head->childCount() == 3 );
-	ASSERT_EQ( head->childCount(), 3 );
+	ASSERT_TRUE( head->childCount() == 2 );
+	//ASSERT_EQ( head->childCount(), 3 );
 	ASSERT_EQ( Node::Bold, head->child( 1 )->kind() );
 	
 	String expectedText = String( (const byte *)"&", 1 );
