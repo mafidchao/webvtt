@@ -115,7 +115,7 @@ TEST_F(PayloadFormat,MultilineBasicCueTextExtraLine)
  * WebVTT cue text consists of zero or more WebVTT cue components, in any order,
  * each optionally separated from the next by a WebVTT line terminator.
  */
-TEST_F(PayloadFormat,AmpersandAndBoldTag)
+TEST_F(PayloadFormat,NoBreakSpaceEscapeAndBoldTag)
 {
 	loadVtt( "payload/payload-format/component-and-escape-together.vtt" );
 	const InternalNode *head = getHeadOfCue( 0 );
@@ -124,8 +124,9 @@ TEST_F(PayloadFormat,AmpersandAndBoldTag)
 	//ASSERT_EQ( head->childCount(), 3 );
 	ASSERT_EQ( Node::Bold, head->child( 1 )->kind() );
 	
-	String expectedText = String( (const byte *)"&<b></b>", 1 );
-	printf ("%s\n", expectedText.text());
-	printf ("%s\n", node->content().text());
-	ASSERT_EQ( expectedText.text(), node->content().text() );
+	//String expectedText = String( (const byte *)"&<b></b>", 1 );
+	//printf ("%s\n", expectedText.text());
+	//printf ("%s\n", node->content().text());
+	//ASSERT_EQ( expectedText.text(), node->content().text() );
+	ASSERT_EQ( UTF16_NO_BREAK_SPACE, node->content().text()[0] );
 }
