@@ -115,7 +115,7 @@ TEST_F(PayloadFormat,MultilineBasicCueTextExtraLine)
  * WebVTT cue text consists of zero or more WebVTT cue components, in any order,
  * each optionally separated from the next by a WebVTT line terminator.
  */
-TEST_F(PayloadFormat,MultilineBasicCueTextExtraLine)
+TEST_F(PayloadFormat,AmpersandAndBoldTag)
 {
 	loadVtt( "payload/payload-format/component-and-escape-together.vtt" );
 	const InternalNode *head = getHeadOfCue( 0 );
