@@ -44,12 +44,13 @@ TEST_F(FileStructure,WebVTTSpaceText)
 
 TEST_F(FileStructure,TextBeforeHeader)
 {
-	printf ("Opening file...\n");
+	ASSERT_ANY_THROW( loadVtt( "filestructure/text-before-header.vtt" ) );
+	//printf ("Opening file...\n");
 	//parser = new ItemStorageParser( "filestructure/text-before-header.vtt" );
 	//printf ("Creating parser...\n");
 	//ASSERT_FALSE( parser->parse() ) << "parser.parse() failed";
      //ASSERT_EQ( expectedNumberOfCues, parser->cueCount() ) << "webvtt file contained different number of cues than expected, once parsed.";
-	loadVtt( "filestructure/text-before-header.vtt" );
+	//loadVtt( "filestructure/text-before-header.vtt" );
 	//ASSERT_EQ( 0, errorCount() ) << "This file should contain no errors.";
 }
 
