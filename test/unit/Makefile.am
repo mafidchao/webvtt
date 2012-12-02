@@ -59,17 +59,17 @@ UNIT_TESTS = \
 # Tests added to KNOWN_VALGRIND_TEST_FAILURES will not cause the test run
 # to fail. You can run tests with valgrind like so:
 #
-#   ./configure --enable-valgrind-testing
-#   make && make check
+# ./configure --enable-valgrind-testing
+# make && make check
 KNOWN_VALGRIND_TEST_FAILURES =
 if VALGRIND_TESTING
 KNOWN_VALGRIND_TEST_FAILURES += \
-	csgeneric_unittest \
-	csline_unittest \
-	cssize_unittest \
-	csposition_unittest \
-	csvertical_unittest \
-	csalign_unittest \
+csgeneric_unittest \
+csline_unittest \
+cssize_unittest \
+csposition_unittest \
+csvertical_unittest \
+csalign_unittest \
   ctorder_unittest \
   ctseparator_unittest \
   cttimestampminute_unittest \
@@ -110,7 +110,7 @@ cttimestampsecondfrac_unittest_SOURCES = cttimestampsecondfrac_unittest.cpp
 plboldtag_unittest_SOURCES = plboldtag_unittest.cpp
 plclasstag_unittest_SOURCES = plclasstag_unittest.cpp
 plescapecharacter_unittest_SOURCES = plescapecharacter_unittest.cpp
-plformat_unittest_SOURCES  = plformat_unittest.cpp
+plformat_unittest_SOURCES = plformat_unittest.cpp
 plitalictag_unittest_SOURCES = plitalictag_unittest.cpp
 pltagformat_unittest_SOURCES = pltagformat_unittest.cpp
 pltimestamp_unittest_SOURCES = pltimestamp_unittest.cpp

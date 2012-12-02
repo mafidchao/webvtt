@@ -20,3 +20,4 @@ script:
 notifications:
   email: false
   #irc: "irc.mozilla.org#seneca"
+
