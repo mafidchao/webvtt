@@ -18,4 +18,5 @@ script:
   - "${ANALYSIS} ${ANALYSIS_ARGS} make check"
 
 notifications:
-  irc: "irc.mozilla.org#seneca"
+  email: false
+  #irc: "irc.mozilla.org#seneca"
