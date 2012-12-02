@@ -106,7 +106,7 @@ TEST_F(PayloadFormat,MultilineBasicCueTextCRLF)
  */
 TEST_F(PayloadFormat,MultilineBasicCueTextExtraLine)
 {
-	loadVtt( "payload/payload-format/multiline-extra-line-terminator.vtt" );
+	loadVtt( "payload/payload-format/multiline-extra-line-terminator.vtt", 1);
 	ASSERT_EQ( Node::Text, getHeadOfCue( 0 )->child( 0 )->kind() );
 }
 
@@ -124,6 +124,6 @@ TEST_F(PayloadFormat,AmpersandAndBoldTag)
 	//ASSERT_EQ( head->childCount(), 3 );
 	ASSERT_EQ( Node::Bold, head->child( 1 )->kind() );
 	
-	String expectedText = String( (const byte *)"&", 1 );
+	String expectedText = String( (const byte *)"&<b></b>", 1 );
 	ASSERT_EQ( expectedText.text(), node->content().text() );
 }
