@@ -109,24 +109,3 @@ TEST_F(PayloadFormat,MultilineBasicCueTextExtraLine)
 	loadVtt( "payload/payload-format/multiline-extra-line-terminator.vtt", 1);
 	ASSERT_EQ( Node::Text, getHeadOfCue( 0 )->child( 0 )->kind() );
 }
-
-/* Verifies that cue text with a span tag (bold) and an escape character is parsed correctly.
- * From http://dev.w3.org/html5/webvtt/#webvtt-cue-text (12/02/2012)
- * WebVTT cue text consists of zero or more WebVTT cue components, in any order,
- * each optionally separated from the next by a WebVTT line terminator.
- */
-TEST_F(PayloadFormat,NoBreakSpaceEscapeAndBoldTag)
-{
-	loadVtt( "payload/payload-format/component-and-escape-together.vtt" );
-	const InternalNode *head = getHeadOfCue( 0 );
-	const TextNode *node = getHeadOfCue( 0 )->child( 0 )->toTextNode();
-	ASSERT_TRUE( head->childCount() == 2 );
-	//ASSERT_EQ( head->childCount(), 3 );
-	ASSERT_EQ( Node::Bold, head->child( 1 )->kind() );
-	
-	//String expectedText = String( (const byte *)"&<b></b>", 1 );
-	//printf ("%s\n", expectedText.text());
-	//printf ("%s\n", node->content().text());
-	//ASSERT_EQ( expectedText.text(), node->content().text() );
-	ASSERT_EQ( UTF16_NO_BREAK_SPACE, node->content().text()[0] );
-}
