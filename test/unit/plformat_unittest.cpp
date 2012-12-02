@@ -125,5 +125,7 @@ TEST_F(PayloadFormat,AmpersandAndBoldTag)
 	ASSERT_EQ( Node::Bold, head->child( 1 )->kind() );
 	
 	String expectedText = String( (const byte *)"&<b></b>", 1 );
+	printf ("%s\n", expectedText.text());
+	printf ("%s\n", node->content().text());
 	ASSERT_EQ( expectedText.text(), node->content().text() );
 }
