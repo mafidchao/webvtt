@@ -79,7 +79,7 @@ TEST_F(PayloadFormat,DISABLED_MultilineMultipleCueTextTag)
  *		2. LF (U+000A)
  *		3. CRLF pair
  */
-TEST_F(PayloadFormat,MultilineBasicCueTextCR)
+TEST_F(PayloadFormat,DISABLED_MultilineBasicCueTextCR)
 {
 	loadVtt( "payload/payload-format/multiline-basic-cue-text-cr.vtt" );
 	ASSERT_EQ( Node::Text, getHeadOfCue( 0 )->child( 0 )->kind() );
@@ -93,7 +93,7 @@ TEST_F(PayloadFormat,MultilineBasicCueTextCR)
  *		2. LF (U+000A)
  *		3. CRLF pair
  */
-TEST_F(PayloadFormat,MultilineBasicCueTextCRLF)
+TEST_F(PayloadFormat,DISABLED_MultilineBasicCueTextCRLF)
 {
 	loadVtt( "payload/payload-format/multiline-basic-cue-text-crlf.vtt" );
 	ASSERT_EQ( Node::Text, getHeadOfCue( 0 )->child( 0 )->kind() );
@@ -104,7 +104,7 @@ TEST_F(PayloadFormat,MultilineBasicCueTextCRLF)
  * The WebVTT parser algorithm is as follows:
  * [...] 50. Bad cue: Discard cue.
  */
-TEST_F(PayloadFormat,MultilineBasicCueTextExtraLine)
+TEST_F(PayloadFormat,DISABLED_MultilineBasicCueTextExtraLine)
 {
 	loadVtt( "payload/payload-format/multiline-extra-line-terminator.vtt", 1);
 	ASSERT_EQ( Node::Text, getHeadOfCue( 0 )->child( 0 )->kind() );

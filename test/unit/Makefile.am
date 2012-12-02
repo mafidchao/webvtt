@@ -19,6 +19,9 @@ LIBS = \
 
 LDADD = $(LIBS)
 
+FILESTRUCTURE_TESTS = \
+  filestructure_unittest
+
 CUESETTINGS_TESTS = \
   csgeneric_unittest \
   csline_unittest \
@@ -50,6 +53,7 @@ PAYLOAD_TESTS = \
 UNIT_TESTS = \
   sample_unittest \
   sample2_unittest \
+  $(FILESTRUCTURE_TESTS) \
   $(CUESETTINGS_TESTS) \
   $(CUETIMES_TESTS) \
   $(PAYLOAD_TESTS)
@@ -88,6 +92,9 @@ check_PROGRAMS = $(UNIT_TESTS)
 
 sample_unittest_SOURCES = sample_unittest.cpp
 sample2_unittest_SOURCES = sample2_unittest.cpp
+
+# General file structure tests
+filestructure_unittest_SOURCES = filestructure_unittest.cpp
 
 # Cue Settings tests
 csgeneric_unittest_SOURCES = csgeneric_unittest.cpp
