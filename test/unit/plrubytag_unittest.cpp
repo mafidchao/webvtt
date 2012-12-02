@@ -111,7 +111,7 @@ TEST_F(PayloadRubyTag,DISABLED_NoRubyBaseText)
   const InternalNode *head = getHeadOfCue( 0 );
 
   ASSERT_EQ( Node::Ruby, head->child( 1 )->kind() );
-  ASSERT_EQ( Node::RubyText, head->child( 1 )->toInternalNode()->child( 0 )->kind());
+  ASSERT_EQ( Node::RubyText, head->child( 1 )->toInternalNode()->child( 0 )->kind() );
 }
 
 /**
@@ -140,7 +140,7 @@ TEST_F(PayloadRubyTag,DISABLED_NoRubyTextTag)
   const InternalNode *head = getHeadOfCue( 0 );
 
   ASSERT_EQ( Node::Ruby, head->child( 1 )->kind() );
-  ASSERT_EQ( Node::Text, head->child( 1 )->toInternalNode()->child( 0 )->kind());
+  ASSERT_EQ( Node::Text, head->child( 1 )->toInternalNode()->child( 0 )->kind() );
 }
 
 /**
@@ -170,13 +170,13 @@ TEST_F(PayloadRubyTag,DISABLED_NoRubyText)
   const InternalNode *head1 = getHeadOfCue( 1 );
 
   ASSERT_EQ( Node::Ruby, head0->child( 1 )->kind() );
-  ASSERT_EQ( Node::Text, head0->child( 1 )->toInternalNode()->child( 0 )->kind());
-  ASSERT_EQ( Node::RubyText, head0->child( 1 )->toInternalNode()->child( 1 )->kind());
+  ASSERT_EQ( Node::Text, head0->child( 1 )->toInternalNode()->child( 0 )->kind() );
+  ASSERT_EQ( Node::RubyText, head0->child( 1 )->toInternalNode()->child( 1 )->kind() );
   ASSERT_TRUE( head0->child( 1 )->toInternalNode()->child( 1 )->toInternalNode()->childCount() == 0 );
 
   ASSERT_EQ( Node::Ruby, head1->child( 1 )->kind() );
-  ASSERT_EQ( Node::Text, head1->child( 1 )->toInternalNode()->child( 0 )->kind());
-  ASSERT_EQ( Node::RubyText, head1->child( 1 )->toInternalNode()->child( 1 )->kind());
+  ASSERT_EQ( Node::Text, head1->child( 1 )->toInternalNode()->child( 0 )->kind() );
+  ASSERT_EQ( Node::RubyText, head1->child( 1 )->toInternalNode()->child( 1 )->kind() );
   ASSERT_TRUE( head1->child( 1 )->toInternalNode()->child( 1 )->toInternalNode()->childCount() == 0 );
 }
 
