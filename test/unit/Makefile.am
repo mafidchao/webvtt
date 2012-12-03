@@ -36,6 +36,12 @@ CUETIMES_TESTS = \
   cttimestampsecond_unittest \
   cttimestampsecondfrac_unittest
 
+CUEIDS_TESTS = \
+  ciarrow_unittest \
+  cigeneral_unittest \
+  cilanguage_unittest \
+  cilinefeeds_unittest
+
 PAYLOAD_TESTS = \
   plboldtag_unittest \
   plclasstag_unittest \
@@ -52,6 +58,7 @@ UNIT_TESTS = \
   sample2_unittest \
   $(CUESETTINGS_TESTS) \
   $(CUETIMES_TESTS) \
+  $(CUEIDS_TESTS) \
   $(PAYLOAD_TESTS)
 
 # On TravisCI, we run valgrind for unit tests with --exit-exitcode=1,
@@ -105,6 +112,12 @@ cttimestamphour_unittest_SOURCES = cttimestamphour_unittest.cpp
 cttimestampminute_unittest_SOURCES = cttimestampminute_unittest.cpp
 cttimestampsecond_unittest_SOURCES = cttimestampsecond_unittest.cpp
 cttimestampsecondfrac_unittest_SOURCES = cttimestampsecondfrac_unittest.cpp
+
+# Cue Ids Tests
+ciarrow_unittest_SOURCES = ciarrow_unittest.cpp
+cigeneral_unittest_SOURCES = cigeneral_unittest.cpp
+cilanguage_unittest_SOURCES = cilanguage_unittest.cpp
+cilinefeeds_unittest_SOURCES = cilinefeeds_unittest.cpp
 
 #Payload Tests
 plboldtag_unittest_SOURCES = plboldtag_unittest.cpp
