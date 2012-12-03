@@ -81,7 +81,11 @@ KNOWN_VALGRIND_TEST_FAILURES += \
   ctseparator_unittest \
   cttimestampminute_unittest \
   cttimestampsecond_unittest \
-  cttimestampsecondfrac_unittest
+  cttimestampsecondfrac_unittest \
+  ciarrow_unittest \
+  cigeneral_unittest \
+  cilanguage_unittest \
+  cilineendings_unittest
 endif
 
 # Tests we expect to fail (i.e., known-fails)
