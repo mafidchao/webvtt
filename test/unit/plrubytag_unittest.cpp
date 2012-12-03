@@ -87,3 +87,95 @@ TEST_F(PayloadRubyTag,DISABLED_NoRubyText)
   ASSERT_EQ( Node::RubyText, head1->child( 1 )->toInternalNode()->child( 1 )->kind() );
   ASSERT_TRUE( head1->child( 1 )->toInternalNode()->child( 1 )->toInternalNode()->childCount() == 0 );
 }
+
+/*
+ * Verifies that a single subclass can be attached to a cue text ruby start tag.
+ * From http://dev.w3.org/html5/webvtt/#webvtt-cue-span-start-tag (11/27/2012)
+ *  Cue span start tags consist of the following:
+ *    1. A "<" character representing the beginning of the start tag.
+ *    2. The tag name.
+ *    3. Zero or more the following sequence representing a subclasses of the start tag
+ *      3.1. A full stop "." character.
+ *      3.2. A sequence of non-whitespace characters.
+ *    4. If the start tag requires an annotation then a space or tab character followed by a sequence of 
+ *       non-whitespace characters representing the annotation.
+ *    5. A ">" character repsenting the end of the start tag.
+ */
+TEST_F(PayloadRubyTag,DISABLED_RubyTagSingleSubclass)
+{
+  loadVtt( "payload/ruby-tag/ruby-tag-single-subclass.vtt" );
+
+  const InternalNode *head = getHeadOfCue( 0 );
+
+  ASSERT_EQ( Node::Ruby, head->child( 1 )->kind() );
+
+  StringList cssClasses = head->child( 1 )->toInternalNode()->cssClasses();
+  String expectedString = String( (const byte *)"class", 5 );
+
+  ASSERT_TRUE( cssClasses.length() == 1 );
+  ASSERT_EQ(  expectedString.text(), cssClasses.stringAtIndex( 0 ).text() );
+}
+
+TEST_F(PayloadRubyTag,DISABLED_RubyTagMultiSubclass)
+{
+  loadVtt( "payload/ruby-tag/ruby-tag-multi-subclass.vtt" );
+
+  const InternalNode *head = getHeadOfCue( 0 );
+
+  ASSERT_EQ( Node::Ruby, head->child( 1 )->kind() );
+
+  StringList cssClasses = head->child( 1 )->toInternalNode()->cssClasses();
+  String expectedString = String( (const byte *)"class", 5 );
+
+  ASSERT_TRUE( cssClasses.length() == 1 );
+  ASSERT_EQ(  expectedString.text(), cssClasses.stringAtIndex( 0 ).text() );
+
+  expectedString = String( (const byte *)"subclass", 8 );
+  ASSERT_EQ( expectedString.text(), cssClasses.stringAtIndex( 1 ).text() );
+}
+
+/*
+ * Verifies that a single subclass can be attached to a cue text ruby text start tag.
+ * From http://dev.w3.org/html5/webvtt/#webvtt-cue-span-start-tag (11/27/2012)
+ *  Cue span start tags consist of the following:
+ *    1. A "<" character representing the beginning of the start tag.
+ *    2. The tag name.
+ *    3. Zero or more the following sequence representing a subclasses of the start tag
+ *      3.1. A full stop "." character.
+ *      3.2. A sequence of non-whitespace characters.
+ *    4. If the start tag requires an annotation then a space or tab character followed by a sequence of 
+ *       non-whitespace characters representing the annotation.
+ *    5. A ">" character repsenting the end of the start tag.
+ */
+TEST_F(PayloadRubyTag,DISABLED_RubyTextTagSingleSubclass)
+{
+  loadVtt( "payload/ruby-tag/ruby-text-tag-single-subclass.vtt" );
+
+  const InternalNode *head = getHeadOfCue( 0 );
+
+  ASSERT_EQ( Node::RubyText, head->child( 1 )->toInteralNode()->child( 1 )->kind() );
+
+  StringList cssClasses = head->child( 1 )->toInteralNode()->child( 1 )->toInternalNode()->cssClasses();
+  String expectedString = String( (const byte *)"class", 5 );
+
+  ASSERT_TRUE( cssClasses.length() == 1 );
+  ASSERT_EQ(  expectedString.text(), cssClasses.stringAtIndex( 0 ).text() );
+}
+
+TEST_F(PayloadRubyTag,DISABLED_RubyTextTagMultiSubclass)
+{
+  loadVtt( "payload/ruby-tag/ruby-text-tag-multi-subclass.vtt" );
+
+  const InternalNode *head = getHeadOfCue( 0 );
+
+  ASSERT_EQ( Node::RubyText, head->child( 1 )->toInteralNode()->child( 1 )->kind() );
+
+  StringList cssClasses = head->child( 1 )->toInteralNode()->child( 1 )->toInternalNode()->cssClasses();
+  String expectedString = String( (const byte *)"class", 5 );
+
+  ASSERT_TRUE( cssClasses.length() == 1 );
+  ASSERT_EQ(  expectedString.text(), cssClasses.stringAtIndex( 0 ).text() );
+
+  expectedString = String( (const byte *)"subclass", 8 );
+  ASSERT_EQ( expectedString.text(), cssClasses.stringAtIndex( 1 ).text() );
+}
