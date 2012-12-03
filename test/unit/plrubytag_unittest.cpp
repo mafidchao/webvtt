@@ -153,9 +153,9 @@ TEST_F(PayloadRubyTag,DISABLED_RubyTextTagSingleSubclass)
 
   const InternalNode *head = getHeadOfCue( 0 );
 
-  ASSERT_EQ( Node::RubyText, head->child( 1 )->toInteralNode()->child( 1 )->kind() );
+  ASSERT_EQ( Node::RubyText, head->child( 1 )->toInternalNode()->child( 1 )->kind() );
 
-  StringList cssClasses = head->child( 1 )->toInteralNode()->child( 1 )->toInternalNode()->cssClasses();
+  StringList cssClasses = head->child( 1 )->toInternalNode()->child( 1 )->toInternalNode()->cssClasses();
   String expectedString = String( (const byte *)"class", 5 );
 
   ASSERT_TRUE( cssClasses.length() == 1 );
@@ -168,9 +168,9 @@ TEST_F(PayloadRubyTag,DISABLED_RubyTextTagMultiSubclass)
 
   const InternalNode *head = getHeadOfCue( 0 );
 
-  ASSERT_EQ( Node::RubyText, head->child( 1 )->toInteralNode()->child( 1 )->kind() );
+  ASSERT_EQ( Node::RubyText, head->child( 1 )->toInternalNode()->child( 1 )->kind() );
 
-  StringList cssClasses = head->child( 1 )->toInteralNode()->child( 1 )->toInternalNode()->cssClasses();
+  StringList cssClasses = head->child( 1 )->toInternalNode()->child( 1 )->toInternalNode()->cssClasses();
   String expectedString = String( (const byte *)"class", 5 );
 
   ASSERT_TRUE( cssClasses.length() == 1 );
