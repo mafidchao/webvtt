@@ -14,31 +14,31 @@ TEST_F(FileStructure,WebVTTNoBOM)
 
 TEST_F(FileStructure,DISABLED_WebVTTWithBOM)
 {
-	loadVtt( "filestructure/webvtt-with.bom.vtt" );
+	loadVtt( "filestructure/webvtt-with.bom.vtt", 0 );
 	ASSERT_EQ( 0, errorCount() ) << "This file should contain no errors.";
 }
 
 TEST_F(FileStructure,WebVTTSpace)
 {
-	loadVtt( "filestructure/webvtt-space.vtt" );
+	loadVtt( "filestructure/webvtt-space.vtt", 0 );
 	ASSERT_EQ( 0, errorCount() ) << "This file should contain no errors.";
 }
 
 TEST_F(FileStructure,WebVTTTab)
 {
-	loadVtt( "filestructure/webvtt-tab.vtt" );
+	loadVtt( "filestructure/webvtt-tab.vtt", 0 );
 	ASSERT_EQ( 0, errorCount() ) << "This file should contain no errors.";
 }
 
 TEST_F(FileStructure,WebVTTTabText)
 {
-	loadVtt( "filestructure/webvtt-tab-text.vtt" );
+	loadVtt( "filestructure/webvtt-tab-text.vtt", 0 );
 	ASSERT_EQ( 0, errorCount() ) << "This file should contain no errors.";
 }
 
 TEST_F(FileStructure,WebVTTSpaceText)
 {
-	loadVtt( "filestructure/webvtt-space-text.vtt" );
+	loadVtt( "filestructure/webvtt-space-text.vtt", 0 );
 	ASSERT_EQ( 0, errorCount() ) << "This file should contain no errors.";
 }
 
@@ -49,25 +49,25 @@ TEST_F(FileStructure,TextBeforeHeader)
 
 TEST_F(FileStructure,BlankFile)
 {
-	loadVtt( "filestructure/blank-file.vtt" );
+	loadVtt( "filestructure/blank-file.vtt", 0 );
 	ASSERT_EQ( 0, errorCount() ) << "This file should contain no errors.";
 }
 
 TEST_F(FileStructure,DISABLED_BlankFileWithBOM)
 {
-	loadVtt( "filestructure/blank-file-with-bom.vtt" );
+	loadVtt( "filestructure/blank-file-with-bom.vtt", 0 );
 	ASSERT_EQ( 0, errorCount() ) << "This file should contain no errors.";
 }
 
 TEST_F(FileStructure,TabAfterBOMBeforeHeader)
 {
-	loadVtt( "filestructure/tab-after-bom-before-header.vtt" );
+	loadVtt( "filestructure/tab-after-bom-before-header.vtt", 0 );
 	ASSERT_EQ( 1, errorCount() ) << "This file should contain 1 error.";
 }
 
-TEST_F(FileStructure,HeaderNoNewLine)
+TEST_F(FileStructure,DISABLED_HeaderNoNewLine)
 {
-	loadVtt( "filestructure/header-no-new-line.vtt", 1 );	
+	loadVtt( "filestructure/header-no-new-line.vtt", 1 );
 }
 TEST_F(FileStructure,NoPayloadText)
 {
