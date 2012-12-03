@@ -62,7 +62,7 @@ TEST_F(FileStructure,DISABLED_BlankFileWithBOM)
 TEST_F(FileStructure,TabAfterBOMBeforeHeader)
 {
 	loadVtt( "filestructure/tab-after-bom-before-header.vtt" );
-	ASSERT_EQ( 1, errorCount() ) << "This file should contain one error.";
+	ASSERT_EQ( 1, errorCount() ) << "This file should contain 1 error.";
 }
 
 TEST_F(FileStructure,HeaderNoNewLine)
@@ -72,11 +72,11 @@ TEST_F(FileStructure,HeaderNoNewLine)
 }
 TEST_F(FileStructure,NoPayloadText)
 {
-	loadVtt( "filestructure/no-payload-text.vtt", 2 );
+	loadVtt( "filestructure/no-payload-text.vtt", 1 );
 	ASSERT_EQ( 0, errorCount() ) << "This file should contain no errors.";
 }
 TEST_F(FileStructure,MissingCueIdentifier)
 {
-	loadVtt( "filestructure/missing-cue-identifier.vtt", 0 );
-	ASSERT_EQ( 0, errorCount() ) << "This file should contain no errors.";
+	loadVtt( "filestructure/missing-cue-identifier.vtt", 1 );
+	ASSERT_EQ( 0, errorCount() ) << "This file should contain 1 error.";
 }
