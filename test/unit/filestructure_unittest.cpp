@@ -67,8 +67,7 @@ TEST_F(FileStructure,TabAfterBOMBeforeHeader)
 
 TEST_F(FileStructure,HeaderNoNewLine)
 {
-	loadVtt( "filestructure/header-no-new-line.vtt" );
-	ASSERT_EQ( 0, errorCount() ) << "This file should contain no errors.";
+	loadVtt( "filestructure/header-no-new-line.vtt", 1 );	
 }
 TEST_F(FileStructure,NoPayloadText)
 {
@@ -77,6 +76,6 @@ TEST_F(FileStructure,NoPayloadText)
 }
 TEST_F(FileStructure,MissingCueIdentifier)
 {
-	loadVtt( "filestructure/missing-cue-identifier.vtt", 1 );
-	ASSERT_EQ( 0, errorCount() ) << "This file should contain 1 error.";
+	loadVtt( "filestructure/missing-cue-identifier.vtt", 0 );
+	ASSERT_EQ( 1, errorCount() ) << "This file should contain 1 error.";
 }
