@@ -46,7 +46,7 @@ TEST_F(PayloadVoiceTag,DISABLED_VoiceInternalTextTag)
  *		2. Cue internal text representing the voice text.
  *		3. A cue span end tag that can be ommitted for brevity if the voice span is the only tag in this webvtt cue text sequence.
  */
-TEST_F(PayloadVoiceTag,DISABLED_ItalicAnnotation)
+TEST_F(PayloadVoiceTag,DISABLED_VoiceTagAnnotation)
 {
 	loadVtt( "payload/v-tag/v-tag-annotation.vtt" );
 
@@ -72,7 +72,7 @@ TEST_F(PayloadVoiceTag,DISABLED_ItalicAnnotation)
  *		   non-whitespace characters representing the annotation.
  *		5. A ">" character repsenting the end of the start tag.
  */
-TEST_F(PayloadVoiceTag,DISABLED_ItalicTagSingleSubclass)
+TEST_F(PayloadVoiceTag,DISABLED_VoiceTagSingleSubclass)
 {
 	loadVtt( "payload/v-tag/v-tag-single-subclass.vtt" );
 
@@ -101,7 +101,7 @@ TEST_F(PayloadVoiceTag,DISABLED_ItalicTagSingleSubclass)
  *		   non-whitespace characters representing the annotation.
  *		5. A ">" character repsenting the end of the start tag.
  */
-TEST_F(PayloadVoiceTag,DISABLED_ItalicTagMultiSubclass)
+TEST_F(PayloadVoiceTag,DISABLED_VoiceTagMultiSubclass)
 {
 	loadVtt( "payload/v-tag/v-tag-multi-subclass.vtt" );
 
