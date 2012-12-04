@@ -150,3 +150,55 @@ TEST_F(CueTimeOrder, SecondCueDuringFirst)
     loadVtt("cue-times/order/second_cue_during_first.vtt");
     ASSERT_EQ( 0, errorCount() );
 }
+
+/*
+ *Test expecting the parser to fail with one cue, where the start and end time are the same
+ *
+ * From http://dev.w3.org/html5/webvtt/#webvtt-cue-timings (10/15/2012):
+ * The WebVTT cue timings part of a WebVTT cue consists of the following components, in the given order:
+ *
+ * 1. A WebVTT timestamp representing the start time offset of the cue. The time represented by this
+ *    WebVTT timestamp must be greater than or equal to the start time offsets of all previous cues in the file.
+ *
+ * 2. One or more U+0020 SPACE characters or U+0009 CHARACTER TABULATION (tab) characters.
+ *
+ * 3. The string "-->" (U+002D HYPHEN-MINUS, U+002D HYPHEN-MINUS, U+003E GREATER-THAN SIGN).
+ *
+ * 4. One or more U+0020 SPACE characters or U+0009 CHARACTER TABULATION (tab) characters.
+ *
+ * 5. A WebVTT timestamp representing the end time offset of the cue. The time represented by this
+ *    WebVTT timestamp must be greater than the start time offset of the cue.
+ */
+TEST_F(CueTimeOrder, StartEqualsEnd)
+{
+  loadVtt("cue-times/order/start_equals_end_bad.vtt");
+  ASSERT_NE( 0, errorCount() );
+  const Error& err = getError( 0 );
+  EXPECT_EQ( WEBVTT_INVALID_ENDTIME, err.error() );
+}
+
+/*
+ *Test expecting the parser to fail with one cue, where the start time greater than the end time
+ *
+ * From http://dev.w3.org/html5/webvtt/#webvtt-cue-timings (10/15/2012):
+ * The WebVTT cue timings part of a WebVTT cue consists of the following components, in the given order:
+ *
+ * 1. A WebVTT timestamp representing the start time offset of the cue. The time represented by this
+ *    WebVTT timestamp must be greater than or equal to the start time offsets of all previous cues in the file.
+ *
+ * 2. One or more U+0020 SPACE characters or U+0009 CHARACTER TABULATION (tab) characters.
+ *
+ * 3. The string "-->" (U+002D HYPHEN-MINUS, U+002D HYPHEN-MINUS, U+003E GREATER-THAN SIGN).
+ *
+ * 4. One or more U+0020 SPACE characters or U+0009 CHARACTER TABULATION (tab) characters.
+ *
+ * 5. A WebVTT timestamp representing the end time offset of the cue. The time represented by this
+ *    WebVTT timestamp must be greater than the start time offset of the cue.
+ */
+ TEST_F(CueTimeOrder, StartGreaterEnd)
+{
+  loadVtt("cue-times/order/start_greater_end_bad.vtt");
+  ASSERT_NE( 0, errorCount() );
+  const Error& err = getError( 0 );
+  EXPECT_EQ( WEBVTT_INVALID_ENDTIME, err.error() );
+}
