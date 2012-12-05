@@ -133,7 +133,7 @@ TEST_F(CueTimeTimestampHour,HoursCheck)
  */
  TEST_F(CueTimeTimestampHour, DISABLED_InvalidHour)
 {
-  loadVtt("cue-times/timestamp/from/hour/nondigit_bad.vtt", 1); //std::bad_alloc
+  loadVtt( "cue-times/timestamp/from/hour/nondigit_bad.vtt", 1 ); //std::bad_alloc
   ASSERT_NE( 0, errorCount() ); 
   const Error& err = getError( 0 );
   EXPECT_EQ( WEBVTT_INVALID_ENDTIME, err.error() );
