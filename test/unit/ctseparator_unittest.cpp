@@ -148,7 +148,7 @@ TEST_F(CueTimeSeparator,MissingSpaceRight)
 
 TEST_F(CueTimeSeparator,MissingSeparator)
 {
-  loadVtt( "cue-times/separator/missing_separator.vtt" );
+  loadVtt( "cue-times/separator/missing_separator_bad.vtt" );
   ASSERT_NE( 0, errorCount() );
   const Error& err = getError( 0 );
   EXPECT_EQ( WEBVTT_CUE_INCOMPLETE, err.error() ); //Is this the error code it should be throwing?
