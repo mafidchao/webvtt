@@ -353,8 +353,8 @@ TEST_F(CueTimeTimestampMinute,MinutesCheck)
  */
 TEST_F(CueTimeTimestampMinute,ThreeDigitsBad)
 {
-  loadVtt( "cue-times/timestamp/from/minute/three_digits_bad.vtt" );
-  ASSERT_NE( 0, errorCount() );
+  loadVtt( "cue-times/timestamp/from/minute/three_digits_bad.vtt", 1 );
+  ASSERT_EQ( 1, errorCount() );
   const Error& err = getError( 0 );
   EXPECT_EQ( WEBVTT_MALFORMED_TIMESTAMP, err.error() );
 }

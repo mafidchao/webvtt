@@ -148,8 +148,8 @@ TEST_F(CueTimeSeparator,MissingSpaceRight)
 
 TEST_F(CueTimeSeparator,MissingSeparator)
 {
-  loadVtt( "cue-times/separator/missing_separator_bad.vtt" );
-  ASSERT_NE( 0, errorCount() );
+  loadVtt( "cue-times/separator/missing_separator_bad.vtt", 0 );
+  ASSERT_EQ( 1, errorCount() );
   const Error& err = getError( 0 );
   EXPECT_EQ( WEBVTT_CUE_INCOMPLETE, err.error() ); //Is this the error code it should be throwing?
 }
@@ -175,8 +175,8 @@ TEST_F(CueTimeSeparator,MissingSeparator)
 
 TEST_F(CueTimeSeparator,MissingBothSpaces)
 {
-  loadVtt( "cue-times/separator/missing_both_spaces_bad.vtt" );
-  ASSERT_NE( 0, errorCount() );
+  loadVtt( "cue-times/separator/missing_both_spaces_bad.vtt", 1 );
+  ASSERT_EQ( 2, errorCount() );
   const Error& err = getError( 0 );
   EXPECT_EQ( WEBVTT_EXPECTED_WHITESPACE, err.error() ); //Is this the error code it should be throwing?
 }

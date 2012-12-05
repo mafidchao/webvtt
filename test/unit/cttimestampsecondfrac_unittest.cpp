@@ -353,8 +353,8 @@ TEST_F(CueTimeTimestampSecondFrac,MillisecondsCheck)
  */
 TEST_F(CueTimeTimestampSecondFrac,FourDigitMillisecond)
 {
-  loadVtt( "cue-times/timestamp/from/secondfrac/four_digits_bad.vtt" );
-  ASSERT_NE( 0, errorCount() );
+  loadVtt( "cue-times/timestamp/from/secondfrac/four_digits_bad.vtt", 1 );
+  ASSERT_EQ( 1, errorCount() );
   const Error& err = getError( 0 );
   EXPECT_EQ( WEBVTT_EXPECTED_WHITESPACE, err.error() );//Wrong error code?
 }
