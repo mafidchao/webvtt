@@ -21,6 +21,30 @@ protected:
 	  }
     }
   }
+  
+  /**
+   * Added functions for ASSERT-ing timestamp equality in an easier way.
+   */
+  void assertEquals( const Timestamp &ts, int hours, int minutes, int seconds, int millis )
+  {
+    ASSERT_EQ( hours, ts.hours() );
+    ASSERT_EQ( minutes, ts.minutes() );
+    ASSERT_EQ( seconds, ts.seconds() );
+    ASSERT_EQ( millis, ts.milliseconds() );
+  }
+  
+  inline void assertEquals( const Timestamp &ts, int minutes, int seconds, int millis )
+  {
+    return timestampEquals( ts, 0, minutes, seconds, millis );
+  }
+  
+  inline void assertEquals( const Error &err, webvtt_error code, WebVTT::uint line, WebVTT::uint column )
+  {
+    ASSERT_EQ( code, err.error() );
+    ASSERT_EQ( line, err.line() );
+    ASSERT_EQ( column, err.column() );
+  }
+  
   void loadVtt( const char *fileName, WebVTT::uint expectedNumberOfCues )
   {
      parser = new ItemStorageParser( fileName );

@@ -1230,8 +1230,10 @@ parse_int( const webvtt_byte **pb, int *pdigits )
 static int
 parse_timestamp( webvtt_parser self, const webvtt_byte *b, webvtt_timestamp *result )
 {
+	webvtt_int64 tmp;
 	int have_hours = 0;
 	int digits;
+	int malformed = 0;
 	webvtt_int64 v[4];
     if (!ASCII_ISDIGIT(*b))
 	{
@@ -1250,20 +1252,20 @@ parse_timestamp( webvtt_parser self, const webvtt_byte *b, webvtt_timestamp *res
 	/* fail if missing colon ':' character */
 	if ( !*b || *b++ != ASCII_COLON)
 	{
-		goto _malformed;
+		malformed = 1;
 	}
 	
 	/* fail if end of data reached, or byte is not an ASCII digit */
-	if (!ASCII_ISDIGIT(*b))
+	if (!*b || !ASCII_ISDIGIT(*b))
 	{
-		goto _malformed;
+		malformed = 1;
 	}
 	
 	/* get another integer value, fail if digits is not equal to 2 */
     v[1] = parse_int( &b, &digits );
 	if( digits != 2 )
 	{
-		goto _malformed;
+		malformed = 1;
 	}
 	
 	/* if we already know there's an hour component, or if the next byte is a colon ':',
@@ -1274,14 +1276,14 @@ parse_timestamp( webvtt_parser self, const webvtt_byte *b, webvtt_timestamp *res
 		{
 			goto _malformed;
 		}
-        if( !ASCII_ISDIGIT(*b) )
+        if( !*b || !ASCII_ISDIGIT(*b) )
 		{
-			goto _malformed;
+			malformed = 1;
 		}
 		v[2] = parse_int( &b, &digits );
 		if( digits != 2 )
 		{
-			goto _malformed;
+			malformed = 1;
 		}
     }
 	else
@@ -1301,13 +1303,33 @@ parse_timestamp( webvtt_parser self, const webvtt_byte *b, webvtt_timestamp *res
 	v[3] = parse_int( &b, &digits );
 	if( digits != 3 )
 	{
-		goto _malformed;
+		malformed = 1;
 	}
 	
 	/* Ensure that minutes and seconds are acceptable values */
-    if( v[1] > 59 || v[2] > 59 )
+	if( v[3] > 999 )
 	{
-		goto _malformed;
+#define MILLIS_PER_SEC (1000)
+		tmp = v[3];
+		v[2] += tmp / MILLIS_PER_SEC;
+		v[3] = tmp % MILLIS_PER_SEC;
+		malformed = 1;
+	}
+	if( v[2] > 59 )
+	{
+#define SEC_PER_MIN (60)
+		tmp = v[2];
+		v[1] += tmp / SEC_PER_MIN;
+		v[2] = tmp % SEC_PER_MIN;
+		malformed = 1;
+	}
+    if( v[1] > 59 )
+	{
+#define MIN_PER_HOUR (60)
+		tmp = v[1];
+		v[0] += tmp / MIN_PER_HOUR;
+		v[1] = tmp % MIN_PER_HOUR;
+		malformed = 1;
 	}
 	
 	*result = (webvtt_timestamp)( v[0] * SECS_PER_HOUR )
@@ -1315,6 +1337,10 @@ parse_timestamp( webvtt_parser self, const webvtt_byte *b, webvtt_timestamp *res
 			+ v[2] 
 			+ ( v[3] * SECS_PER_MILLI );
 	
+	if( malformed )
+	{
+		return -1;
+	}
 	return 1;
 _malformed:
 	return 0;
