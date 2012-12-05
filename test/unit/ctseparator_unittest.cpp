@@ -153,3 +153,30 @@ TEST_F(CueTimeSeparator,MissingSeparator)
   const Error& err = getError( 0 );
   EXPECT_EQ( WEBVTT_CUE_INCOMPLETE, err.error() ); //Is this the error code it should be throwing?
 }
+
+/**
+ * Test expecting parser to fail when timestamp separator spaces are missing.
+ *
+ * From http://dev.w3.org/html5/webvtt/#webvtt-cue-timings (10/15/2012):
+ * The WebVTT cue timings part of a WebVTT cue consists of the following components, in the given order:
+ *
+ * 1. A WebVTT timestamp representing the start time offset of the cue. The time represented by this
+ *    WebVTT timestamp must be greater than or equal to the start time offsets of all previous cues in the file.
+ *
+ * 2. One or more U+0020 SPACE characters or U+0009 CHARACTER TABULATION (tab) characters.
+ *
+ * 3. The string "-->" (U+002D HYPHEN-MINUS, U+002D HYPHEN-MINUS, U+003E GREATER-THAN SIGN).
+ *
+ * 4. One or more U+0020 SPACE characters or U+0009 CHARACTER TABULATION (tab) characters.
+ *
+ * 5. A WebVTT timestamp representing the end time offset of the cue. The time represented by this
+ *  WebVTT timestamp must be greater than the start time offset of the cue.
+ */
+
+TEST_F(CueTimeSeparator,MissingBothSpaces)
+{
+  loadVtt( "cue-times/separator/missing_both_spaces_bad.vtt" );
+  ASSERT_NE( 0, errorCount() );
+  const Error& err = getError( 0 );
+  EXPECT_EQ( WEBVTT_EXPECTED_WHITESPACE, err.error() ); //Is this the error code it should be throwing?
+}

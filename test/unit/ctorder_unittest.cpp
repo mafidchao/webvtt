@@ -228,4 +228,3 @@ TEST_F(CueTimeOrder, StartEqualsEnd)
   const Error& err = getError( 0 );
   EXPECT_EQ( WEBVTT_INVALID_ENDTIME, err.error() );
 }
-
