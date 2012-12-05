@@ -202,3 +202,30 @@ TEST_F(CueTimeOrder, StartEqualsEnd)
   const Error& err = getError( 0 );
   EXPECT_EQ( WEBVTT_INVALID_ENDTIME, err.error() );
 }
+
+/*
+ *Test expecting the parser to fail with one cue, where the second cue begins before the first cue
+ *
+ * From http://dev.w3.org/html5/webvtt/#webvtt-cue-timings (10/15/2012):
+ * The WebVTT cue timings part of a WebVTT cue consists of the following components, in the given order:
+ *
+ * 1. A WebVTT timestamp representing the start time offset of the cue. The time represented by this
+ *    WebVTT timestamp must be greater than or equal to the start time offsets of all previous cues in the file.
+ *
+ * 2. One or more U+0020 SPACE characters or U+0009 CHARACTER TABULATION (tab) characters.
+ *
+ * 3. The string "-->" (U+002D HYPHEN-MINUS, U+002D HYPHEN-MINUS, U+003E GREATER-THAN SIGN).
+ *
+ * 4. One or more U+0020 SPACE characters or U+0009 CHARACTER TABULATION (tab) characters.
+ *
+ * 5. A WebVTT timestamp representing the end time offset of the cue. The time represented by this
+ *    WebVTT timestamp must be greater than the start time offset of the cue.
+ */
+ TEST_F(CueTimeOrder, DISABLED_SecondCueBeforeFirst)
+{
+  loadVtt("cue-times/order/second_cue_before_first_bad.vtt", 2);
+  ASSERT_NE( 0, errorCount() ); //Error in our parser. It is not throwing an error.
+  const Error& err = getError( 0 );
+  EXPECT_EQ( WEBVTT_INVALID_ENDTIME, err.error() );
+}
+

@@ -322,3 +322,39 @@ TEST_F(CueTimeTimestampSecondFrac,MillisecondsCheck)
   ASSERT_EQ( 111, getCue(0).startTime().milliseconds() );
   EXPECT_EQ( 222, getCue(0).endTime().milliseconds() );
 }
+
+/**
+ * Test expecting parser to fail when a component timestamp's 'milliseconds' component
+ * consists of greater than 3 digits
+ *    FROM   
+ *
+ * From http://dev.w3.org/html5/webvtt/#webvtt-timestamp (10/15/2012):
+ * A WebVTT timestamp representing hours hours, minutes minutes, seconds seconds,
+ * and thousandths of a second seconds-frac, consists of the following components,
+ * in the given order:
+ * 1. Optionally (required if hour is non-zero):
+ *    a. Two or more characters in the range U+0030 DIGIT ZERO (0) to U+0039 DIGIT
+ *       NINE (9), representing the hours as a base ten integer.
+ *
+ *    b. A U+003A COLON character (:)
+ *
+ * 2. Two characters in the range U+0030 DIGIT ZERO (0) to U+0039 DIGIT NINE (9), 
+ *    representing the minutes as a base ten integer in the range 0 ≤ minutes ≤ 59.
+ *
+ * 3. A U+003A COLON character (:)
+ *
+ * 4. Two characters in the range U+0030 DIGIT ZERO (0) to U+0039 DIGIT NINE (9), representing the 
+ *    seconds as a base ten integer in the range 0 ≤ seconds ≤ 59.
+ *
+ * 5. A U+002E FULL STOP character (.).
+ *
+ * 6. Three characters in the range U+0030 DIGIT ZERO (0) to U+0039 DIGIT NINE (9), representing the 
+ *    thousandths of a second seconds-frac as a base ten integer.
+ */
+TEST_F(CueTimeTimestampSecondFrac,FourDigitMillisecond)
+{
+  loadVtt( "cue-times/timestamp/from/secondfrac/four_digits_bad.vtt" );
+  ASSERT_NE( 0, errorCount() );
+  const Error& err = getError( 0 );
+  EXPECT_EQ( WEBVTT_EXPECTED_WHITESPACE, err.error() );//Wrong error code?
+}
