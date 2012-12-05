@@ -39,7 +39,8 @@ PAYLOAD_TESTS = \
   pltagformat_unittest \
   pltimestamp_unittest \
   plunderlinetag_unittest \
-  plvoicetag_unittest
+  plvoicetag_unittest \
+  plrubytag_unittest
 
 UNIT_TESTS = \
   sample_unittest \
@@ -93,3 +94,4 @@ pltagformat_unittest_SOURCES = pltagformat_unittest.cpp
 pltimestamp_unittest_SOURCES = pltimestamp_unittest.cpp
 plunderlinetag_unittest_SOURCES = plunderlinetag_unittest.cpp
 plvoicetag_unittest_SOURCES = plvoicetag_unittest.cpp
+plrubytag_unittest_SOURCES = plrubytag_unittest.cpp
