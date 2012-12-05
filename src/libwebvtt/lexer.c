@@ -435,32 +435,16 @@ webvtt_lex( webvtt_parser self, const webvtt_byte *buffer, webvtt_uint *pos, web
 			BEGIN_STATE(T_TIMESTAMP3)
 				UTF8_DIGIT
 				{
-					OVERFLOW(BADTOKEN)
-					SET_STATE(T_TIMESTAMP4)
+					OVERFLOW(TIMESTAMP)
+					BREAK
 				}
-			END_STATE
-				
-			BEGIN_STATE(T_TIMESTAMP4)
-				UTF8_DIGIT
+				DEFAULT
 				{
-					OVERFLOW(BADTOKEN)
-					SET_STATE(T_TIMESTAMP5)
-				}
-			END_STATE
-
-			BEGIN_STATE(T_TIMESTAMP5)
-				UTF8_DIGIT
-				{
-					if( *pos != length && ASCII_ISDIGIT(buffer[*pos]) )
-					{
-						BACKUP
-						return BADTOKEN;
-					}
-					OVERFLOW(BADTOKEN)
+					BACKUP
 					RETURN(TIMESTAMP)
 				}
-			END_STATE
-
+			END_STATE_EX
+				
 			BEGIN_STATE(T_NOTE1)
 				UTF8_O { SET_STATE(T_NOTE2) }
 			END_STATE
