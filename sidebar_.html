@@ -1,0 +1,61 @@
+<div class="hd">
+    <input id="search" type="search" placeholder="search" />
+    <label><input id="show-desc" type="checkbox" /> Show Description</label>
+</div>
+<div class="bd">
+    <div class="toc">
+        
+            <h3 class="toc-mod-title"><a href="cue.html">cue</a></h3>
+            <div class="toc-list">
+                
+                <a class="toc-item" href="cue.html#webvtt_create_cue">
+                    <h4>webvtt_create_cue( webvtt_cue *pcue ) : webvtt_status </h4>
+                    <span class="desc">Creates a cue.</span>
+                </a>
+                
+                <a class="toc-item" href="cue.html#webvtt_validate_cue">
+                    <h4>webvtt_validate_cue( webvtt_cue cue ) : int</h4>
+                    <span class="desc">Validates a cue.</span>
+                </a>
+                
+            </div>
+        
+            <h3 class="toc-mod-title"><a href="datatypes.html">datatypes</a></h3>
+            <div class="toc-list">
+                
+                <a class="toc-item" href="datatypes.html#Macros">
+                    <h4>Macros</h4>
+                    <span class="desc">WEBVTT_ENSURE_SUCCESS(status) ( (status) == WEBVTT_SUCCESS ) WEBVTT_FAILED(status) ( (status) != WEBVTT_SUCCESS )</span>
+                </a>
+                
+                <a class="toc-item" href="datatypes.html#Type definitions">
+                    <h4>Type definitions</h4>
+                    <span class="desc">Depending on the compiler, the related primitive data type is type defined into the following: webvtt_int8 <br />
+webvtt_int16 <br />
+webvtt_int32 <br />
+webvtt_int64 <br />
+webvtt_uint8 <br />
+webvtt_uint16 <br />
+webvtt_uint32 <br />
+webvtt_uint64  </span>
+                </a>
+                
+                <a class="toc-item" href="datatypes.html#Enumerations">
+                    <h4>Enumerations</h4>
+                    <span class="desc">enum webvtt_error_t: <pre class="brush:c"></span>
+                </a>
+                
+            </div>
+        
+            <h3 class="toc-mod-title"><a href="parser.html">parser</a></h3>
+            <div class="toc-list">
+                
+                <a class="toc-item" href="parser.html#webvtt\_create\_parser">
+                    <h4>webvtt\_create\_parser( webvtt\_cue\_fn\_ptr on\_read, webvtt\_error\_fn\_ptr on\_error, void * userdata, webvtt\_parser *ppout ) : webvtt\_status</h4>
+                    <span class="desc">Creates a parser using a given cue callback function pointer callback, an error callback function pointer, the raw userdata text to be parsed, and a pointer to a <code>webvtt_parser</code>. Passes the created <code>webvtt_parser</code> through <code>*ppout</code>.</span>
+                </a>
+                
+            </div>
+        
+    </div>
+</div>
