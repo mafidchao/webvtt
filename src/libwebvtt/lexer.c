@@ -1,4 +1,4 @@
-#include "parser.h"
+#include "parser_internal.h"
 
 /**
  * There are probably enough jumps and stack pops here to fill up quite a few caches but it may still

@@ -5,6 +5,8 @@ audio and video elements.
 
 See: [W3C WebVTT Draft](http://dev.w3.org/html5/webvtt/)
 
+[![Build Status](https://travis-ci.org/humphd/webvtt.png?branch=seneca)](https://travis-ci.org/humphd/webvtt)
+
 ##Build Instructions:
 
 In Unix-like environments, we use autotools:
@@ -14,6 +16,28 @@ In Unix-like environments, we use autotools:
 ```
 
 On Windows, we use a Visual Studio Project, see files in build/msvc2010
+
+##Running Tests:
+
+All tests are written using Google Test, and run using `make check`. You can configure the tests to run with our without valgrind, for memory checking.
+
+Without valgrind:
+
+```
+./configure
+make
+make check
+```
+
+With valgrind:
+
+```
+./configure --enable-valgrind-testing
+make
+make check
+```
+
+When running tests with valgrind, any test that fails valgrind (even if it passes Google Test) will fail. See `test/unit/Makefile.am` for info on known test failures, and how to add/remove them.
 
 ##Routines available to application:
 ### Parser object routines
@@ -38,8 +62,9 @@ On Windows, we use a Visual Studio Project, see files in build/msvc2010
 	const char *webvtt_strerror( webvtt_error );
 
 ##TODO:
-- *** IMPORTANT *** Implement routine to validate cue-text and produce a tree of nodes
-- Normalize routine names ( webvtt_create_XXX, webvtt_delete_XXX, rather than webvtt_XXX_new, webvtt_XXX_delete)
+
+###General
+- Change parser to convert to UTF16 as it goes through the buffer and convert parser to work with UTF16 instead of UTF8.
 - node-ffi bindings for libwebvtt structures and public API, to assist with unit testing
 - New unit tests, and convert some existing conformance tests to unit tests
 - Integration with TravisCI
@@ -54,3 +79,10 @@ On Windows, we use a Visual Studio Project, see files in build/msvc2010
 - Routines for generating conformant WebVTT text
 - Language bindings (Rust, C++, D, etc)
 - GNU Autotools build system to enhance portability (With MPL2'd M4 from Mozilla-Central to support Windows environments)
+
+###Cue Text Payload Parsing
+- Get shared UTF16 time stamp parser function working in order to create a time stamp node/token.
+- Error reporting
+- Line and character tracking in the cue_text in order to report errors correctly
+- Possible change of token and node data structs to allow easier readability
+- MANY bugs

@@ -1,5 +1,5 @@
 #include <string.h>
-#include "bytearray.h"
+#include "bytearray_internal.h"
 
 #define CR (0x0D)
 #define LF (0x0A)
@@ -8,14 +8,14 @@
  * Allocate new bytearray.
  */
 WEBVTT_INTERN webvtt_status
-webvtt_bytearray_new( webvtt_uint32 alloc, webvtt_bytearray *pba )
+webvtt_create_bytearray( webvtt_uint32 alloc, webvtt_bytearray *pba )
 {
 	webvtt_bytearray s;
 	if( !pba )
 	{
 		return WEBVTT_INVALID_PARAM;
 	}
-	s = webvtt_alloc( sizeof(struct webvtt_bytearray_t) + (alloc*sizeof(webvtt_byte)) );
+	s = (webvtt_bytearray)webvtt_alloc( sizeof(struct webvtt_bytearray_t) + (alloc*sizeof(webvtt_byte)) );
 	if( !s )
 	{
 		return WEBVTT_OUT_OF_MEMORY;
@@ -33,7 +33,7 @@ webvtt_bytearray_new( webvtt_uint32 alloc, webvtt_bytearray *pba )
  * Delete bytearray
  */
 WEBVTT_INTERN void
-webvtt_bytearray_delete( webvtt_bytearray *pstr )
+webvtt_delete_bytearray( webvtt_bytearray *pstr )
 {
 	if( pstr && *pstr )
 	{
