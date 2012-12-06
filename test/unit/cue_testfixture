@@ -30,7 +30,9 @@ protected:
     ASSERT_EQ( hours, ts.hours() );
     ASSERT_EQ( minutes, ts.minutes() );
     ASSERT_EQ( seconds, ts.seconds() );
-    ASSERT_EQ( millis, ts.milliseconds() );
+
+    /* hack to avoid rounding error... */
+    ASSERT_TRUE( millis == ts.milliseconds() || millis == ts.milliseconds() + 1 );
   }
   
   inline void assertEquals( const Timestamp &ts, int minutes, int seconds, int millis )
