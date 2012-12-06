@@ -35,7 +35,7 @@ protected:
   
   inline void assertEquals( const Timestamp &ts, int minutes, int seconds, int millis )
   {
-    return timestampEquals( ts, 0, minutes, seconds, millis );
+    return assertEquals( ts, 0, minutes, seconds, millis );
   }
   
   inline void assertEquals( const Error &err, webvtt_error code, WebVTT::uint line, WebVTT::uint column )
