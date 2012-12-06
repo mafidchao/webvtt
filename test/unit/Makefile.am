@@ -49,8 +49,6 @@ PAYLOAD_TESTS = \
   plrubytag_unittest
 
 UNIT_TESTS = \
-  sample_unittest \
-  sample2_unittest \
   $(CUESETTINGS_TESTS) \
   $(CUETIMES_TESTS) \
   $(PAYLOAD_TESTS)
@@ -86,9 +84,6 @@ XFAIL_TESTS = $(KNOWN_VALGRIND_TEST_FAILURES)
 TESTS = $(UNIT_TESTS)
 TESTS_ENVIRONMENT = $(VALGRIND_ENVIRONMENT)
 check_PROGRAMS = $(UNIT_TESTS)
-
-sample_unittest_SOURCES = sample_unittest.cpp
-sample2_unittest_SOURCES = sample2_unittest.cpp
 
 # Cue Settings tests
 csgeneric_unittest_SOURCES = csgeneric_unittest.cpp
