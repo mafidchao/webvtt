@@ -1,0 +1,65 @@
+# data types #
+Definition of the data types used in WebVTT parser library functions.
+
+## Macros
+WEBVTT_ENSURE_SUCCESS(status) ( (status) == WEBVTT_SUCCESS )
+WEBVTT_FAILED(status) ( (status) != WEBVTT_SUCCESS )
+
+## Type definitions
+Depending on the compiler, the related primitive data type is type defined into the following:
+webvtt_int8  
+webvtt_int16  
+webvtt_int32  
+webvtt_int64  
+webvtt_uint8  
+webvtt_uint16  
+webvtt_uint32  
+webvtt_uint64  
+
+Redefined data types:
+typedef signed int webvtt_int;  
+typedef signed char webvtt_char;  
+typedef signed short webvtt_short;  
+typedef signed long webvtt_long;  
+typedef signed long long webvtt_longlong;  
+typedef unsigned int webvtt_uint;  
+typedef unsigned char webvtt_uchar;  
+typedef unsigned short webvtt_ushort;  
+typedef unsigned long webvtt_ulong;  
+typedef unsigned long long webvtt_ulonglong;  
+typedef webvtt_uint8 webvtt_byte;  
+typedef webvtt_int webvtt_bool;  
+typedef webvtt_uint32 webvtt_length;  
+
+typedef enum webvtt_error_t webvtt_error;
+
+typedef enum webvtt_status_t webvtt_status;
+
+## Enumerations
+enum webvtt_error_t:
+```c
+WEBVTT_ALLOCATION_FAILED = 0: /* There was a problem allocating something */  
+WEBVTT_MALFORMED_TAG: /* 'WEBVTT' is not the first 6 characters in the file (not counting UTF8 BOM) */  
+WEBVTT_EXPECTED_EOL: /* An end-of-line sequence was expected, but not found. */  
+WEBVTT_EXPECTED_WHITESPACE: /* A string of whitespace was expected, but not found. */  
+WEBVTT_LONG_COMMENT: /* Long WEBVTT comment, decide whether to abort parsing or not */  
+WEBVTT_ID_TRUNCATED: /* A cue-id was too long to fit in the buffer. */  
+WEBVTT_MALFORMED_TIMESTAMP: /* A timestamp is malformed */  
+WEBVTT_EXPECTED_TIMESTAMP: /* Expected a timestamp, but didn't find one */  
+WEBVTT_MISSING_CUETIME_SEPARATOR: /* Missing timestamp separator */  
+WEBVTT_MISSING_CUESETTING_DELIMITER: /* Missing cuesetting delimiter */  
+WEBVTT_INVALID_ENDTIME: /* End-time is less than or equal to start time */  
+WEBVTT_INVALID_CUESETTING: /* Invalid cue-setting */  
+WEBVTT_VERTICAL_ALREADY_SET: /* 'vertical' setting already exists for this cue. */  
+WEBVTT_VERTICAL_BAD_VALUE: /* Bad 'vertical' value */  
+WEBVTT_LINE_ALREADY_SET: /* 'line' setting already exists for this cue. */  
+WEBVTT_LINE_BAD_VALUE: /* Bad 'line' value */  
+WEBVTT_POSITION_ALREADY_SET: /* 'position' setting already exists for this cue. */  
+WEBVTT_POSITION_BAD_VALUE: /* Bad 'position' value */  
+WEBVTT_SIZE_ALREADY_SET: /* 'size' setting already exists for this cue. */  
+WEBVTT_SIZE_BAD_VALUE: /* Bad 'size' value */  
+WEBVTT_ALIGN_ALREADY_SET: /* 'align' setting already exists for this cue. */  
+WEBVTT_ALIGN_BAD_VALUE: /* Bad 'align' value */  
+WEBVTT_CUE_CONTAINS_SEPARATOR: /* A cue-text object contains the string "-->", which needs to be escaped */  
+WEBVTT_CUE_INCOMPLETE: /* A webvtt cue contains only a cue-id, and no cuetimes or payload. */  
+```

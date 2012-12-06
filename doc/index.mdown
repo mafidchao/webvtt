@@ -1,0 +1,3 @@
+# WebVTT Parser #
+
+Functions contained within the WebVTT parser library.

@@ -1,0 +1,8 @@
+# parser #
+Main functions used for the manipulation of WebVTT cues.
+
+## webvtt_create_cue( webvtt_cue *pcue ) : webvtt_status 
+Creates a cue.
+
+## webvtt_validate_cue( webvtt_cue cue ) : int
+Validates a cue.

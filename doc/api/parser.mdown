@@ -1,0 +1,46 @@
+# parser #
+Main functions used for the creation of the WebVTT parser.
+
+## webvtt\_create\_parser( webvtt\_cue\_fn\_ptr on\_read, webvtt\_error\_fn\_ptr on\_error, void * userdata, webvtt\_parser *ppout ) : webvtt\_status
+
+Creates a parser using a given cue callback function pointer callback, an error callback function pointer, the raw userdata text to be parsed, and a pointer to a `webvtt_parser`. Passes the created `webvtt_parser` through `*ppout`.
+
+Return values:  
+WEBVTT\_INVALID\_PARAM - invalid parameters passed in to webvtt\_create\_parser().  
+WEBVTT\_OUT\_OF\_MEMORY - unable to allocate enough memory for the `webvtt_parser`.  
+WEBVTT\_SUCCESS - `webvtt_parser` was successfully created.  
+
+Example:
+```c
+//cue callback function
+static void WEBVTT_CALLBACK
+cue( void *userdata, webvtt_cue cue )
+{
+	webvtt_parse_cuetext( cue );
+}
+
+//error callback function
+static int WEBVTT_CALLBACK
+error( void *userdata, webvtt_uint line, webvtt_uint col, webvtt_error errcode )
+{
+	fprintf(stderr, "`%s' at %u:%u -- error: %s\n", (const char *)userdata, line, col, webvtt_strerror( errcode ) );
+	return -1; /* Die on all errors */
+}
+
+//int main()
+const char *input_file = "sample.vtt";
+webvtt_status result;
+webvtt_parser vtt;
+FILE *fh = fopen (input_file,"rb");
+if( ( result = webvtt_create_parser( &cue, &error, (void *)input_file, &vtt ) ) != WEBVTT_SUCCESS )
+{
+  fprintf( stderr, "error: failed to create VTT parser.\n" );
+  fclose( fh );
+  return 1;
+}
+
+ret = parse_fh( fh, vtt );
+webvtt_delete_parser( vtt );
+fclose( fh );
+return ret;
+```
