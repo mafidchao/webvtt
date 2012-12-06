@@ -110,6 +110,8 @@ webvtt_parser_t
 
 WEBVTT_INTERN webvtt_token webvtt_lex( webvtt_parser self, const webvtt_byte *buffer, webvtt_uint *pos, webvtt_uint length, int finish );
 
+#define BAD_TIMESTAMP(ts) ( *((webvtt_uint32*)(&ts)) == 0xFFFFFFFF )
+
 #define ERROR(Code) \
 do \
 { \

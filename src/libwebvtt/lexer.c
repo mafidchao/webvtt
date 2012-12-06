@@ -134,7 +134,7 @@ enum token_state_t
 	T_POSITION6, T_ALIGN0, T_ALIGN1, T_ALIGN2, T_ALIGN3, T_L0, T_LINE1, T_LINE2, T_LINE3,
 	T_VERTICAL0, T_VERTICAL1, T_VERTICAL2, T_VERTICAL3, T_VERTICAL4, T_VERTICAL5, T_VERTICAL6, T_RL0,
 	T_S0, T_SIZE1, T_SIZE2, T_START1, T_START2, T_START3, T_MIDDLE0, T_MIDDLE1, T_MIDDLE2, T_MIDDLE3,
-	T_MIDDLE4, T_END0, T_END1, T_TIMESTAMP1, T_TIMESTAMP2, T_TIMESTAMP3, T_TIMESTAMP4, T_TIMESTAMP5, T_RIGHT1, T_RIGHT2,
+	T_MIDDLE4, T_END0, T_END1, T_TIMESTAMP1, T_TIMESTAMP2, T_TIMESTAMP3, T_RIGHT1, T_RIGHT2,
 	T_RIGHT3, T_NOTE1, T_NOTE2, T_NOTE3, T_LEFT1, T_LEFT2, 
 };
 
@@ -442,6 +442,7 @@ webvtt_lex( webvtt_parser self, const webvtt_byte *buffer, webvtt_uint *pos, web
 				{
 					BACKUP
 					RETURN(TIMESTAMP)
+					BREAK
 				}
 			END_STATE_EX
 				
@@ -468,6 +469,7 @@ webvtt_lex( webvtt_parser self, const webvtt_byte *buffer, webvtt_uint *pos, web
 		switch( self->tstate )
 		{
 			case T_DIGIT0: RETURN(INTEGER)
+			case T_TIMESTAMP3: RETURN(TIMESTAMP)
 			default:
 				if(self->token_pos)
 				{

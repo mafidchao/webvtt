@@ -402,21 +402,27 @@ _recheck:
 				}
 				if( !parse_timestamp( self, self->token, &SP->v.cue->from ) )
 				{
-					webvtt_release_cue( &SP->v.cue );
-					ERROR_AT_COLUMN(WEBVTT_MALFORMED_TIMESTAMP,last_column);
-					POP();
-					*mode = M_SKIP_CUE;
-					goto _finish;
+					if( BAD_TIMESTAMP(SP->v.cue->from) )
+					{
+						webvtt_release_cue(&SP->v.cue);
+						ERROR_AT_COLUMN(WEBVTT_EXPECTED_TIMESTAMP,last_column);
+						POP();
+						break;
+					}
+					else
+					{
+						ERROR_AT_COLUMN(WEBVTT_MALFORMED_TIMESTAMP,last_column);
+					}
 				}
 				PUSH( T_SEP_LEFT, SP->v.cue );
 				break;
 
 			default:
 				/**
-				 * Some garbage non-timestamp garbage was found. If it starts with an integer, lets say it's malformed.
+				 * Some garbage non-timestamp garbage was found.
 				 */
 				webvtt_release_cue( &SP->v.cue );
-				ERROR_AT_COLUMN(  token != SEPARATOR ? WEBVTT_MALFORMED_TIMESTAMP : WEBVTT_EXPECTED_TIMESTAMP,last_column);
+				ERROR_AT_COLUMN( WEBVTT_EXPECTED_TIMESTAMP, last_column );
 				*mode = M_SKIP_CUE;
 				POP();
 				goto _finish;
@@ -491,15 +497,22 @@ _until:
 					webvtt_cue cue = (webvtt_cue)SP->v.cue;
 					if( !parse_timestamp( self, self->token, &cue->until ) )
 					{
-						webvtt_release_cue( &SP->v.cue );
-						ERROR_AT_COLUMN(WEBVTT_MALFORMED_TIMESTAMP,last_column);
-						*mode = M_SKIP_CUE;
-						POP(); /* T_UNTIL */
-						POP(); /* T_SEP_RIGHT */
-						POP(); /* T_SEP */
-						POP(); /* T_SEP_LEFT */
-						POP(); /* T_FROM */
-						goto _finish;
+						if( BAD_TIMESTAMP(cue->until) )
+						{
+							webvtt_release_cue( &SP->v.cue );
+							ERROR_AT_COLUMN(WEBVTT_EXPECTED_TIMESTAMP,last_column);
+							*mode = M_SKIP_CUE;
+							POP(); /* T_UNTIL */
+							POP(); /* T_SEP_RIGHT */
+							POP(); /* T_SEP */
+							POP(); /* T_SEP_LEFT */
+							POP(); /* T_FROM */
+							goto _finish;
+						}
+						else
+						{
+							ERROR_AT_COLUMN(WEBVTT_MALFORMED_TIMESTAMP,last_column);
+						}
 					}
 					POP(); /* T_UNTIL */
 					POP(); /* T_SEP_RIGHT */
@@ -1339,9 +1352,10 @@ parse_timestamp( webvtt_parser self, const webvtt_byte *b, webvtt_timestamp *res
 	
 	if( malformed )
 	{
-		return -1;
+		return 0;
 	}
 	return 1;
 _malformed:
+	*((webvtt_uint32*)result) = 0xFFFFFFFF;
 	return 0;
 }
