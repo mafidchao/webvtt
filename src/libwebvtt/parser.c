@@ -71,9 +71,9 @@ enum parse_state_t
 #define ASCII_DASH (0x2D)
 #define ASCII_COLON  (0x3A)
 
-#define SECS_PER_HOUR (3600)
-#define SECS_PER_MINUTE (60)
-#define SECS_PER_MILLI (0.001)
+#define MSECS_PER_HOUR (3600000)
+#define MSECS_PER_MINUTE (60000)
+#define MSECS_PER_SECOND (1000)
 #define BUFFER (self->buffer + self->position)
 #define MALFORMED_TIME ((webvtt_timestamp_t)-1.0)
 
@@ -545,10 +545,10 @@ _until:
 
 			default:
 				/**
-				 * Some garbage non-timestamp garbage was found. If it starts with an integer, lets say it's malformed.
+				 * Some garbage non-timestamp garbage was found.
 				 */
 				webvtt_release_cue( &SP->v.cue );
-				ERROR_AT_COLUMN( WEBVTT_MALFORMED_TIMESTAMP,last_column);
+				ERROR_AT_COLUMN( WEBVTT_EXPECTED_TIMESTAMP,last_column);
 				POP(); /* T_UNTIL */
 				POP(); /* T_SEP_RIGHT */
 				POP(); /* T_SEP */
@@ -1345,10 +1345,10 @@ parse_timestamp( webvtt_parser self, const webvtt_byte *b, webvtt_timestamp *res
 		malformed = 1;
 	}
 	
-	*result = (webvtt_timestamp)( v[0] * SECS_PER_HOUR )
-			+ ( v[1] * SECS_PER_MINUTE )
-			+ v[2] 
-			+ ( v[3] * SECS_PER_MILLI );
+	*result = (webvtt_timestamp)( v[0] * MSECS_PER_HOUR )
+			+ ( v[1] * MSECS_PER_MINUTE )
+			+ ( v[2] * MSECS_PER_SECOND )
+			+ ( v[3] );
 	
 	if( malformed )
 	{
@@ -1356,6 +1356,6 @@ parse_timestamp( webvtt_parser self, const webvtt_byte *b, webvtt_timestamp *res
 	}
 	return 1;
 _malformed:
-	*((webvtt_uint32*)result) = 0xFFFFFFFF;
+	*result = 0xFFFFFFFFFFFFFFFF;
 	return 0;
 }
