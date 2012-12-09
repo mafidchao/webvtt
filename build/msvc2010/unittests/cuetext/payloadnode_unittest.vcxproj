@@ -125,6 +125,19 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\test\gtest\gtest-all.cc" />
+    <ClCompile Include="..\..\test\gtest\gtest_main.cc" />
+    <ClCompile Include="..\..\test\unit\plboldtag_unittest.cpp" />
+    <ClCompile Include="..\..\test\unit\plclasstag_unittest.cpp" />
+    <ClCompile Include="..\..\test\unit\plescapecharacter_unittest.cpp" />
+    <ClCompile Include="..\..\test\unit\plformat_unittest.cpp" />
+    <ClCompile Include="..\..\test\unit\plitalictag_unittest.cpp" />
+    <ClCompile Include="..\..\test\unit\pltagformat_unittest.cpp" />
+    <ClCompile Include="..\..\test\unit\pltimestamp_unittest.cpp" />
+    <ClCompile Include="..\..\test\unit\plunderlinetag_unittest.cpp" />
+    <ClCompile Include="..\..\test\unit\plvoicetag_unittest.cpp" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

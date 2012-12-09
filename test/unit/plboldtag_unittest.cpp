@@ -27,7 +27,7 @@ TEST_F(PayloadBoldTag,DISABLED_BoldTag)
  *		2. Possible cue internal text representing the boldened text.
  *		3. A cue span end tag.
  */
-TEST_F(PayloadBoldTag,DISABLED_BoldAnnotation)
+TEST_F(PayloadBoldTag,DISABLED_BoldTagAnnotation)
 {
 	loadVtt( "payload/b-tag/b-tag-annotation.vtt" );
 
