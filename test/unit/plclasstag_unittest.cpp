@@ -27,7 +27,7 @@ TEST_F(PayloadClassTag,DISABLED_ClassTag)
  *		2. Possible cue internal text representing the cue text.
  *		3. A cue span end tag.
  */
-TEST_F(PayloadClassTag,DISABLED_ClassAnnotation)
+TEST_F(PayloadClassTag,DISABLED_ClassTagAnnotation)
 {
 	loadVtt( "payload/c-tag/c-tag-annotation.vtt" );
 
