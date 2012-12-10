@@ -19,6 +19,22 @@ TEST_F(PayloadTagFormat,DISABLED_MultipleCueTextTag)
 }
 
 /*
+Verifies that an incorrect class name cannot be used as a cue component.
+ * From http://dev.w3.org/html5/webvtt/#webvtt-cue-text-parsing-rules step "If token is an end tag" (11/27/2012)
+ *	Relevant cue text specification rule(s):
+ *		1. End tags that do not close the current open tag are ignored.
+ *		2. End tags that are not formatted properly will be ignored. 
+ *		3. Tags that do not have a valid tag name are ignored.
+ *	Implications:
+ *		1. Tags that are not closed properly are valid until the end of the current cue text.
+*/
+TEST_F(PayloadTagFormat,DISABLED_BadTagName)
+{
+	loadVtt( "payload/tag-format/incorrect-tag-name.vtt" );
+	ASSERT_TRUE( getHeadOfCue( 0 )->childCount() == 3 );
+}
+
+/*
  * Verifies that cue text end tags that are out of order will be ignored.
  * From http://dev.w3.org/html5/webvtt/#webvtt-cue-text-parsing-rules step "If token is an end tag" (11/27/2012)
  *	Relevant cue text specification rule(s):
@@ -60,9 +76,9 @@ TEST_F(PayloadTagFormat,DISABLED_EndTagNoBackSlashNoEndBrace)
 	const InternalNode *italicNode = head->child( 1 )->toInternalNode();
 	ASSERT_EQ( Node::Italic, italicNode->kind() );
 
-	ASSERT_TRUE( italicNode->childCount() == 2 );
+	ASSERT_TRUE( italicNode->childCount() == 3 );
 	ASSERT_EQ( Node::Text, italicNode->child( 0 )->kind() );
-	ASSERT_EQ( Node::Text, italicNode->child( 1 )->kind() );
+	ASSERT_EQ( Node::Italic, italicNode->child( 1 )->kind() );
 }
 
 /*
@@ -84,9 +100,8 @@ TEST_F(PayloadTagFormat,DISABLED_EndTagNoEndBrace)
 	const InternalNode *italicNode = head->child( 1 )->toInternalNode();
 	ASSERT_EQ( Node::Italic, italicNode->kind() );
 
-	ASSERT_TRUE( italicNode->childCount() == 2 );
+	ASSERT_TRUE( italicNode->childCount() == 1 );
 	ASSERT_EQ( Node::Text, italicNode->child( 0 )->kind() );
-	ASSERT_EQ( Node::Text, italicNode->child( 1 )->kind() );
 }
 
 /*
@@ -107,10 +122,9 @@ TEST_F(PayloadTagFormat,DISABLED_EndTagNoStartBrace)
 
 	const InternalNode *italicNode = head->child( 1 )->toInternalNode();
 	ASSERT_EQ( Node::Italic, italicNode->kind() );
-
-	ASSERT_TRUE( italicNode->childCount() == 2 );
+		
+	ASSERT_TRUE( italicNode->childCount() == 1 );
 	ASSERT_EQ( Node::Text, italicNode->child( 0 )->kind() );
-	ASSERT_EQ( Node::Text, italicNode->child( 1 )->kind() );
 }
 
 /*
@@ -128,14 +142,18 @@ TEST_F(PayloadTagFormat,DISABLED_MultiTagNoEndTag)
 	const InternalNode *head = getHeadOfCue( 0 );
 
 	ASSERT_TRUE( head->childCount() == 2 );
+	ASSERT_EQ( Node::Text, head->child( 0 )->kind() );
 
-	const InternalNode *italicNode = head->child( 1 )->toInternalNode();
-	ASSERT_EQ( Node::Italic, italicNode->kind() );
+	const InternalNode *italicNode0 = head->child( 1 )->toInternalNode();
 
-	ASSERT_TRUE( italicNode->childCount() == 2 );
-	ASSERT_EQ( Node::Text, italicNode->child( 0 )->kind() );
-	ASSERT_EQ( Node::Italic, italicNode->child( 1 )->kind() );
-	ASSERT_EQ( Node::Text, italicNode->child( 1 )->toInternalNode()->child( 0 )->kind() );
+	ASSERT_TRUE( italicNode0->childCount() == 2 );
+	ASSERT_EQ( Node::Italic, italicNode0->kind() );
+	ASSERT_EQ( Node::Text, italicNode0->child( 0 )->kind() );
+
+	const InternalNode *italicNode1 = italicNode0->child( 1 )->toInternalNode();
+
+	ASSERT_EQ( Node::Italic, italicNode1->kind() );
+	ASSERT_EQ( Node::Text, italicNode1->child( 0 )->kind() );
 }
 
 /*
@@ -154,7 +172,6 @@ TEST_F(PayloadTagFormat,DISABLED_StartTagNoEndBrace)
 	const InternalNode *head = getHeadOfCue( 0 );
 
 	ASSERT_TRUE( head->childCount() == 2 );
-
 	ASSERT_EQ( Node::Text, head->child( 0 )->kind() );
 	ASSERT_EQ( Node::Text, head->child( 1 )->kind() );
 }
