@@ -70,3 +70,42 @@ TEST_F(PayloadFormat,DISABLED_MultilineMultipleCueTextTag)
 	node = node->child( 0 )->toInternalNode();
 	ASSERT_EQ( Node::Bold, node->kind() );
 }
+
+/*
+ * Verifies that cue text separated by a CR line terminator is parsed correctly.
+ * From http://dev.w3.org/html5/webvtt/#webvtt-cue-text (12/02/2012)
+ *	Cue text consists of one or more cue text components optionally separated by a single line terminator which can be: 
+ *		1. CR (U+000D)
+ *		2. LF (U+000A)
+ *		3. CRLF pair
+ */
+TEST_F(PayloadFormat,DISABLED_MultilineBasicCueTextCR)
+{
+	loadVtt( "payload/payload-format/multiline-basic-cue-text-cr.vtt" );
+	ASSERT_EQ( Node::Text, getHeadOfCue( 0 )->child( 0 )->kind() );
+}
+
+/*
+ * Verifies that cue text separated by a CRLF line terminator is parsed correctly.
+ * From http://dev.w3.org/html5/webvtt/#webvtt-cue-text (12/02/2012)
+ *	Cue text consists of one or more cue text components optionally separated by a single line terminator which can be: 
+ *		1. CR (U+000D)
+ *		2. LF (U+000A)
+ *		3. CRLF pair
+ */
+TEST_F(PayloadFormat,DISABLED_MultilineBasicCueTextCRLF)
+{
+	loadVtt( "payload/payload-format/multiline-basic-cue-text-crlf.vtt" );
+	ASSERT_EQ( Node::Text, getHeadOfCue( 0 )->child( 0 )->kind() );
+}
+
+/* Verifies that cue text with a malformed line terminator is still parsed correctly.
+ * From http://dev.w3.org/html5/webvtt/#webvtt-parser-algorithm (12/02/2012)
+ * The WebVTT parser algorithm is as follows:
+ * [...] 50. Bad cue: Discard cue.
+ */
+TEST_F(PayloadFormat,DISABLED_MultilineBasicCueTextExtraLine)
+{
+	loadVtt( "payload/payload-format/multiline-extra-line-terminator.vtt", 1);
+	ASSERT_EQ( Node::Text, getHeadOfCue( 0 )->child( 0 )->kind() );
+}
