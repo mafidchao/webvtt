@@ -240,9 +240,8 @@ TEST_F(FileStructure,DISABLED_HeaderNoNewLine)
  * 5. Zero or more WebVTT cues and/or WebVTT comments separated from each other by two or more WebVTT line terminators.
  * 6. Zero or more WebVTT line terminators.
  */
-TEST_F(FileStructure,DISABLED_NoPayloadText)
+TEST_F(FileStructure,NoPayloadText)
 {
-	/* valgrind failure */
 	loadVtt( "filestructure/no-payload-text.vtt", 1 );
 	ASSERT_EQ( 0, errorCount() ) << "This file should contain no errors.";
 }
@@ -366,9 +365,8 @@ TEST_F(FileStructure,NewlineBeforeWebVTT)
  * 50. Bad cue: Discard cue.
  * 51. Bad cue loop: If position is past the end of input, then jump to the step labeled end. 
  */
-TEST_F(FileStructure,DISABLED_NewlineBetweenPayloadText)
+TEST_F(FileStructure,NewlineBetweenPayloadText)
 {
-	/* valgrind failure */
 	loadVtt( "filestructure/newline-between-payload-text.vtt", 1 );
 	ASSERT_EQ( 1, errorCount() ) << "This file should contain one error: WEBVTT_CUE_INCOMPLETE.";
 	Error tmp = getError(0);
