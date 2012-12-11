@@ -45,7 +45,7 @@ TEST_F(CueTimeOrder,EndLTStart)
  * 5. A WebVTT timestamp representing the end time offset of the cue. The time represented by this
  *    WebVTT timestamp must be greater than the start time offset of the cue.
  */
-TEST_F(CueTimeOrder,DISABLED_StartLTPriorCue) //currently fails, throws c++ out of bounds exception
+TEST_F(CueTimeOrder,StartLTPriorCue) //currently fails, throws c++ out of bounds exception
 {
   loadVtt( "cue-times/order/start_lt_prior_cue.vtt", 0 );
 	const Error& err = getError( 0 );
@@ -222,10 +222,10 @@ TEST_F(CueTimeOrder, StartEqualsEnd)
  * 5. A WebVTT timestamp representing the end time offset of the cue. The time represented by this
  *    WebVTT timestamp must be greater than the start time offset of the cue.
  */
- TEST_F(CueTimeOrder, DISABLED_SecondCueBeforeFirst)
+ TEST_F(CueTimeOrder, SecondCueBeforeFirst)
 {
-  loadVtt( "cue-times/order/second_cue_before_first_bad.vtt", 2 ); //2 or 1 cue?
-  ASSERT_EQ( 1, errorCount() ); //Error in our parser. It is not throwing an error.
+  loadVtt( "cue-times/order/second_cue_before_first_bad.vtt", 2 );
+  ASSERT_EQ( 1, errorCount() );
   const Error& err = getError( 0 );
   EXPECT_EQ( WEBVTT_INVALID_ENDTIME, err.error() );
 }

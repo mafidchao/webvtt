@@ -33,7 +33,7 @@ class CueTimeTimestampHour : public CueTest { };
  * 6. Three characters in the range U+0030 DIGIT ZERO (0) to U+0039 DIGIT NINE (9), representing the 
  *    thousandths of a second seconds-frac as a base ten integer.
  */
-TEST_F(CueTimeTimestampHour,DISABLED_NondigitTimestamp1)//C++ exception "std::bad_alloc"
+TEST_F(CueTimeTimestampHour,NondigitTimestamp1)
 {
   loadVtt( "cue-times/timestamp/from/hour/nondigit.vtt" );
   const Error& err = getError( 0 );
@@ -72,7 +72,7 @@ TEST_F(CueTimeTimestampHour,DISABLED_NondigitTimestamp1)//C++ exception "std::ba
  * 6. Three characters in the range U+0030 DIGIT ZERO (0) to U+0039 DIGIT NINE (9), representing the 
  *    thousandths of a second seconds-frac as a base ten integer.
  */
-TEST_F(CueTimeTimestampHour,DISABLED_NondigitTimestamp2)//C++ exception "std::bad_alloc"
+TEST_F(CueTimeTimestampHour,NondigitTimestamp2)
 {
   loadVtt( "cue-times/timestamp/until/hour/nondigit.vtt" );
   const Error& err = getError( 0 );
@@ -131,9 +131,9 @@ TEST_F(CueTimeTimestampHour,HoursCheck)
  * 5. A WebVTT timestamp representing the end time offset of the cue. The time represented by this
  *    WebVTT timestamp must be greater than the start time offset of the cue.
  */
- TEST_F(CueTimeTimestampHour, DISABLED_InvalidHour)
+ TEST_F(CueTimeTimestampHour,InvalidHour)
 {
-  loadVtt( "cue-times/timestamp/from/hour/nondigit_bad.vtt", 1 ); //std::bad_alloc
+  loadVtt( "cue-times/timestamp/from/hour/nondigit_bad.vtt", 1 ); 
   ASSERT_NE( 0, errorCount() ); 
   const Error& err = getError( 0 );
   EXPECT_EQ( WEBVTT_INVALID_ENDTIME, err.error() );

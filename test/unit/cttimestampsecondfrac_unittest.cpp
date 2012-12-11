@@ -33,7 +33,7 @@ class CueTimeTimestampSecondFrac : public CueTest { };
  * 6. Three characters in the range U+0030 DIGIT ZERO (0) to U+0039 DIGIT NINE (9), representing the 
  *    thousandths of a second seconds-frac as a base ten integer.
  */
-TEST_F(CueTimeTimestampSecondFrac,DISABLED_NondigitTimestamp1)//C++ exception "std::bad_alloc"
+TEST_F(CueTimeTimestampSecondFrac,NondigitTimestamp1)
 {
   loadVtt( "cue-times/timestamp/from/secondfrac/nondigit.vtt" );
   const Error& err = getError( 0 );
@@ -68,7 +68,7 @@ TEST_F(CueTimeTimestampSecondFrac,DISABLED_NondigitTimestamp1)//C++ exception "s
  * 6. Three characters in the range U+0030 DIGIT ZERO (0) to U+0039 DIGIT NINE (9), representing the 
  *    thousandths of a second seconds-frac as a base ten integer.
  */
-TEST_F(CueTimeTimestampSecondFrac,DISABLED_OneDigitTimestamp1)//C++ exception "std::bad_alloc"
+TEST_F(CueTimeTimestampSecondFrac,OneDigitTimestamp1)
 {
   loadVtt( "cue-times/timestamp/from/secondfrac/one_digit.vtt" );
   const Error& err = getError( 0 );
@@ -138,7 +138,7 @@ TEST_F(CueTimeTimestampSecondFrac,TwoDigitsTimestamp1)
  * 6. Three characters in the range U+0030 DIGIT ZERO (0) to U+0039 DIGIT NINE (9), representing the 
  *    thousandths of a second seconds-frac as a base ten integer.
  */
-TEST_F(CueTimeTimestampSecondFrac,DISABLED_FourDigitsTimestamp1)//C++ exception "std::bad_alloc"
+TEST_F(CueTimeTimestampSecondFrac,FourDigitsTimestamp1)
 {
   loadVtt( "cue-times/timestamp/from/secondfrac/four_digits.vtt" );
   const Error& err = getError( 0 );
@@ -177,7 +177,7 @@ TEST_F(CueTimeTimestampSecondFrac,DISABLED_FourDigitsTimestamp1)//C++ exception 
  * 6. Three characters in the range U+0030 DIGIT ZERO (0) to U+0039 DIGIT NINE (9), representing the 
  *    thousandths of a second seconds-frac as a base ten integer.
  */
-TEST_F(CueTimeTimestampSecondFrac,DISABLED_NondigitTimestamp2)//C++ exception "std::bad_alloc"
+TEST_F(CueTimeTimestampSecondFrac,NondigitTimestamp2)
 {
   loadVtt( "cue-times/timestamp/until/secondfrac/nondigit.vtt" );
   const Error& err = getError( 0 );
@@ -212,7 +212,7 @@ TEST_F(CueTimeTimestampSecondFrac,DISABLED_NondigitTimestamp2)//C++ exception "s
  * 6. Three characters in the range U+0030 DIGIT ZERO (0) to U+0039 DIGIT NINE (9), representing the 
  *    thousandths of a second seconds-frac as a base ten integer.
  */
-TEST_F(CueTimeTimestampSecondFrac,DISABLED_OneDigitTimestamp2)//C++ exception "std::bad_alloc"
+TEST_F(CueTimeTimestampSecondFrac,OneDigitTimestamp2)
 {
   loadVtt( "cue-times/timestamp/until/secondfrac/one_digit.vtt" );
   const Error& err = getError( 0 );
@@ -247,7 +247,7 @@ TEST_F(CueTimeTimestampSecondFrac,DISABLED_OneDigitTimestamp2)//C++ exception "s
  * 6. Three characters in the range U+0030 DIGIT ZERO (0) to U+0039 DIGIT NINE (9), representing the 
  *    thousandths of a second seconds-frac as a base ten integer.
  */
-TEST_F(CueTimeTimestampSecondFrac,DISABLED_TwoDigitsTimestamp2)//C++ exception "std::bad_alloc"
+TEST_F(CueTimeTimestampSecondFrac,TwoDigitsTimestamp2)
 {
   loadVtt( "cue-times/timestamp/until/secondfrac/two_digits.vtt" );
   const Error& err = getError( 0 );
@@ -286,7 +286,7 @@ TEST_F(CueTimeTimestampSecondFrac,FourDigitsTimestamp2)
 {
   loadVtt( "cue-times/timestamp/until/secondfrac/four_digits.vtt" );
   const Error& err = getError( 0 );
-  ASSERT_EQ( WEBVTT_EXPECTED_WHITESPACE, err.error() );//not sure if this error is the one it should be
+  ASSERT_EQ( WEBVTT_EXPECTED_WHITESPACE, err.error() );
 }
 
 /**
@@ -356,5 +356,5 @@ TEST_F(CueTimeTimestampSecondFrac,FourDigitMillisecond)
   loadVtt( "cue-times/timestamp/from/secondfrac/four_digits_bad.vtt", 1 );
   ASSERT_EQ( 1, errorCount() );
   const Error& err = getError( 0 );
-  EXPECT_EQ( WEBVTT_EXPECTED_WHITESPACE, err.error() );//Wrong error code?
+  EXPECT_EQ( WEBVTT_EXPECTED_WHITESPACE, err.error() );
 }

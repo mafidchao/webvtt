@@ -33,7 +33,7 @@ class CueTimeTimestampDelimiter : public CueTest { };
  * 6. Three characters in the range U+0030 DIGIT ZERO (0) to U+0039 DIGIT NINE (9), representing the 
  *    thousandths of a second seconds-frac as a base ten integer.
  */
-TEST_F(CueTimeTimestampDelimiter,DISABLED_HourMinuteBadDelimiterTimestamp1)//C++ exception "std::bad_alloc"
+TEST_F(CueTimeTimestampDelimiter,HourMinuteBadDelimiterTimestamp1)
 {
   loadVtt( "cue-times/timestamp/from/delimiter/hour_minute_bad_delimiter.vtt" );
   const Error& err = getError( 0 );
@@ -68,7 +68,7 @@ TEST_F(CueTimeTimestampDelimiter,DISABLED_HourMinuteBadDelimiterTimestamp1)//C++
  * 6. Three characters in the range U+0030 DIGIT ZERO (0) to U+0039 DIGIT NINE (9), representing the 
  *    thousandths of a second seconds-frac as a base ten integer.
  */
-TEST_F(CueTimeTimestampDelimiter,DISABLED_MinuteSecondBadDelimiterTimestamp1)//C++ exception "std::bad_alloc"
+TEST_F(CueTimeTimestampDelimiter,MinuteSecondBadDelimiterTimestamp1)
 {
   loadVtt( "cue-times/timestamp/from/delimiter/minute_second_bad_delimiter.vtt" );
   const Error& err = getError( 0 );
@@ -103,7 +103,7 @@ TEST_F(CueTimeTimestampDelimiter,DISABLED_MinuteSecondBadDelimiterTimestamp1)//C
  * 6. Three characters in the range U+0030 DIGIT ZERO (0) to U+0039 DIGIT NINE (9), representing the 
  *    thousandths of a second seconds-frac as a base ten integer.
  */
-TEST_F(CueTimeTimestampDelimiter,DISABLED_SecondSecondFracBadDelimiterTimestamp1)//C++ exception "std::bad_alloc"
+TEST_F(CueTimeTimestampDelimiter,SecondSecondFracBadDelimiterTimestamp1)
 {
   loadVtt( "cue-times/timestamp/from/delimiter/second_secondfrac_bad_delimiter.vtt" );
   const Error& err = getError( 0 );
@@ -142,7 +142,7 @@ TEST_F(CueTimeTimestampDelimiter,DISABLED_SecondSecondFracBadDelimiterTimestamp1
  * 6. Three characters in the range U+0030 DIGIT ZERO (0) to U+0039 DIGIT NINE (9), representing the 
  *    thousandths of a second seconds-frac as a base ten integer.
  */
-TEST_F(CueTimeTimestampDelimiter,DISABLED_HourMinuteBadDelimiterTimestamp2)//C++ exception "std::bad_alloc"
+TEST_F(CueTimeTimestampDelimiter,HourMinuteBadDelimiterTimestamp2)
 {
   loadVtt( "cue-times/timestamp/until/delimiter/hour_minute_bad_delimiter.vtt" );
   const Error& err = getError( 0 );
@@ -177,7 +177,7 @@ TEST_F(CueTimeTimestampDelimiter,DISABLED_HourMinuteBadDelimiterTimestamp2)//C++
  * 6. Three characters in the range U+0030 DIGIT ZERO (0) to U+0039 DIGIT NINE (9), representing the 
  *    thousandths of a second seconds-frac as a base ten integer.
  */
-TEST_F(CueTimeTimestampDelimiter,DISABLED_MinuteSecondBadDelimiterTimestamp2)//C++ exception "std::bad_alloc"
+TEST_F(CueTimeTimestampDelimiter,MinuteSecondBadDelimiterTimestamp2)
 {
   loadVtt( "cue-times/timestamp/until/delimiter/minute_second_bad_delimiter.vtt" );
   const Error& err = getError( 0 );
@@ -212,7 +212,7 @@ TEST_F(CueTimeTimestampDelimiter,DISABLED_MinuteSecondBadDelimiterTimestamp2)//C
  * 6. Three characters in the range U+0030 DIGIT ZERO (0) to U+0039 DIGIT NINE (9), representing the 
  *    thousandths of a second seconds-frac as a base ten integer.
  */
-TEST_F(CueTimeTimestampDelimiter,DISABLED_SecondSecondFracBadDelimiterTimestamp2)//C++ exception "std::bad_alloc"
+TEST_F(CueTimeTimestampDelimiter,SecondSecondFracBadDelimiterTimestamp2)
 {
   loadVtt( "cue-times/timestamp/until/delimiter/second_secondfrac_bad_delimiter.vtt" );
   const Error& err = getError( 0 );
@@ -246,9 +246,9 @@ TEST_F(CueTimeTimestampDelimiter,DISABLED_SecondSecondFracBadDelimiterTimestamp2
  * 6. Three characters in the range U+0030 DIGIT ZERO (0) to U+0039 DIGIT NINE (9), representing the 
  *    thousandths of a second seconds-frac as a base ten integer.
  */
-TEST_F(CueTimeTimestampDelimiter,DISABLED_TooManyDigitsBad)
+TEST_F(CueTimeTimestampDelimiter,TooManyDigitsBad)
 {
-  loadVtt( "cue-times/timestamp/from/delimiter/too_many_digits_bad.vtt" );//std::bad_alloc error
+  loadVtt( "cue-times/timestamp/from/delimiter/too_many_digits_bad.vtt" );
   ASSERT_NE( 0, errorCount() );
   const Error& err = getError( 0 );
   EXPECT_EQ( WEBVTT_MALFORMED_TIMESTAMP, err.error() );
@@ -281,9 +281,9 @@ TEST_F(CueTimeTimestampDelimiter,DISABLED_TooManyDigitsBad)
  * 6. Three characters in the range U+0030 DIGIT ZERO (0) to U+0039 DIGIT NINE (9), representing the 
  *    thousandths of a second seconds-frac as a base ten integer.
  */
-TEST_F(CueTimeTimestampDelimiter,DISABLED_InvalidStartTime)
+TEST_F(CueTimeTimestampDelimiter,InvalidStartTime)
 {
-  loadVtt( "cue-times/timestamp/from/delimiter/invalid_start_time_bad.vtt" );//std::bad_alloc error
+  loadVtt( "cue-times/timestamp/from/delimiter/invalid_start_time_bad.vtt" );
   ASSERT_NE( 0, errorCount() );
   const Error& err = getError( 0 );
   EXPECT_EQ( WEBVTT_MALFORMED_TIMESTAMP, err.error() );
