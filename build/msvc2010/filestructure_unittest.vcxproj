@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{30E00A8F-9BC3-4705-8474-376587D0B3EB}</ProjectGuid>
+    <ProjectGuid>{E7CF5155-145C-481D-8792-7AA65173338C}</ProjectGuid>
     <RootNamespace>payloadnode_unittest</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -125,15 +125,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\test\gtest\gtest-all.cc" />
     <ClCompile Include="..\..\test\gtest\gtest_main.cc" />
-    <ClCompile Include="..\..\test\unit\plboldtag_unittest.cpp" />
-    <ClCompile Include="..\..\test\unit\plclasstag_unittest.cpp" />
-    <ClCompile Include="..\..\test\unit\plescapecharacter_unittest.cpp" />
-    <ClCompile Include="..\..\test\unit\plformat_unittest.cpp" />
-    <ClCompile Include="..\..\test\unit\plitalictag_unittest.cpp" />
-    <ClCompile Include="..\..\test\unit\pltagformat_unittest.cpp" />
-    <ClCompile Include="..\..\test\unit\pltimestamp_unittest.cpp" />
-    <ClCompile Include="..\..\test\unit\plunderlinetag_unittest.cpp" />
-    <ClCompile Include="..\..\test\unit\plvoicetag_unittest.cpp" />
+    <ClCompile Include="..\..\test\unit\filestructure_unittest.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

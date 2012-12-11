@@ -67,12 +67,12 @@ UNIT_TESTS = \
 KNOWN_VALGRIND_TEST_FAILURES =
 if VALGRIND_TESTING
 KNOWN_VALGRIND_TEST_FAILURES += \
-csgeneric_unittest \
-csline_unittest \
-cssize_unittest \
-csposition_unittest \
-csvertical_unittest \
-csalign_unittest \
+  csgeneric_unittest \
+  csline_unittest \
+  cssize_unittest \
+  csposition_unittest \
+  csvertical_unittest \
+  csalign_unittest \
   ctorder_unittest \
   ctseparator_unittest \
   cttimestampminute_unittest \
