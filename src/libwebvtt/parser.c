@@ -1,15 +1,28 @@
 #include "parser_internal.h"
 #include <string.h>
-#define FULLSTOP (0x2E)
+
+#define _ERROR(X) do { if( skip_error == 0 ) { ERROR(X); } } while(0)
+
+/**
+ * ASCII characters
+ */
+#define  ASCII_PERIOD (0x2E)
+#define  ASCII_CR     (0x0D)
+#define  ASCII_LF     (0x0A)
+#define  ASCII_SPACE  (0x20)
+#define  ASCII_TAB    (0x09)
+#define  ASCII_DASH   (0x2D)
+#define  ASCII_GT     (0x3E)
 
 /**
  * parser modes
  */
 enum
 {
-	M_BUFFER_TOKENS = 0,
-	M_LINE_TOKENS,
-	M_READ_LINE
+	M_WEBVTT = 0,
+	M_CUETEXT,
+	M_SKIP_CUE,
+	M_READ_LINE,
 };
 
 
@@ -18,38 +31,49 @@ enum
  */
 enum parse_state_t
 {
-	T_INITIAL = 0, /* WEBVTT -> T_TAG */
-	T_TAG = 1, /* NEWLINE -> T_TAGEOL */
-	T_TAGEOL = 2, /* NEWLINE -> T_CUEEOL */
-	T_CUEEOL = 3, /* NEWLINE -> T_CUEID */
-	T_CUEID = 4, /* Line contains "-->" -> T_STARTTIME ; * -> T_CUEID */
-	T_STARTTIME = 5, /* TIMESTAMP -> T_SEP1 */
-	T_SEP1 = 6, /* WHITESPACE -> T_SEP2 */
-	T_SEP2 = 7, /* SEPARATOR -> T_SEP3 */
-	T_SEP3 = 8, /* WHITESPACE -> T_ENDTIME */
-	T_ENDTIME = 9, /* TIMESTAMP -> T_PRESETTING */
-	T_PRESETTING = 10, /* WHITESPACE -> T_SETTING ; EOB -> T_PREPAYLOAD */
-	T_PAYLOADEOL = 11, /* NEWLINE -> T_CUEEOL & process finished Cue */
-	T_PAYLOAD = 12, /* EOB -> T_PREPAYLOAD */
-	T_SETTING = 13, /* VERTICAL -> T_VERTICAL ; POSITION -> T_POSITION ; LINE -> T_LINE ; SIZE -> T_SIZE ; ALIGN -> T_ALIGN ; EOB -> T_PREPAYLOAD */
-	T_VERTICAL = 14, /* (RL|LR) -> T_PRESETTING */
-	T_POSITION = 15, /* PERCENTAGE -> T_PRESETTING */
-	T_LINE = 16, /* (PERCENTAGE|INTEGER) -> T_PRESETTING */
-	T_SIZE = 17, /* PERCENTAGE -> T_PRESETTING */
-	T_ALIGN = 18, /* (START|MIDDLE|END) -> T_PRESETTING */
-	T_PREPAYLOAD = 19 /* NEWLINE -> T_PAYLOAD */
+	/**
+	 * WEBVTT parse states
+	 */
+		T_INITIAL = 0,
+		T_TAG,
+		T_TAGCOMMENT,
+		T_EOL,
+		T_BODY,
+
+		/**
+		 * NOTE comments
+		 */
+		T_COMMENT,
+
+		/**
+		 * Cuetimes
+		 */
+		T_FROM,
+		T_SEP_LEFT,
+		T_SEP,
+		T_SEP_RIGHT,
+		T_UNTIL,
+
+		/**
+		 * Cuesettings
+		 */
+		T_PRECUESETTING,
+		T_CUESETTING,
+		T_CUESETTING_DELIMITER,
+		T_CUESETTING_VALUE,
+		T_SKIP_SETTING /* We have to skip a cue-setting because of an error. */
+
+	/**
+	 * Cuetext parse states
+	 */
 };
 
+#define ASCII_DASH (0x2D)
+#define ASCII_COLON  (0x3A)
 
-#define ASCII_0 (0x30)
-#define ASCII_9 (0x39)
-#define ASCII_ISDIGIT(c) ( ((c) >= ASCII_0) && ((c) <= ASCII_9) )
-#define HYPHEN_MINUS (0x2D)
-#define COLON  (0x3A)
-
-#define SECS_PER_HOUR (3600)
-#define SECS_PER_MINUTE (60)
-#define SECS_PER_MILLI (0.001)
+#define MSECS_PER_HOUR (3600000)
+#define MSECS_PER_MINUTE (60000)
+#define MSECS_PER_SECOND (1000)
 #define BUFFER (self->buffer + self->position)
 #define MALFORMED_TIME ((webvtt_timestamp_t)-1.0)
 
@@ -74,9 +98,15 @@ webvtt_create_parser( webvtt_cue_fn_ptr on_read,
 		return WEBVTT_OUT_OF_MEMORY;
 	}
 	
+	memset(p->astack, 0, sizeof(p->astack));
+	p->stack = p->astack;
+	p->top = p->stack;
+	p->top->state = T_INITIAL;
+	p->stack_alloc = sizeof(p->astack) / sizeof(p->astack[0]);
+
 	p->read = on_read;
 	p->error = on_error;
-	p->line = 1;
+	p->column = p->line = 1;
 	p->userdata = userdata;
 	*ppout = p;
 	
@@ -84,22 +114,20 @@ webvtt_create_parser( webvtt_cue_fn_ptr on_read,
 }
 
 static void
-finish_cue( webvtt_parser self )
+finish_cue( webvtt_parser self, webvtt_cue cue )
 {
-	if( self->cue )
+	if( cue )
 	{
 		/**
 		 * Validate the cue
 		 */
-		if( webvtt_validate_cue( (webvtt_cue)self->cue ) )
+		if( webvtt_validate_cue( (webvtt_cue)cue ) )
 		{
-			webvtt_cue cue = (webvtt_cue)self->cue;
-			self->cue = 0;
 			self->read( self->userdata, cue );
 		}
 		else
 		{
-			webvtt_release_cue( (webvtt_cue *)&self->cue );
+			webvtt_release_cue( &cue );
 		}
 	}
 }
@@ -116,76 +144,6 @@ webvtt_finish_parsing( webvtt_parser self )
 	 * we should assume that we're finished with the cue and provide it to the application
 	 */
 	self->finish = 1;
-	if( self->cue )
-	{
-		switch( self->state )
-		{
-			case T_CUEID:
-			/**
-			 * We left off with an unfinished potential CUEID
-			 */
-			if( self->line_buffer )
-			{
-				/**
-				 * Maybe it's cue times/settings
-				 */
-				if( find_bytes( self->line_buffer->text, self->line_buffer->length, (const webvtt_byte *)"-->", 3 ) )
-				{
-					webvtt_status ret;
-					self->mode = M_LINE_TOKENS;
-					self->state = T_STARTTIME;
-					ret = webvtt_parse_chunk( self, self->line_buffer->text, self->line_buffer->length );
-					if( ret )
-					{
-						return ret;
-					}
-				}
-				else
-				{
-					/**
-					 * webvtt-cue-id found, but there's no point returning it because we don't have cuetimes or a payload.
-					 * Essentially, treat this as a parse error
-					 */
-					ERROR(WEBVTT_CUE_INCOMPLETE);
-				}
-
-				break;
-			}
-			case T_STARTTIME:
-			/* We were brought to this state because the buffer ended with an EOL character and we were expecting a timestamp.
-			   It's unlikely that we have one, so this is probably an error */
-			if( self->line_buffer && self->line_buffer->length )
-			{
-				webvtt_status ret = webvtt_parse_chunk( self, self->line_buffer->text, self->line_buffer->length );
-				if( ret )
-				{
-					return ret;
-				}
-			}
-			else
-			{
-				ERROR(WEBVTT_CUE_INCOMPLETE);
-			}
-			break;
-
-			case T_PAYLOAD:
-			case T_PAYLOADEOL:
-			case T_CUEEOL:
-			if( self->line_buffer )
-			{
-				webvtt_uint pos = 0;
-				webvtt_create_string( self->line_buffer->length, &self->cue->payload );
-				if( webvtt_string_append_utf8( &self->cue->payload, self->line_buffer->text, &pos, 
-					self->line_buffer->length, 0 ) == WEBVTT_OUT_OF_MEMORY )
-				{
-					ERROR(WEBVTT_ALLOCATION_FAILED);
-				}
-				webvtt_delete_bytearray(&self->line_buffer);
-			}
-			finish_cue( self );
-			break;
-		}
-	}
 	self->finish = 0;
 	return WEBVTT_SUCCESS;
 }
@@ -195,6 +153,11 @@ webvtt_delete_parser( webvtt_parser self )
 {
 	if( self )
 	{
+		if( self->stack != self->astack )
+		{
+			webvtt_free( self->stack );
+		}
+
 		if( self->line_buffer )
 		{
 			webvtt_delete_bytearray( &self->line_buffer );
@@ -210,7 +173,7 @@ webvtt_delete_parser( webvtt_parser self )
 #define BEGIN_STATE(State) case State: {
 #define END_STATE } break;
 #define IF_TOKEN(Token,Actions) case Token: { Actions } break;
-#define BEGIN_DFA switch(self->state) {
+#define BEGIN_DFA switch(top->state) {
 #define END_DFA }
 #define BEGIN_TOKEN switch(token) {
 #define END_TOKEN }
@@ -219,11 +182,12 @@ webvtt_delete_parser( webvtt_parser self )
 #define ENDIF }
 #define ELSE } else {
 
-static int find_newline( const webvtt_byte *buffer, webvtt_uint *pos, webvtt_uint len )
+static WEBVTT_INTERN int
+find_newline( const webvtt_byte *buffer, webvtt_uint *pos, webvtt_uint len )
 {
 	while( *pos < len )
 	{
-		if( buffer[ *pos ] == CR || buffer[ *pos ] == LF )
+		if( buffer[ *pos ] == ASCII_CR || buffer[ *pos ] == ASCII_LF )
 		{
 			return 1;
 		} 
@@ -233,6 +197,23 @@ static int find_newline( const webvtt_byte *buffer, webvtt_uint *pos, webvtt_uin
 		}
 	}
 	return -1;
+}
+
+static WEBVTT_INTERN void
+find_next_whitespace(const webvtt_byte *buffer, webvtt_uint *ppos, webvtt_uint len)
+{
+	webvtt_uint pos = *ppos;
+	while( pos < len )
+	{
+		webvtt_byte c = buffer[pos];
+		if( c == ASCII_CR || c == ASCII_LF || c == ASCII_SPACE || c == ASCII_TAB )
+		{
+			break;
+		}
+
+		++pos;
+	}
+	*ppos = pos;
 }
 
 /**
@@ -252,590 +233,969 @@ find_bytes(const webvtt_byte *buffer, webvtt_uint len, const webvtt_byte *sbytes
 	return 0;
 }
 
+	/**
+	 * Helpers to figure out what state we're on
+	 */
+#define SP (self->top)
+#define AT_BOTTOM (self->top == self->stack)
+#define ON_HEAP (self->stack_alloc == sizeof(p->astack) / sizeof(p->astack[0]))
+#define STACK_SIZE ((webvtt_uint)(self->top - self->stack))
+#define FRAME(i) (self->top - (i))
+#define RECHECK goto _recheck;
+	/**
+	 * More state stack helpers
+	 */
+static WEBVTT_INTERN webvtt_status
+do_push( webvtt_parser self, webvtt_uint state, void *data )
+{
+	if( STACK_SIZE + 1 >= self->stack_alloc )
+	{
+		webvtt_state *stack = (webvtt_state *)webvtt_alloc0( sizeof(webvtt_state) * (self->stack_alloc<<1) ), *tmp;
+		if( !stack )
+		{
+			ERROR(WEBVTT_ALLOCATION_FAILED);
+			return WEBVTT_OUT_OF_MEMORY;
+		}
+		memcpy( stack, self->stack, sizeof(webvtt_state) * self->stack_alloc ); \
+		tmp = self->stack;
+		self->stack = stack;
+		self->top = stack + (self->top - tmp);
+		if( tmp != self->astack )
+		{
+			webvtt_free( tmp );
+		}
+	}
+	++self->top;
+	self->top->state = state;
+	self->top->v.pointer = data;
+	return WEBVTT_SUCCESS;
+}
+#define PUSH(S,V) do { if( do_push(self,(S),(void*)(V)) == WEBVTT_OUT_OF_MEMORY ) return WEBVTT_OUT_OF_MEMORY; } while(0)
+#define POP() \
+do \
+{ \
+	--(self->top); \
+} while(0)
+static WEBVTT_INTERN webvtt_status
+parse_webvtt( webvtt_parser self, const webvtt_byte *buffer, webvtt_uint *ppos, webvtt_uint len, webvtt_uint *mode, int finish )
+{
+	webvtt_status status = WEBVTT_SUCCESS;
+	webvtt_token token;
+	webvtt_uint pos = *ppos;
+	int settings_delimiter = 0;
+	int settings_whitespace = 0;
+	webvtt_uint settings_whitespace_at;
+	webvtt_uint missing_cuesetting_at;
+
+	while( pos < len )
+	{
+		int skip_error = 0;
+		webvtt_uint last_column = self->column;
+		webvtt_uint last_line = self->line;
+		webvtt_uint last_pos = pos;
+		token = webvtt_lex( self, buffer, &pos, len, finish );
+_recheck:
+		switch( SP->state )
+		{
+		case T_INITIAL:
+			switch( token )
+			{
+			case WEBVTT:
+				PUSH( T_TAG, 0 );
+				break;
+			default:
+				_ERROR(WEBVTT_MALFORMED_TAG);
+			}
+			break;
+		
+		case T_TAG:
+			switch(token)
+			{
+			case WHITESPACE:
+				/**
+				 * Skip comment
+				 */
+				PUSH(T_TAGCOMMENT,0);
+				break;
+			case NEWLINE:
+				/**
+				 * Expect another newline
+				 */
+				POP();
+				SP->state = T_BODY;
+				PUSH(T_EOL,1);
+				break;
+			}
+			break;
+
+		/**
+		 * COMMENT -- Read until EOL, ignore everything else
+		 */
+		case T_TAGCOMMENT:
+			switch(token)
+			{
+			case NEWLINE:
+				FRAME(1)->state = T_BODY;
+				SP->state = T_EOL;
+				SP->v.value = 1;
+				break;
+			default:
+				continue;
+			}
+			break;
+
+		/**
+		 * Count EOLs, POP when finished
+		 */
+		case T_EOL:
+			switch(token)
+			{
+			case NEWLINE:
+				SP->v.value++;
+				break;
+			default:
+				POP();
+				RECHECK
+			}
+			break;
+
+		case T_BODY:
+			/**
+			 * If we're here, we need to read a line
+			 */
+			*mode = M_READ_LINE;	
+			/**
+			 * We read a token before coming here, so lets just unread it.
+			 */
+			pos = last_pos;
+			self->line = last_line;
+			self->column = last_column;
+			self->token_pos = 0;
+			goto _finish;
+			break;
+
+		case T_FROM:
+			/**
+			 * We already know that this line contains '-->', and we're expecting the first TIMESTAMP
+			 */
+			switch(token)
+			{
+			case WHITESPACE:
+				if( !skip_error )
+				{
+					ERROR_AT_COLUMN(WEBVTT_UNEXPECTED_WHITESPACE,last_column);
+					skip_error = 1;
+				}
+				break;
+
+			case TIMESTAMP:
+				if( !SP->v.cue )
+				{
+					if(WEBVTT_FAILED(status=webvtt_create_cue( &SP->v.cue )))
+					{
+						if(status == WEBVTT_OUT_OF_MEMORY)
+						{
+							_ERROR(WEBVTT_ALLOCATION_FAILED);
+							return status;
+						}
+					}
+				}
+				if( !parse_timestamp( self, self->token, &SP->v.cue->from ) )
+				{
+					if( BAD_TIMESTAMP(SP->v.cue->from) )
+					{
+						webvtt_release_cue(&SP->v.cue);
+						ERROR_AT_COLUMN(WEBVTT_EXPECTED_TIMESTAMP,last_column);
+						POP();
+						break;
+					}
+					else
+					{
+						ERROR_AT_COLUMN(WEBVTT_MALFORMED_TIMESTAMP,last_column);
+					}
+				}
+				PUSH( T_SEP_LEFT, SP->v.cue );
+				break;
+
+			default:
+				/**
+				 * Some garbage non-timestamp garbage was found.
+				 */
+				webvtt_release_cue( &SP->v.cue );
+				ERROR_AT_COLUMN( WEBVTT_EXPECTED_TIMESTAMP, last_column );
+				*mode = M_SKIP_CUE;
+				POP();
+				goto _finish;
+				break;
+			}
+			break;
+
+		case T_SEP_LEFT:
+			switch(token)
+			{
+			case WHITESPACE:
+				PUSH( T_SEP, SP->v.cue );
+				break;
+
+			case SEPARATOR:
+				_ERROR(WEBVTT_EXPECTED_WHITESPACE);
+				PUSH( T_SEP, SP->v.cue );
+				PUSH( T_SEP_RIGHT, SP->v.cue );
+				break;
+
+			case TIMESTAMP:
+				_ERROR(WEBVTT_MISSING_CUETIME_SEPARATOR);
+				PUSH( T_SEP, SP->v.cue );
+				PUSH( T_SEP_RIGHT, SP->v.cue );
+				PUSH( T_UNTIL, SP->v.cue );
+				goto _until;
+			}
+			break;
+
+		case T_SEP:
+			switch(token)
+			{
+			case WHITESPACE:
+				/**
+				 * safely ignore whitespace
+				 */
+				break;
+			case SEPARATOR:
+				PUSH( T_SEP_RIGHT, SP->v.cue );
+				break;
+			}
+			break;
+
+		case T_SEP_RIGHT:
+			switch(token)
+			{
+			case WHITESPACE:
+				PUSH( T_UNTIL,SP->v.cue );
+				break;
+
+			case TIMESTAMP:
+				_ERROR(WEBVTT_EXPECTED_WHITESPACE);
+				PUSH(T_UNTIL,SP->v.cue);
+				goto _until;
+				break;
+			}
+			break;
+
+		case T_UNTIL:
+			switch(token)
+			{
+			case WHITESPACE:
+				/**
+				 * This whitespace can be safely ignored
+				 */
+				break;
+
+			case TIMESTAMP:
+_until:
+				{
+
+					webvtt_cue cue = (webvtt_cue)SP->v.cue;
+					if( !parse_timestamp( self, self->token, &cue->until ) )
+					{
+						if( BAD_TIMESTAMP(cue->until) )
+						{
+							webvtt_release_cue( &SP->v.cue );
+							ERROR_AT_COLUMN(WEBVTT_EXPECTED_TIMESTAMP,last_column);
+							*mode = M_SKIP_CUE;
+							POP(); /* T_UNTIL */
+							POP(); /* T_SEP_RIGHT */
+							POP(); /* T_SEP */
+							POP(); /* T_SEP_LEFT */
+							POP(); /* T_FROM */
+							goto _finish;
+						}
+						else
+						{
+							ERROR_AT_COLUMN(WEBVTT_MALFORMED_TIMESTAMP,last_column);
+						}
+					}
+					POP(); /* T_UNTIL */
+					POP(); /* T_SEP_RIGHT */
+					POP(); /* T_SEP */
+					POP(); /* T_SEP_LEFT */
+					POP(); /* T_FROM */
+					PUSH( T_PRECUESETTING, cue );
+				}
+				break;
+
+			case VERTICAL:
+			case LINE:
+			case ALIGN:
+			case SIZE:
+			case POSITION:
+			case COLON:
+				/**
+				 * A cuesetting identifier was detected, but isn't expected yet. report as an error.
+				 */
+				webvtt_release_cue( &SP->v.cue );
+				ERROR_AT_COLUMN( WEBVTT_EXPECTED_TIMESTAMP,last_column);
+				POP(); /* T_UNTIL */
+				POP(); /* T_SEP_RIGHT */
+				POP(); /* T_SEP */
+				POP(); /* T_SEP_LEFT */
+				POP(); /* T_FROM */
+				*mode = M_SKIP_CUE;
+				goto _finish;
+				break;
+
+			default:
+				/**
+				 * Some garbage non-timestamp garbage was found.
+				 */
+				webvtt_release_cue( &SP->v.cue );
+				ERROR_AT_COLUMN( WEBVTT_EXPECTED_TIMESTAMP,last_column);
+				POP(); /* T_UNTIL */
+				POP(); /* T_SEP_RIGHT */
+				POP(); /* T_SEP */
+				POP(); /* T_SEP_LEFT */
+				POP(); /* T_FROM */
+				*mode = M_SKIP_CUE;
+				goto _finish;
+				break;
+			}
+			break;
+
+		case T_SKIP_SETTING:
+			switch(token)
+			{
+				case WHITESPACE:
+				case VERTICAL:
+				case ALIGN:
+				case LINE:
+				case SIZE:
+				case POSITION:
+					POP();
+					skip_error = 1;
+					goto _precuesetting;
+
+				case BADTOKEN:
+					++pos;
+					++self->column;
+					/**
+					 * Ignore further garbage without reporting errors.
+					 */
+					break;
+
+				default:
+					break;
+			}
+			break;
+
+		case T_PRECUESETTING:
+_precuesetting:
+			switch(token)
+			{
+			case WHITESPACE:
+				PUSH(T_CUESETTING,SP->v.cue);
+				break;
+			case NEWLINE:
+				*mode = M_CUETEXT;
+				goto _finish;
+
+			case VERTICAL:
+			case ALIGN:
+			case LINE:
+			case SIZE:
+			case POSITION:
+				/**
+				 * The error actually occurs at the column PRIOR to the token, which is where the whitespace should be.
+				 * Because of this, we need to use a special error macro which will let us specify the column.
+				 */
+				ERROR_AT_COLUMN(WEBVTT_EXPECTED_WHITESPACE,last_column);
+				PUSH(T_CUESETTING,SP->v.cue);
+				PUSH(T_CUESETTING_DELIMITER,token);
+				break;
+
+			default:
+				_ERROR(WEBVTT_INVALID_CUESETTING_DELIMITER);
+				PUSH(T_SKIP_SETTING,0);
+				goto _recheck;
+			}
+			break;
+
+		case T_CUESETTING:
+			switch(token)
+			{
+			case WHITESPACE:
+				break; /* Ignore whitespace */
+
+			case NEWLINE: /* We're finished with cue-settings her, we're expecting cuetext now. */
+				POP();
+				*mode = M_CUETEXT;
+				goto _finish;
+				break;
+
+			case BADTOKEN: /* We got some garbage, an invalid keyword. */
+				ERROR_AT_COLUMN(WEBVTT_INVALID_CUESETTING,last_column);
+				PUSH(T_SKIP_SETTING, 0);
+				goto _recheck;
+				break;
+
+			case COLON: /* We got a colon without a cuesetting keyword. Mark that this will be a future error. */
+				missing_cuesetting_at = last_column;
+				PUSH(T_CUESETTING_DELIMITER,0);
+				RECHECK
+				break;
+
+			case VERTICAL:
+			case ALIGN:
+			case LINE:
+			case SIZE:
+			case POSITION:
+				PUSH(T_CUESETTING_DELIMITER,token);
+				break;
+			}
+			break;
+
+		case T_CUESETTING_DELIMITER:
+		{
+			switch(token)
+			{
+			case COLON:
+				settings_delimiter = 1;
+				SP->state = T_CUESETTING_VALUE;
+				break;
+			case WHITESPACE:
+				settings_whitespace = 1;
+				settings_whitespace_at = last_column;
+				/**
+				 * Error recovery: just attempt to continue parsing
+				 */
+				break;
+
+			case INTEGER:
+			case PERCENTAGE:
+			case LR:
+			case RL:
+			case START:
+			case MIDDLE:
+			case END:
+			case LEFT:
+			case RIGHT:
+				if( !skip_error && !settings_delimiter )
+				{
+					settings_delimiter = !settings_whitespace;
+					ERROR_AT_COLUMN(WEBVTT_MISSING_CUESETTING_DELIMITER,settings_whitespace ? settings_whitespace_at : last_column);
+				}
+				SP->state = T_CUESETTING_VALUE;
+				RECHECK
+				break;
+
+			default:
+				if(!skip_error)
+				{
+					settings_delimiter = 1;
+					ERROR_AT_COLUMN(WEBVTT_INVALID_CUESETTING_DELIMITER,last_column);
+				}
+				/**
+				 * Error recovery: skip this cuesetting
+				 */
+				PUSH(T_SKIP_SETTING,0);
+				break;
+			}
+			break;
+		}
+		
+
+		case T_CUESETTING_VALUE:
+			if( settings_whitespace && settings_delimiter && !skip_error)
+			{
+				skip_error = 1;
+				ERROR_AT_COLUMN(WEBVTT_UNEXPECTED_WHITESPACE,settings_whitespace_at);
+			}
+			settings_whitespace = 0;
+			settings_delimiter = 0;
+			
+			switch(token)
+			{
+			case WHITESPACE:
+				ERROR_AT_COLUMN(WEBVTT_UNEXPECTED_WHITESPACE,last_column);
+				/**
+				 * Error recovery: just attempt to continue parsing
+				 */
+				break;
+			default:
+				{
+					webvtt_cue cue = FRAME(1)->v.cue;
+					switch( SP->v.value )
+					{
+					case 0:
+						/**
+						 * We didn't get a cuesetting key
+						 */
+						switch(token)
+						{
+						case RL: case LR: case INTEGER: case PERCENTAGE: case START: case MIDDLE: case END: case LEFT: case RIGHT:
+							ERROR_AT_COLUMN(WEBVTT_MISSING_CUESETTING_KEYWORD,missing_cuesetting_at);
+							break;
+						default:
+							ERROR_AT_COLUMN(WEBVTT_INVALID_CUESETTING,missing_cuesetting_at);
+							break;
+						}
+						/**
+						 * In either case, we need to return to normal-ness
+						 */
+						POP(); /* Back to T_CUESETTING */
+						POP(); /* Back to T_PRECUESETTING */
+						break;
+
+					case VERTICAL:
+						switch(token)
+						{
+						case LR:
+						case RL:
+							if( self->flags & READ_VERTICAL )
+							{
+								_ERROR(WEBVTT_VERTICAL_ALREADY_SET);
+								/**
+								 * Recovery: replace vertical setting with new one.
+								 */
+							}
+							self->flags |= READ_VERTICAL;
+							cue->settings.vertical = token == LR ? WEBVTT_VERTICAL_LR : WEBVTT_VERTICAL_RL;
+							break;
+						default:
+							/**
+								* Bad value. Recovery: move to next cuesetting
+								*/
+							_ERROR(WEBVTT_VERTICAL_BAD_VALUE);
+							find_next_whitespace(buffer,&pos,len);
+							break;
+						}
+						POP(); /* Back to T_CUESETTING */
+						POP(); /* Back to T_PRECUESETTING */
+						break;
+
+					case POSITION:
+						switch(token)
+						{
+						case PERCENTAGE:
+							if( self->flags & READ_POSITION )
+							{
+								_ERROR(WEBVTT_VERTICAL_ALREADY_SET);
+								/**
+								 * Recovery: replace vertical setting with new one.
+								 */
+							}
+							self->flags |= READ_POSITION;
+							{
+								const webvtt_byte *bytes = self->token;
+								webvtt_int64 v = parse_int(&bytes,0);
+								if( v < 0 )
+								{
+									ERROR_AT_COLUMN(WEBVTT_POSITION_BAD_VALUE,last_column);
+									/**
+									 * Value cannot be negative
+									 */
+								}
+								cue->settings.position = (webvtt_uint)v;
+							}
+							break;
+						default:
+							/**
+							 * Bad value. Recovery: move to next cuesetting
+							 */
+							ERROR_AT_COLUMN(WEBVTT_POSITION_BAD_VALUE,last_column);
+							find_next_whitespace(buffer,&pos,len);
+							break;
+						}
+						POP(); /* Back to T_CUESETTING */
+						POP(); /* Back to T_PRECUESETTING */
+						break;
+
+					case ALIGN:
+						switch(token)
+						{
+						case START:
+						case MIDDLE:
+						case END:
+						case LEFT:
+						case RIGHT:
+							if( self->flags & READ_ALIGN )
+							{
+								_ERROR(WEBVTT_ALIGN_ALREADY_SET);
+								/**
+								 * Recovery: replace vertical setting with new one.
+								 */
+							}
+							self->flags |= READ_ALIGN;
+							switch(token)
+							{
+								case START: cue->settings.align = WEBVTT_ALIGN_START; break;
+								case MIDDLE: cue->settings.align = WEBVTT_ALIGN_MIDDLE; break;
+								case END: cue->settings.align = WEBVTT_ALIGN_END; break;
+								case LEFT: cue->settings.align = WEBVTT_ALIGN_LEFT; break;
+								case RIGHT: cue->settings.align = WEBVTT_ALIGN_RIGHT; break;
+							}
+							break;
+
+						default:
+							/**
+							 * Bad value. Recovery: move to next cuesetting
+							 */
+							ERROR_AT_COLUMN(WEBVTT_ALIGN_BAD_VALUE,last_column);
+							find_next_whitespace(buffer,&pos,len);
+							break;
+						}
+						POP(); /* Back to T_CUESETTING */
+						POP(); /* Back to T_PRECUESETTING */
+						break;
+
+					case LINE:
+						switch(token)
+						{
+						case INTEGER:
+						case PERCENTAGE:
+							if( self->flags & READ_LINE )
+							{
+								ERROR(WEBVTT_LINE_ALREADY_SET);
+								/**
+								 * Recovery: replace vertical setting with new one.
+								 */
+							}
+							self->flags |= READ_LINE;
+							{
+								const webvtt_byte *bytes = self->token;
+								if( token == INTEGER )
+								{
+									cue->settings.line.no = cue->settings.position = (webvtt_int)parse_int(&bytes,0);
+									cue->settings.line_is_relative = 0;
+								}
+								else
+								{
+									webvtt_int64 v = parse_int(&bytes,0);
+									if( v < 0 )
+									{
+										_ERROR(WEBVTT_LINE_BAD_VALUE);
+										/**
+										 * This value cannot be negative,
+										 * but I'm not sure there's really a good reason to die over it
+										 */
+									}
+									cue->settings.line.relative_position = (webvtt_uint)v;
+									cue->settings.line_is_relative = 1;
+								}
+							}
+							break;
+						default:
+							/**
+							 * Bad value. Recovery: move to next cuesetting
+							 */
+							_ERROR(WEBVTT_LINE_BAD_VALUE);
+							find_next_whitespace(buffer,&pos,len);
+							break;
+						}
+						POP(); /* Back to T_CUESETTING */
+						POP(); /* Back to T_PRECUESETTING */
+						break;
+
+					case SIZE:
+						switch(token)
+						{
+						case PERCENTAGE:
+							if( self->flags & READ_SIZE )
+							{
+								_ERROR(WEBVTT_SIZE_ALREADY_SET);
+								/**
+								 * Recovery: replace vertical setting with new one.
+								 */
+							}
+							self->flags |= READ_SIZE;
+							{
+								const webvtt_byte *bytes = self->token;
+								webvtt_int64 v = parse_int(&bytes,0);
+								if( v < 0 )
+								{
+									if( !skip_error )
+									{
+										ERROR_AT_COLUMN(WEBVTT_SIZE_BAD_VALUE,last_column);
+										skip_error = 1;
+									}
+									/**
+									 * This value cannot be negative,
+									 * but I'm not sure there's really a good reason to die over it
+									 */
+								}
+								cue->settings.size = (webvtt_uint)v;
+							}
+							break;
+						default:
+							/**
+							 * Bad value. Recovery: move to next cuesetting
+							 */
+							if( !skip_error )
+							{
+								ERROR_AT_COLUMN(WEBVTT_SIZE_BAD_VALUE,last_column);
+								skip_error = 1;
+							}
+							find_next_whitespace(buffer,&pos,len);
+							break;
+						}
+						POP(); /* Back to T_CUESETTING */
+						POP(); /* Back to T_PRECUESETTING */
+						break;
+					}
+					break;
+				}
+			}
+			break; /* T_CUESETTING_VALUE */
+		}
+
+		/**
+		 * reset token pos
+		 */
+		self->token_pos = 0;
+	}
+
+
+_finish:
+	if( finish )
+	{
+		if( SP->state == T_SKIP_SETTING )
+		{
+			int broken = 1;
+			POP(); /* T_SKIP_SETTING */
+			while(broken)
+			{
+				switch(SP->state)
+				{
+					case T_CUESETTING_VALUE:
+					case T_CUESETTING_DELIMITER:
+					case T_CUESETTING:
+						POP();
+					default:
+						broken = 0;
+						break;
+				}
+			}
+		}
+		else if( SP->state == T_CUESETTING_VALUE )
+		{
+			int err = 0xFFFFFFFF;
+			switch(SP->v.value)
+			{
+			case VERTICAL: err = WEBVTT_VERTICAL_BAD_VALUE; break;
+			case ALIGN: err = WEBVTT_ALIGN_BAD_VALUE; break;
+			case POSITION: err = WEBVTT_POSITION_BAD_VALUE; break;
+			case SIZE: err = WEBVTT_SIZE_BAD_VALUE; break;
+			case LINE: err = WEBVTT_LINE_BAD_VALUE; break;
+			}
+			if( err != 0xFFFFFFFF )
+			{
+				ERROR(err);
+				POP();
+				POP();
+			}
+		}
+		/**
+		 * If we're finished, we shouldn't be coming back to this buffer, so make sure that pos = len
+		 */
+		pos = len;
+	}
+	*ppos = pos;
+	return status;
+}
+
+
+static WEBVTT_INTERN webvtt_status
+parse_cuetext( webvtt_parser self, const webvtt_byte *buffer, webvtt_uint *ppos, webvtt_uint len, webvtt_uint *mode, int finish )
+{
+	/**
+	 * TODO:
+	 * Unify cuetext parsing
+	 */
+	return WEBVTT_PARSE_ERROR;
+}
+
+static WEBVTT_INTERN webvtt_status
+read_cuetext( webvtt_parser self, const webvtt_byte *b, webvtt_uint *ppos, webvtt_uint len, webvtt_uint *mode, webvtt_bool finish )
+{
+	webvtt_status status = WEBVTT_SUCCESS;
+	webvtt_uint pos = *ppos;
+	int finished = 0;
+	do
+	{
+		int v;
+		if( ( v = webvtt_bytearray_getline( &self->line_buffer, b, &pos, len, &self->truncate ) ) )
+		{
+			if( v < 0 )
+			{
+				status = WEBVTT_OUT_OF_MEMORY;
+				goto _finish;
+			}
+			
+			if( self->line_buffer->text[ self->line_buffer->length - 1 ] == ASCII_LF )
+			{
+				/**
+				 * finished
+				 */
+				finished = 1;
+			}
+			webvtt_bytearray_putc( &self->line_buffer, ASCII_LF );
+
+			if( b[pos] == ASCII_CR )
+			{
+				if( len - pos >= 2 && b[pos+1] == ASCII_LF )
+				{
+					++pos;
+				}
+				++pos;
+			}
+			else
+			{
+				++pos;
+			}
+		}
+	} while( pos < len && !finished );
+_finish:
+	*ppos = pos;
+	return status;
+}
+
 WEBVTT_EXPORT webvtt_status
 webvtt_parse_chunk( webvtt_parser self, const void *buffer, webvtt_uint len )
 {
-	webvtt_token token;
+	webvtt_status status;
 	webvtt_uint pos = 0;
+	const webvtt_byte *b = (const webvtt_byte *)buffer;
+
 	while( pos < len )
 	{
 		switch( self->mode )
 		{
-#if 1 /* M_BUFFER_TOKENS */
-			case M_BUFFER_TOKENS:
+		case M_WEBVTT:
+			if( WEBVTT_FAILED(status = parse_webvtt( self, b, &pos, len, &self->mode, 0 )) )
 			{
-				token = webvtt_lex( self, (webvtt_byte *)buffer, &pos, len, 0 );
-				if(token == UNFINISHED || token == BADTOKEN )
+				return status;
+			}
+			break;
+
+		case M_CUETEXT:
+#if 0
+			if( WEBVTT_FAILED(status = parse_cuetext( self, b, &pos, len, &self->mode, 0 )) )
+			{
+				return status;
+			}
+#else
+			/**
+			 * read in cuetext
+			 */
+			if( WEBVTT_FAILED(status = read_cuetext( self, b, &pos, len, &self->mode, 0 )) )
+			{
+				return status;
+			}
+#endif
+			finish_cue( self, SP->v.cue );
+			webvtt_delete_bytearray( &self->line_buffer );
+			self->mode = M_WEBVTT;
+			break;
+
+		case M_SKIP_CUE:
+			if( WEBVTT_FAILED(status = read_cuetext( self, b, &pos, len, &self->mode, 0 )) )
+			{
+				return status;
+			}
+			webvtt_delete_bytearray( &self->line_buffer );
+			self->mode = M_WEBVTT;
+			break;
+
+		case M_READ_LINE:
+			{
+				/**
+				 * Read in a line of text into the line-buffer,
+				 * we will and depending on our state, do something with it.
+				 */
+				int ret;
+				if( ( ret = webvtt_bytearray_getline( &self->line_buffer, b, &pos, len, &self->truncate ) ) )
 				{
-					switch( self->state )
+					static const webvtt_byte separator[] = { ASCII_DASH, ASCII_DASH, ASCII_GT };
+					if( ret < 0 )
 					{
-					case T_CUEEOL:
-					case T_PAYLOADEOL:
-						self->state = self->state == T_CUEEOL ? T_CUEID : T_PAYLOAD;
-						pos -= self->token_pos;
-						self->mode = M_READ_LINE;
-						continue;
+						ERROR(WEBVTT_ALLOCATION_FAILED);
+						return WEBVTT_OUT_OF_MEMORY;
 					}
-				}
-				if( token == UNFINISHED )
-				{
-					return WEBVTT_UNFINISHED;
-				}
-				else
-				{
-					BEGIN_DFA
-						BEGIN_STATE(T_INITIAL)
-							/* Transition from T_INITIAL -> T_TAG if we find 'WEBVTT'. Otherwise, there's been an error. */
-							IF_TRANSITION( WEBVTT, T_TAG )
-								self->mode = M_READ_LINE;
-							ELSE
-								/* indicate that a valid tag has not been provided and this is not a valid WebVTT
-									document */
-								ERROR(WEBVTT_MALFORMED_TAG);
-							ENDIF
-						END_STATE
-
-						BEGIN_STATE(T_TAGEOL)
-							IF_TRANSITION(NEWLINE,T_CUEEOL)
-							ELSE
-								ERROR(WEBVTT_EXPECTED_EOL);
-								pos -= (self->token_pos-1);
-								continue;
-							ENDIF
-						END_STATE
-
-						BEGIN_STATE(T_CUEID)
-							IF_TRANSITION(NEWLINE,T_STARTTIME)
-								self->mode = M_READ_LINE;
-							ELSE
-							ENDIF
-						END_STATE
-
-						BEGIN_STATE(T_TAG)
-							IF_TRANSITION(NEWLINE,T_TAGEOL)
-							ELSE
-							ENDIF
-						END_STATE
-
-						BEGIN_STATE(T_PREPAYLOAD)
-							IF_TRANSITION(NEWLINE,T_PAYLOAD)
-								self->mode = M_READ_LINE;
-							ELSE
-								ERROR(WEBVTT_EXPECTED_EOL);
-							ENDIF
-						END_STATE
-
-						BEGIN_STATE(T_PAYLOADEOL)
-							IF_TRANSITION(NEWLINE,T_CUEEOL)
+					switch( self->top->state )
+					{
+					case T_BODY:
+						/**
+						 * If there's a cuetime 'separator' found in the string, we need to go directly to T_FROM
+						 */
+						if( find_bytes( self->line_buffer->text, self->line_buffer->length, separator, sizeof(separator) ) )
+						{
+							/**
+							 * This should be webvtt-cuetimes, so we need to activate cuetime parsing mode.
+							 */
+							webvtt_uint linepos = 0;
+							PUSH(T_FROM,0);
+							if( WEBVTT_FAILED(status = parse_webvtt( self, self->line_buffer->text, &linepos, self->line_buffer->length, 
+								&self->mode, 1 )) )
 							{
-								/* We've had multiple EOLs, so we're done with this cue. Ship it to the application */
-								if( self->line_buffer )
+								return status;
+							}
+							if( self->mode != M_SKIP_CUE )
+							{
+								self->mode =  M_WEBVTT;
+							}
+						}
+						else
+						{
+							
+							/**
+							 * get the first token from the line. If it's NOTE,
+							 * then read out a comment.
+							 */
+							webvtt_uint linepos = 0;
+							webvtt_uint line_tok = webvtt_lex( self, self->line_buffer->text, &linepos, self->line_buffer->length, 0 );
+							if( line_tok == NOTE )
+							{
+								PUSH(T_COMMENT,0);
+								continue;
+							}
+							else
+							{
+								/**
+								 * If it's not a NOTE, it should be considered a cue id
+								 */
+								webvtt_cue cue = 0;
+								if(WEBVTT_FAILED(status = webvtt_create_cue(&cue)))
 								{
-									webvtt_string utf16;
-									if( webvtt_create_string( self->line_buffer->length, &utf16 ) == WEBVTT_OUT_OF_MEMORY )
+									if( status == WEBVTT_OUT_OF_MEMORY )
 									{
+										/**
+										 * TODO: This will report an incorrect line/column number, fix this.
+										 */
 										ERROR(WEBVTT_ALLOCATION_FAILED);
 									}
-									else
-									{
-										webvtt_uint pos = 0;
-										webvtt_string_append_utf8( &utf16, self->line_buffer->text, &pos, self->line_buffer->length, 0 );
-									}
-									webvtt_delete_bytearray( &self->line_buffer );
-									self->line_pos = 0;
-									self->cue->payload = utf16;
+									return status;
 								}
-								finish_cue( self );
+								PUSH(T_FROM,cue);
+								self->mode = M_WEBVTT;
 							}
-							ELSE
-								/* We didn't get a newline, so backup and switch to M_READ_LINE so we can add it to the line buffer */
-								self->state = T_PAYLOAD;
-								pos -= self->token_pos;
-								self->mode = M_READ_LINE;
-							ENDIF
-						END_STATE
-						BEGIN_STATE(T_PAYLOAD)
-							IF_TRANSITION(NEWLINE,T_PAYLOADEOL)
-							ELSE
-								/**
-								 * ... well what else could it be?
-								 */
-								ERROR(WEBVTT_EXPECTED_EOL);
-							ENDIF
-						END_STATE
-
-						BEGIN_STATE(T_CUEEOL)
-							IF_TRANSITION(NEWLINE,T_CUEEOL)
-							ELSE
-								self->mode = M_READ_LINE;
-								pos -= self->token_pos;
-								self->column = 0;
-								self->state = T_CUEID;
-							ENDIF
-						END_STATE
-					END_DFA
-					self->token[ self->token_pos = 0 ] = 0;
+						}
+						break;
+					}
+					webvtt_delete_bytearray( &self->line_buffer );
 				}
 			}
 			break;
-#endif
-#if 1 /* M_LINE_TOKENS */
-			case M_LINE_TOKENS:
-			{
-				webvtt_uint old_pos = self->line_pos;
-				
-				if( old_pos == self->line_buffer->length )
-				{
-					if( self->finish )
-					{
-						/**
-						 * As a hack for webvtt_finish_parsing(), we know that we aren't going to
-						 * get any valid token here, and we assume that there is no further data to look at in the future.
-						 * Ergo, simply return WEBVTT_SUCCESS;
-						 * so that webvtt_finish_parsing() may hand over whatever is in the cue
-						 */
-						return WEBVTT_SUCCESS;
-					}
-					else if (self->state == T_PRESETTING || self->state == T_SETTING )
-					{
-						self->state = T_PREPAYLOAD;
-						self->mode = M_BUFFER_TOKENS;
-						webvtt_delete_bytearray(&self->line_buffer);
-						self->line_pos = 0;
-						continue;
-					}
-				}
-
-				token = webvtt_lex( self, (webvtt_byte *)self->line_buffer->text, &self->line_pos, self->line_buffer->length, 1 );
-			
-				BEGIN_DFA
-					BEGIN_STATE(T_STARTTIME)
-						if( token == TIMESTAMP )
-						{
-							if( !parse_timestamp(self, self->token, &self->cue->from ) )
-							{
-								ERROR(WEBVTT_MALFORMED_TIMESTAMP);
-							}
-							self->state = T_SEP1;
-						}
-						else
-						{
-							ERROR(WEBVTT_EXPECTED_TIMESTAMP);
-						}
-					END_STATE
-
-					BEGIN_STATE(T_SEP1)
-						IF_TRANSITION(WHITESPACE,T_SEP2)
-						ELSE
-							ERROR(WEBVTT_EXPECTED_WHITESPACE);
-							IF_TRANSITION(SEPARATOR,T_SEP3)
-							ENDIF
-						ENDIF
-					END_STATE
-
-					BEGIN_STATE(T_SEP2)
-						IF_TRANSITION(SEPARATOR,T_SEP3)
-						ELSE
-							ERROR(WEBVTT_MISSING_CUETIME_SEPARATOR);
-							if( token == TIMESTAMP )
-							{
-								if( !parse_timestamp( self, self->token, &self->cue->until ) )
-								{
-									ERROR(WEBVTT_MALFORMED_TIMESTAMP);
-								}
-								if( self->cue->until <= self->cue->from )
-								{
-									ERROR(WEBVTT_INVALID_ENDTIME);
-								}
-								self->state = T_PRESETTING;
-							}
-						ENDIF
-					END_STATE
-
-					BEGIN_STATE(T_SEP3)
-						IF_TRANSITION(WHITESPACE,T_ENDTIME)
-						ELSE
-							ERROR(WEBVTT_EXPECTED_WHITESPACE);
-							if( token == TIMESTAMP )
-							{
-								if( !parse_timestamp(self, self->token, &self->cue->until ) )
-								{
-									ERROR(WEBVTT_MALFORMED_TIMESTAMP);
-								}
-								if( self->cue->until <= self->cue->from )
-								{
-									ERROR(WEBVTT_INVALID_ENDTIME);
-								}
-								self->state = T_PRESETTING;
-							}
-						ENDIF
-					END_STATE
-
-					BEGIN_STATE(T_ENDTIME)
-						if( token == TIMESTAMP )
-						{
-							if( !parse_timestamp( self, self->token, &self->cue->until ) )
-							{
-								ERROR(WEBVTT_MALFORMED_TIMESTAMP);
-							}
-							if( self->cue->until <= self->cue->from )
-							{
-								ERROR(WEBVTT_INVALID_ENDTIME);
-							}
-							self->state = T_PRESETTING;
-						}
-						else
-						{
-							ERROR(WEBVTT_EXPECTED_TIMESTAMP);
-						}
-					END_STATE
-
-					BEGIN_STATE(T_PRESETTING)
-						IF_TRANSITION(WHITESPACE,T_SETTING)
-						ELSE
-							ERROR(WEBVTT_EXPECTED_WHITESPACE);
-						ENDIF
-					END_STATE
-
-					BEGIN_STATE(T_SETTING)
-						IF_TRANSITION(VERTICAL,T_VERTICAL)
-						ELIF_TRANSITION(POSITION,T_POSITION)
-						ELIF_TRANSITION(LINE,T_LINE)
-						ELIF_TRANSITION(SIZE,T_SIZE)
-						ELIF_TRANSITION(ALIGN,T_ALIGN)
-						ELIF_TRANSITION(NEWLINE,T_PAYLOAD)
-							webvtt_delete_bytearray(&self->line_buffer);
-							self->mode = M_READ_LINE;
-						ELSE
-							ERROR(WEBVTT_INVALID_CUESETTING);
-						ENDIF
-					END_STATE
-
-					BEGIN_STATE(T_VERTICAL)
-						if( token == RL || token == LR )
-						{
-							if( self->flags & READ_VERTICAL )
-							{
-								ERROR(WEBVTT_VERTICAL_ALREADY_SET);
-							}
-							self->flags |= READ_VERTICAL;
-							self->cue->settings.vertical = token == RL ? WEBVTT_VERTICAL_RL : WEBVTT_VERTICAL_LR;
-							self->state = T_PRESETTING;
-						}
-						else
-						{
-							ERROR(WEBVTT_VERTICAL_BAD_VALUE);
-						}
-					END_STATE
-
-					BEGIN_STATE(T_POSITION)
-						if( token == PERCENTAGE )
-						{
-							const webvtt_byte *b = self->token;
-							webvtt_int64 value;
-							int digits;
-							if( self->flags & READ_POSITION )
-							{
-								ERROR(WEBVTT_POSITION_ALREADY_SET);
-							}
-
-							value = parse_int( &b, &digits );
-							if( digits == 0 )
-							{
-								ERROR(WEBVTT_POSITION_BAD_VALUE);
-							}
-
-							self->flags |= READ_POSITION;
-							self->cue->settings.position = (webvtt_uint)value;
-							self->state = T_PRESETTING;
-						}
-						else
-						{
-							ERROR(WEBVTT_POSITION_BAD_VALUE);
-						}
-					END_STATE
-
-					BEGIN_STATE(T_SIZE)
-						if( token == PERCENTAGE )
-						{
-							const webvtt_byte *b = self->token;
-							webvtt_int64 value;
-							int digits;
-
-							if( self->flags & READ_SIZE )
-							{
-								ERROR(WEBVTT_SIZE_ALREADY_SET);
-							}
-								
-							value = parse_int( &b, &digits );
-							if( digits == 0 )
-							{
-								ERROR(WEBVTT_SIZE_BAD_VALUE);
-							}
-							self->flags |= READ_SIZE;
-
-							self->cue->settings.size = (webvtt_uint)value;
-							self->state = T_PRESETTING;
-						}
-						else
-						{
-							ERROR(WEBVTT_SIZE_BAD_VALUE);
-						}
-					END_STATE
-
-					BEGIN_STATE(T_LINE)
-						if( token == INTEGER || token == PERCENTAGE )
-						{
-							const webvtt_byte *b = self->token;
-							webvtt_int64 value;
-							int digits;
-
-							if( self->flags & READ_LINE )
-							{
-								ERROR(WEBVTT_LINE_ALREADY_SET);
-							}
-								
-							value = parse_int( &b, &digits );
-							if( digits == 0 )
-							{
-								ERROR(WEBVTT_LINE_BAD_VALUE);
-							}
-							if( token == PERCENTAGE )
-							{
-								if( value < 0 )
-								{
-									ERROR(WEBVTT_LINE_BAD_VALUE);
-								}
-								else
-								{
-									self->cue->settings.line_is_relative = 1;
-									self->cue->settings.line.relative_position = (webvtt_uint)value;
-								}
-								self->flags |= READ_LINE;
-							}
-							else
-							{
-								self->cue->settings.line_is_relative = 0;
-								self->cue->settings.line.no = (webvtt_int)value;
-								self->flags |= READ_LINE;
-							}
-							self->state = T_PRESETTING;
-						}
-						else
-						{
-							ERROR(WEBVTT_LINE_BAD_VALUE);
-						}
-					END_STATE
-
-					BEGIN_STATE(T_ALIGN)
-						if( token == START || token == MIDDLE || token == END )
-						{
-							if( self->flags & READ_ALIGN )
-							{
-								ERROR(WEBVTT_ALIGN_ALREADY_SET);
-							}
-							
-							if( token == START )
-							{
-								self->cue->settings.align = WEBVTT_ALIGN_START;
-							}
-							else if( token == MIDDLE )
-							{
-								self->cue->settings.align = WEBVTT_ALIGN_MIDDLE;
-							}
-							else
-							{
-								self->cue->settings.align = WEBVTT_ALIGN_END;
-							}
-							self->state = T_PRESETTING;
-						}
-						else
-						{
-							ERROR(WEBVTT_ALIGN_BAD_VALUE);
-						}
-					END_STATE
-
-				END_DFA
-				self->token[ self->token_pos = 0 ] = 0;
-			}
-			break;
-#endif
-#if 1 /* M_READ_LINE */
-			case M_READ_LINE:
-			{
-				BEGIN_DFA
-					BEGIN_STATE(T_TAG)
-						if( !find_newline( (const webvtt_byte*)buffer, &pos, len ) )
-						{
-							ERROR(WEBVTT_LONG_COMMENT);
-						}
-						else
-						{	/* We found the new line, so return to buffer parsing mode */
-							self->mode = M_BUFFER_TOKENS;
-						}
-					END_STATE
-
-					case T_STARTTIME: /* Looks ugly doesn't it? */
-					BEGIN_STATE(T_CUEID)
-						int stat;
-						if( !self->cue )
-						{
-							if( webvtt_create_cue( (webvtt_cue*)&self->cue ) == WEBVTT_OUT_OF_MEMORY )
-							{
-								ERROR(WEBVTT_ALLOCATION_FAILED);
-							}
-							self->flags = 0;
-						}
-						if( !self->line_buffer )
-						{
-							if( webvtt_create_bytearray( 0x80, &self->line_buffer ) != WEBVTT_SUCCESS )
-							{
-								ERROR(WEBVTT_ALLOCATION_FAILED);
-							}
-							self->truncate = 0;
-							self->line_pos = 0;
-						}
-						if( (stat = webvtt_bytearray_getline( &self->line_buffer, (const webvtt_byte*)buffer,
-							&pos, len, self->state == T_CUEID ? &self->truncate : 0 )) < 0 )
-						{
-							/**
-							 * Allocation failed, so...
-							 */
-							ERROR(WEBVTT_ALLOCATION_FAILED);
-						}
-						if( self->truncate )
-						{
-							/**
-							 * Let the application decide if we should give up now.
-							 */
-							ERROR(WEBVTT_ID_TRUNCATED);
-						}
-
-						if( stat )
-						{
-							if( self->state == T_STARTTIME && self->line_buffer->length == 0 )
-							{
-								/**
-								 * We should have a start time, but... We don't.
-								 */
-								webvtt_delete_bytearray( &self->line_buffer );
-								ERROR(WEBVTT_CUE_INCOMPLETE);
-								self->mode = M_BUFFER_TOKENS;
-								self->state = T_CUEEOL;
-								continue;
-							}
-
-							if(  find_bytes( (const webvtt_byte *)self->line_buffer->text, self->line_buffer->length, (const webvtt_byte *)"-->", 3 ) )
-							{
-								self->mode = M_LINE_TOKENS;
-								self->state = T_STARTTIME;
-							}
-							else
-							{
-								webvtt_uint pos = 0;
-								webvtt_create_string( self->line_buffer->length, &self->cue->id );
-								if( webvtt_string_append_utf8( &self->cue->id, self->line_buffer->text, &pos, 
-									self->line_buffer->length, 0 ) == WEBVTT_OUT_OF_MEMORY )
-								{
-									ERROR(WEBVTT_ALLOCATION_FAILED);
-								}
-								webvtt_delete_bytearray(&self->line_buffer);
-								self->mode = M_BUFFER_TOKENS;
-							}
-						}
-
-					END_STATE
-					/**
-					 * Save the payload:
-					 *
-					 * 10/25/2012: http://dev.w3.org/html5/webvtt/#webvtt-cue-text
-					 * WebVTT cue text consists of zero or more WebVTT cue components, in any order, each optionally separated from the next by a WebVTT line terminator.
-					 *
-					 * We need to read line into our byte array, and continue doing so for as long as there is not 2 or more newline character sequences.
-					 */
-					BEGIN_STATE(T_PAYLOAD)
-						int stat;
-						webvtt_uint linepos;
-						if( !self->line_buffer )
-						{
-							if( webvtt_create_bytearray( 0x80, &self->line_buffer ) == WEBVTT_OUT_OF_MEMORY )
-							{
-								ERROR(WEBVTT_ALLOCATION_FAILED);
-							}
-							self->truncate = 0;
-						}
-						linepos = self->line_buffer->length;
-						if( (stat = webvtt_bytearray_getline( &self->line_buffer, (const webvtt_byte*)buffer,
-							&pos, len, 0 )) < 0 )
-						{
-							/**
-							 * Allocation failed, so...
-							 */
-							ERROR(WEBVTT_ALLOCATION_FAILED);
-						}
-						if( linepos == 0 && self->line_buffer->length == 0 )
-						{
-							/* The line was empty, and we thouht we'd have cuetext. So, we can assume we're finished with this cue */
-							self->mode = M_BUFFER_TOKENS;
-							self->state = T_PAYLOADEOL;
-						}
-
-						if( find_bytes( (const webvtt_byte *)self->line_buffer->text + linepos, self->line_buffer->length - linepos, (const webvtt_byte *)"-->", 3 ) )
-						{
-							/* If we read a "-->", this is not a legal cue text line, and a problem has occurred */
-							ERROR(WEBVTT_CUE_CONTAINS_SEPARATOR);
-							if( linepos != 0 )
-							{
-								webvtt_bytearray ba;
-								webvtt_create_bytearray( self->line_buffer->length - linepos, &ba );
-								memcpy( ba->text, self->line_buffer->text + linepos, self->line_buffer->length - linepos );
-								ba->length += (self->line_buffer->length - linepos );
-								ba->text[ ba->length ] = 0;
-								finish_cue( self );
-								self->line_buffer = ba;
-							}
-							if( !self->cue )
-							{
-								if( webvtt_create_cue( (webvtt_cue *)&self->cue ) == WEBVTT_OUT_OF_MEMORY )
-								{
-									ERROR(WEBVTT_ALLOCATION_FAILED);
-								}
-								self->flags = 0;
-							}
-							self->mode = M_LINE_TOKENS;
-							self->state = T_STARTTIME;
-						}
-
-						if( stat )
-						{
-							if( webvtt_bytearray_putc(&self->line_buffer, 0x0A) == WEBVTT_OUT_OF_MEMORY )
-							{
-								ERROR(WEBVTT_ALLOCATION_FAILED);
-							}
-							
-							self->mode = M_BUFFER_TOKENS;
-							self->line_pos = 0;
-						}
-					END_STATE
-				END_DFA
-				self->token[ self->token_pos = 0 ] = 0;
-			}
-			break;
-#endif
 		}
 	}
 
-	if( self->cue )
-	{
-		return WEBVTT_UNFINISHED;
-	}
-
-	if( pos == len || token == UNFINISHED )
-	{
-		return WEBVTT_SUCCESS;
-	}
-	return WEBVTT_PARSE_ERROR;
+	return WEBVTT_SUCCESS;
 }
+
+#undef SP
+#undef AT_BOTTOM
+#undef ON_HEAP
+#undef STACK_SIZE
+#undef FRAME
+#undef PUSH
+#undef POP
 
 /**
  * Get an integer value from a series of digits.
@@ -858,7 +1218,7 @@ parse_int( const webvtt_byte **pb, int *pdigits )
 			result = result * 10 + ( ch - ASCII_0 );
 			++digits;
 		}
-		else if( mul == 1 && digits == 0 && ch == HYPHEN_MINUS )
+		else if( mul == 1 && digits == 0 && ch == ASCII_DASH )
 		{
 			mul = -1;
 		}
@@ -883,8 +1243,10 @@ parse_int( const webvtt_byte **pb, int *pdigits )
 static int
 parse_timestamp( webvtt_parser self, const webvtt_byte *b, webvtt_timestamp *result )
 {
+	webvtt_int64 tmp;
 	int have_hours = 0;
 	int digits;
+	int malformed = 0;
 	webvtt_int64 v[4];
     if (!ASCII_ISDIGIT(*b))
 	{
@@ -901,40 +1263,40 @@ parse_timestamp( webvtt_parser self, const webvtt_byte *b, webvtt_timestamp *res
 	}
 	
 	/* fail if missing colon ':' character */
-	if ( !*b || *b++ != COLON)
+	if ( !*b || *b++ != ASCII_COLON)
 	{
-		goto _malformed;
+		malformed = 1;
 	}
 	
 	/* fail if end of data reached, or byte is not an ASCII digit */
-	if (!ASCII_ISDIGIT(*b))
+	if (!*b || !ASCII_ISDIGIT(*b))
 	{
-		goto _malformed;
+		malformed = 1;
 	}
 	
 	/* get another integer value, fail if digits is not equal to 2 */
     v[1] = parse_int( &b, &digits );
 	if( digits != 2 )
 	{
-		goto _malformed;
+		malformed = 1;
 	}
 	
 	/* if we already know there's an hour component, or if the next byte is a colon ':',
 	   read the next value */
-	if (have_hours || (*b == COLON))
+	if (have_hours || (*b == ASCII_COLON))
 	{
-		if( *b++ != COLON )
+		if( *b++ != ASCII_COLON )
 		{
 			goto _malformed;
 		}
-        if( !ASCII_ISDIGIT(*b) )
+        if( !*b || !ASCII_ISDIGIT(*b) )
 		{
-			goto _malformed;
+			malformed = 1;
 		}
 		v[2] = parse_int( &b, &digits );
 		if( digits != 2 )
 		{
-			goto _malformed;
+			malformed = 1;
 		}
     }
 	else
@@ -947,28 +1309,53 @@ parse_timestamp( webvtt_parser self, const webvtt_byte *b, webvtt_timestamp *res
 
 	/* collect the manditory seconds-frac component. fail if there is no FULL_STOP '.'
 	   or if there is no ascii digit following it */
-	if( *b++ != FULLSTOP || !ASCII_ISDIGIT(*b))
+	if( *b++ != ASCII_PERIOD || !ASCII_ISDIGIT(*b))
 	{
 		goto _malformed;
 	}
 	v[3] = parse_int( &b, &digits );
 	if( digits != 3 )
 	{
-		goto _malformed;
+		malformed = 1;
 	}
 	
 	/* Ensure that minutes and seconds are acceptable values */
-    if( v[1] > 59 || v[2] > 59 )
+	if( v[3] > 999 )
 	{
-		goto _malformed;
+#define MILLIS_PER_SEC (1000)
+		tmp = v[3];
+		v[2] += tmp / MILLIS_PER_SEC;
+		v[3] = tmp % MILLIS_PER_SEC;
+		malformed = 1;
+	}
+	if( v[2] > 59 )
+	{
+#define SEC_PER_MIN (60)
+		tmp = v[2];
+		v[1] += tmp / SEC_PER_MIN;
+		v[2] = tmp % SEC_PER_MIN;
+		malformed = 1;
+	}
+    if( v[1] > 59 )
+	{
+#define MIN_PER_HOUR (60)
+		tmp = v[1];
+		v[0] += tmp / MIN_PER_HOUR;
+		v[1] = tmp % MIN_PER_HOUR;
+		malformed = 1;
 	}
 	
-	*result = (webvtt_timestamp)( v[0] * SECS_PER_HOUR )
-			+ ( v[1] * SECS_PER_MINUTE )
-			+ v[2] 
-			+ ( v[3] * SECS_PER_MILLI );
+	*result = (webvtt_timestamp)( v[0] * MSECS_PER_HOUR )
+			+ ( v[1] * MSECS_PER_MINUTE )
+			+ ( v[2] * MSECS_PER_SECOND )
+			+ ( v[3] );
 	
+	if( malformed )
+	{
+		return 0;
+	}
 	return 1;
 _malformed:
+	*result = 0xFFFFFFFFFFFFFFFF;
 	return 0;
 }

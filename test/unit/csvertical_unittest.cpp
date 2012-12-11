@@ -43,7 +43,7 @@ TEST_F(CueSettingVertical,LR)
  *	2. A U+003A COLON character (:).
  *	3. One of the following strings: "rl", "lr". 
  */
-TEST_F(CueSettingVertical,DISABLED_BadKeyword)
+TEST_F(CueSettingVertical,BadKeyword)
 {
 	loadVtt( "cue-settings/vertical/bad-keyword.vtt", 1 );
 	const Error& err = getError( 0 );
@@ -63,18 +63,15 @@ TEST_F(CueSettingVertical,DISABLED_BadKeyword)
  *	2. A U+003A COLON character (:).
  *	3. One of the following strings: "rl", "lr". 
  */
-TEST_F(CueSettingVertical,DISABLED_BadDelimiter)
+TEST_F(CueSettingVertical,BadDelimiter)
 {
 	loadVtt ( "cue-settings/vertical/bad-delimiter.vtt", 1 );
 	const Error& err = getError( 0 );
 
 	/**
-	 * We're expecting a WEBVTT_INVALID_CUESETTING error on the 25th column of the 3rd line
-	 *
-	 * This should really be changed to a different error, like WEBVTT_EXPECTED_CUESETTING_DELIMITER, or something,
-	 * on the 33rd column of the 3rd line.
+	 * We're expecting a WEBVTT_INVALID_CUESETTING_DELIMITER error on the 33rd column of the 3rd line
 	 */
-	ASSERT_EQ(WEBVTT_INVALID_CUESETTING,err.error());
+	ASSERT_EQ(WEBVTT_INVALID_CUESETTING_DELIMITER,err.error());
 	ASSERT_EQ(3,err.line());
 	ASSERT_EQ(33,err.column());
 }
@@ -87,7 +84,7 @@ TEST_F(CueSettingVertical,DISABLED_BadDelimiter)
  *	2. A U+003A COLON character (:).
  *	3. One of the following strings: "rl", "lr". 
  */
-TEST_F(CueSettingVertical,DISABLED_BadValue)
+TEST_F(CueSettingVertical,BadValue)
 {
 	loadVtt( "cue-settings/vertical/bad-value.vtt", 1 );
 	const Error& err = getError( 0 );
@@ -108,18 +105,15 @@ TEST_F(CueSettingVertical,DISABLED_BadValue)
  *	2. A U+003A COLON character (:).
  *	3. One of the following strings: "rl", "lr". 
  */
-TEST_F(CueSettingVertical,DISABLED_BadWhitespaceBeforeDelimiter)
+TEST_F(CueSettingVertical,BadWhitespaceBeforeDelimiter)
 {
 	loadVtt( "cue-settings/vertical/bad-whitespace-before-delimiter.vtt", 1 );
 	const Error& err = getError( 0 );
 
 	/**
-	 * We're expecting a WEBVTT_INVALID_CUESETTING error on the 25th column of the 3rd line
-	 *
-	 * This should really be changed to a different error, like WEBVTT_UNEXPECTED_WHITESPACE, or something,
-	 * on the 33rd column of the 3rd line
+	 * We're expecting a WEBVTT_UNEXPECTED_WHITESPACE error on the 33rd column of the 3rd line
 	 */
-	ASSERT_EQ( WEBVTT_INVALID_CUESETTING, err.error() );
+	ASSERT_EQ( WEBVTT_UNEXPECTED_WHITESPACE, err.error() );
 	ASSERT_EQ( 3, err.line() );
 	ASSERT_EQ( 33, err.column() );
 }
@@ -132,18 +126,15 @@ TEST_F(CueSettingVertical,DISABLED_BadWhitespaceBeforeDelimiter)
  *	2. A U+003A COLON character (:).
  *	3. One of the following strings: "rl", "lr". 
  */
-TEST_F(CueSettingVertical,DISABLED_BadWhitespaceAfterDelimiter)
+TEST_F(CueSettingVertical,BadWhitespaceAfterDelimiter)
 {
 	loadVtt( "cue-settings/vertical/bad-whitespace-after-delimiter.vtt", 1 );
 	const Error& err = getError( 0 );
 
 	/**
-	 * We're expecting a WEBVTT_VERTICAL_BAD_VALUE error on the 34th column of the 3rd line
-	 *
-	 * This should really be changed to a different error, like WEBVTT_UNEXPECTED_WHITESPACE, or something,
-	 * on the 34th column on the 3rd line
+	 * We're expecting a WEBVTT_UNEXPECTED_WHITESPACE error on the 34th column of the 3rd line
 	 */
-	ASSERT_EQ( WEBVTT_VERTICAL_BAD_VALUE, err.error() );
+	ASSERT_EQ( WEBVTT_UNEXPECTED_WHITESPACE, err.error() );
 	ASSERT_EQ( 3, err.line() );
 	ASSERT_EQ( 34, err.column() );
 }

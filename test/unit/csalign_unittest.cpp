@@ -62,7 +62,7 @@ TEST_F(CueSettingAlign,End)
  * A U+003A COLON character (:).
  * One of the following strings: "start", "middle", "end", "left", "right"
  */
-TEST_F(CueSettingAlign,DISABLED_Left)
+TEST_F(CueSettingAlign,Left)
 {
 	loadVtt( "cue-settings/align/left.vtt", 1 );
 	ASSERT_EQ( 0, errorCount() ) << "This file should contain no errors.";
@@ -79,7 +79,7 @@ TEST_F(CueSettingAlign,DISABLED_Left)
  * A U+003A COLON character (:).
  * One of the following strings: "start", "middle", "end", "left", "right"
  */
-TEST_F(CueSettingAlign,DISABLED_Right)
+TEST_F(CueSettingAlign,Right)
 {
 	loadVtt( "cue-settings/align/right.vtt", 1 );
 	ASSERT_EQ( 0, errorCount() ) << "This file should contain no errors.";
@@ -96,15 +96,14 @@ TEST_F(CueSettingAlign,DISABLED_Right)
  * A U+003A COLON character (:).
  * One of the following strings: "start", "middle", "end", "left", "right"
  */
-TEST_F(CueSettingAlign,DISABLED_NoKeyword)
+TEST_F(CueSettingAlign,NoKeyword)
 {
 	loadVtt( "cue-settings/align/no-keyword.vtt" );
 	const Error& err = getError( 0 );
 	/**
-	 * We're expecting a WEBVTT_INVALID_CUESETTING error on the 25th column of the 3rd line
-	 * We could return a smarter error, after a little bit of refactoring, perhaps.
+	 * We're expecting a WEBVTT_MISSING_CUESETTING_KEYWORD error on the 25th column of the 3rd line
 	 */
-	ASSERT_EQ( WEBVTT_INVALID_CUESETTING, err.error() );
+	ASSERT_EQ( WEBVTT_MISSING_CUESETTING_KEYWORD, err.error() );
 	ASSERT_EQ( 3, err.line() );
 	ASSERT_EQ( 25, err.column() );
 }
@@ -119,7 +118,7 @@ TEST_F(CueSettingAlign,DISABLED_NoKeyword)
  * A U+003A COLON character (:).
  * One of the following strings: "start", "middle", "end", "left", "right"
  */
-TEST_F(CueSettingAlign,DISABLED_BadValue)
+TEST_F(CueSettingAlign,BadValue)
 {
 	loadVtt( "cue-settings/align/bad-value.vtt" );
 	const Error& err = getError( 0 );
@@ -141,7 +140,7 @@ TEST_F(CueSettingAlign,DISABLED_BadValue)
  * A U+003A COLON character (:).
  * One of the following strings: "start", "middle", "end", "left", "right"
  */
-TEST_F(CueSettingAlign,DISABLED_NoValue)
+TEST_F(CueSettingAlign,NoValue)
 {
 	loadVtt( "cue-settings/align/no-value.vtt" );
 	const Error& err = getError( 0 );
@@ -163,16 +162,16 @@ TEST_F(CueSettingAlign,DISABLED_NoValue)
  * A U+003A COLON character (:).
  * One of the following strings: "start", "middle", "end", "left", "right"
  */
-TEST_F(CueSettingAlign,DISABLED_BadDelimiter)
+TEST_F(CueSettingAlign,BadDelimiter)
 {
 	loadVtt( "cue-settings/align/bad-delimiter.vtt" );
 	const Error& err = getError( 0 );
 	/**
-	 * We're expecting a WEBVTT_INVALID_CUESETTING error on the 25th column of the 3rd line
+	 * We're expecting a WEBVTT_INVALID_CUESETTING_DELIMITER error on the 30th column of the 3rd line
 	 */
-	ASSERT_EQ( WEBVTT_INVALID_CUESETTING, err.error() );
+	ASSERT_EQ( WEBVTT_INVALID_CUESETTING_DELIMITER, err.error() );
 	ASSERT_EQ( 3, err.line() );
-	ASSERT_EQ( 25, err.column() );
+	ASSERT_EQ( 30, err.column() );
 }
 
 /**
@@ -185,14 +184,14 @@ TEST_F(CueSettingAlign,DISABLED_BadDelimiter)
  * A U+003A COLON character (:).
  * One of the following strings: "start", "middle", "end", "left", "right"
  */
-TEST_F(CueSettingAlign,DISABLED_NoDelimiter)
+TEST_F(CueSettingAlign,NoDelimiter)
 {
 	loadVtt( "cue-settings/align/no-delimiter.vtt" );
 	const Error& err = getError( 0 );
 	/**
 	 * We're expecting a WEBVTT_INVALID_CUESETTING error on the 25th column of the 3rd line
 	 */
-	ASSERT_EQ( WEBVTT_INVALID_CUESETTING, err.error() );
+	ASSERT_EQ( WEBVTT_MISSING_CUESETTING_DELIMITER, err.error() );
 	ASSERT_EQ( 3, err.line() );
-	ASSERT_EQ( 25, err.column() );
+	ASSERT_EQ( 30, err.column() );
 }

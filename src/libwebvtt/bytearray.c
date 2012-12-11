@@ -90,17 +90,27 @@ webvtt_bytearray_getline( webvtt_bytearray *pba, const webvtt_byte *buffer,
 	const webvtt_byte *s = buffer + *pos;
 	const webvtt_byte *p = s;
 	const webvtt_byte *n = buffer + len;
+	if( !ba )
+	{
+		if(WEBVTT_FAILED(webvtt_create_bytearray( 0x100, pba )))
+		{
+			return -1;
+		}
+		ba = *pba;
+	}
+
 	while( p < n && *p != CR && *p != LF ) 
 	{
 		++p;
 	}
+
 	if( p < n )
 	{
 		ret = 1; /* indicate that we found EOL */
 	}
 	len = (webvtt_uint)( p - s );
 	*pos += len;
-	if( ba->length + len >= ba->alloc )
+	if( ba->length + len + 1 >= ba->alloc )
 	{
 		if( truncate && ba->alloc >= WEBVTT_MAX_LINE )
 		{

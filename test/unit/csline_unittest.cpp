@@ -372,9 +372,9 @@ TEST_F(CueSettingLine,SingleDigitPercentageLowBoundary)
  *		1. One or more characters in the range U+0030 DIGIT ZERO (0) to U+0039 DIGIT NINE (9).
  *		2. A U+0025 PERCENT SIGN character (%).
  */
-TEST_F(CueSettingLine,DISABLED_BadKeyword)
+TEST_F(CueSettingLine,BadKeyword)
 {
-	loadVtt( "cue-settings/line/bad-keyword.vtt" );
+	loadVtt( "cue-settings/line/bad-keyword.vtt", 1 );
 	const Error& err = getError( 0 );
 	/**
 	 * We're expecting a WEBVTT_INVALID_CUESETTING error on the 25th column of the 3rd line
@@ -395,19 +395,16 @@ TEST_F(CueSettingLine,DISABLED_BadKeyword)
  *		1. One or more characters in the range U+0030 DIGIT ZERO (0) to U+0039 DIGIT NINE (9).
  *		2. A U+0025 PERCENT SIGN character (%).
  */
-TEST_F(CueSettingLine,DISABLED_BadDelimiter)
+TEST_F(CueSettingLine,BadDelimiter)
 {
-	loadVtt( "cue-settings/line/bad-delimiter.vtt" );
+	loadVtt( "cue-settings/line/bad-delimiter.vtt", 1 );
 	const Error& err = getError( 0 );
 	/**
-	 * We're expecting a WEBVTT_INVALID_CUESETTING error on the 25th column of the 3rd line
-	 *
-	 * This should really be changed to a different error, like WEBVTT_EXPECTED_CUESETTING_DELIMITER, or something,
-	 * on the 29th column of the 3rd line.
+	 * We're expecting a WEBVTT_INVALID_CUESETTING_DELIMITER error on the 29th column of the 3rd line
 	 */
-	ASSERT_EQ( WEBVTT_INVALID_CUESETTING, err.error() );
+	ASSERT_EQ( WEBVTT_INVALID_CUESETTING_DELIMITER, err.error() );
 	ASSERT_EQ( 3, err.line() );
-	ASSERT_EQ( 25, err.column() );
+	ASSERT_EQ( 29, err.column() );
 }
 
 /**
@@ -422,9 +419,9 @@ TEST_F(CueSettingLine,DISABLED_BadDelimiter)
  *		1. One or more characters in the range U+0030 DIGIT ZERO (0) to U+0039 DIGIT NINE (9).
  *		2. A U+0025 PERCENT SIGN character (%).
  */
-TEST_F(CueSettingLine,DISABLED_BadValue)
+TEST_F(CueSettingLine,BadValue)
 {
-	loadVtt( "cue-settings/line/bad-value.vtt" );
+	loadVtt( "cue-settings/line/bad-value.vtt", 1 );
 	const Error& err = getError( 0 );
 
 	/**
@@ -446,17 +443,20 @@ TEST_F(CueSettingLine,DISABLED_BadValue)
  *		1. One or more characters in the range U+0030 DIGIT ZERO (0) to U+0039 DIGIT NINE (9).
  *		2. A U+0025 PERCENT SIGN character (%).
  */
-TEST_F(CueSettingLine,DISABLED_BadValueSuffix)
+TEST_F(CueSettingLine,BadValueSuffix)
 {
 	loadVtt( "cue-settings/line/bad-value-suffix.vtt" );
 	const Error& err = getError( 0 );
 
 	/**
-	 * We're expecting a WEBVTT_LINE_BAD_VALUE error on the 30th column of the 3rd line
+	 * We're expecting a WEBVTT_INVALID_CUESETTING_DELIMITER error on the 32nd column of the 3rd line
+	 *
+	 * Should this be a "*_BAD_VALUE" error? It does find a valid INTEGER token, so technically, the
+	 * 'line' setting is perfectly valid. The real error is the garbage on the end of it.
 	 */
-	ASSERT_EQ( WEBVTT_LINE_BAD_VALUE, err.error() );
+	ASSERT_EQ( WEBVTT_INVALID_CUESETTING_DELIMITER, err.error() );
 	ASSERT_EQ( 3, err.line() );
-	ASSERT_EQ( 30, err.column() );
+	ASSERT_EQ( 32, err.column() );
 }
 
 /**
@@ -470,19 +470,17 @@ TEST_F(CueSettingLine,DISABLED_BadValueSuffix)
  *		1. One or more characters in the range U+0030 DIGIT ZERO (0) to U+0039 DIGIT NINE (9).
  *		2. A U+0025 PERCENT SIGN character (%).
  */
-TEST_F(CueSettingLine,DISABLED_WhitespaceDelimiter)
+TEST_F(CueSettingLine,WhitespaceDelimiter)
 {
 	loadVtt( "cue-settings/line/bad-whitespace-delimiter.vtt" );
 	const Error& err = getError( 0 );
 
 	/**
-	 * We're expecting a WEBVTT_INVALID_CUESETTING error on the 25th column of the 3rd line
-	 * This should probably be changed to something else, like WEBVTT_EXPECTED_CUESETTING_DELIMITER
-	 * on the 29th column of the 3rd line
+	 * We're expecting a WEBVTT_MISSING_CUESETTING_DELIMITER error on the 29th column of the 3rd line
 	 */
-	ASSERT_EQ( WEBVTT_INVALID_CUESETTING, err.error() );
+	ASSERT_EQ( WEBVTT_MISSING_CUESETTING_DELIMITER, err.error() );
 	ASSERT_EQ( 3, err.line() );
-	ASSERT_EQ( 25, err.column() );
+	ASSERT_EQ( 29, err.column() );
 }
 
 /**
@@ -496,20 +494,17 @@ TEST_F(CueSettingLine,DISABLED_WhitespaceDelimiter)
  *		1. One or more characters in the range U+0030 DIGIT ZERO (0) to U+0039 DIGIT NINE (9).
  *		2. A U+0025 PERCENT SIGN character (%).
  */
-TEST_F(CueSettingLine,DISABLED_BadWhitespaceBeforeDelimiter)
+TEST_F(CueSettingLine,BadWhitespaceBeforeDelimiter)
 {
 	loadVtt( "cue-settings/line/bad-whitespace-before-delimiter.vtt" );
 	const Error& err = getError( 0 );
 
 	/**
-	 * We're expecting a WEBVTT_INVALID_CUESETTING error on the 25th column of the 3rd line
-	 *
-	 * This should really be changed to a different error, like WEBVTT_UNEXPECTED_WHITESPACE, or something,
-	 * on the 29th column of the 3rd line
+	 * We're expecting a WEBVTT_UNEXPECTED_WHITESPACE error on the 29th column of the 3rd line
 	 */
-	ASSERT_EQ( WEBVTT_INVALID_CUESETTING, err.error() );
+	ASSERT_EQ( WEBVTT_UNEXPECTED_WHITESPACE, err.error() );
 	ASSERT_EQ( 3, err.line() );
-	ASSERT_EQ( 25, err.column() );
+	ASSERT_EQ( 29, err.column() );
 }
 
 /**
@@ -523,18 +518,15 @@ TEST_F(CueSettingLine,DISABLED_BadWhitespaceBeforeDelimiter)
  *		1. One or more characters in the range U+0030 DIGIT ZERO (0) to U+0039 DIGIT NINE (9).
  *		2. A U+0025 PERCENT SIGN character (%).
  */
-TEST_F(CueSettingLine,DISABLED_BadWhitespaceAfterDelimiter)
+TEST_F(CueSettingLine,BadWhitespaceAfterDelimiter)
 {
 	loadVtt( "cue-settings/line/bad-whitespace-after-delimiter.vtt" );
 	const Error& err = getError( 0 );
 
 	/**
-	 * We're expecting a WEBVTT_LINE_BAD_VALUE error on the 30th column of the 3rd line
-	 *
-	 * This should really be changed to a different error, like WEBVTT_UNEXPECTED_WHITESPACE, or something,
-	 * on the 30th column on the 3rd line
+	 * We're expecting a WEBVTT_UNEXPECTED_WHITESPACE error on the 30th column of the 3rd line
 	 */
-	ASSERT_EQ( WEBVTT_LINE_BAD_VALUE, err.error() );
+	ASSERT_EQ( WEBVTT_UNEXPECTED_WHITESPACE, err.error() );
 	ASSERT_EQ( 3, err.line() );
 	ASSERT_EQ( 30, err.column() );
 }

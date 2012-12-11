@@ -12,7 +12,7 @@ TEST_F(PayloadTimestampTag,DISABLED_TimestampTag)
 	const TimeStampNode *timeStamp = getHeadOfCue( 0 )->child( 1 )->toTimeStampNode();
 
 	ASSERT_EQ( Node::TimeStamp, timeStamp->kind() );
-	ASSERT_TRUE( timeStamp->timeStamp().toSeconds() == 720 );
+	assertEquals( timeStamp->timeStamp(), 0, 12, 0 );
 }
 
 /*
@@ -25,10 +25,10 @@ TEST_F(PayloadTimestampTag,DISABLED_MultipleTimestampTag)
 	const TimeStampNode *timeStamp = getHeadOfCue( 0 )->child( 1 )->toTimeStampNode();
 
 	ASSERT_EQ( Node::TimeStamp, timeStamp->kind() );
-	ASSERT_TRUE( timeStamp->timeStamp().toSeconds() == 720 );
+	assertEquals( timeStamp->timeStamp(), 0, 12, 0 );
 
 	timeStamp = getHeadOfCue( 0 )->child( 3 )->toTimeStampNode();
 
 	ASSERT_EQ( Node::TimeStamp, getHeadOfCue( 0 )->child( 3 )->kind() );
-	ASSERT_TRUE( timeStamp->timeStamp().toSeconds() == 780 );
+	assertEquals( timeStamp->timeStamp(), 0, 13, 0 );
 }
