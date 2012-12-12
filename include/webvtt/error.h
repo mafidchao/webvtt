@@ -17,6 +17,8 @@ webvtt_error_t
 	WEBVTT_EXPECTED_EOL,
 	/* A string of whitespace was expected, but not found. */
 	WEBVTT_EXPECTED_WHITESPACE,
+	/* A string of whitespace was found, but was not expected (Recoverable error) */
+	WEBVTT_UNEXPECTED_WHITESPACE,
 	/* Long WEBVTT comment, decide whether to abort parsing or not */
 	WEBVTT_LONG_COMMENT,
 	/* A cue-id was too long to fit in the buffer. */
@@ -27,12 +29,21 @@ webvtt_error_t
 	WEBVTT_EXPECTED_TIMESTAMP,
 	/* Missing timestamp separator */
 	WEBVTT_MISSING_CUETIME_SEPARATOR,
+	/* Were expecting a separator, but got some garbage that we can't
+	   recover from instead. */
+	WEBVTT_EXPECTED_CUETIME_SEPARATOR,
 	/* Missing cuesetting delimiter */
 	WEBVTT_MISSING_CUESETTING_DELIMITER,
+	/* Invalid cuesetting delimiter */
+	WEBVTT_INVALID_CUESETTING_DELIMITER,
 	/* End-time is less than or equal to start time */
 	WEBVTT_INVALID_ENDTIME,
 	/* Invalid cue-setting */
 	WEBVTT_INVALID_CUESETTING,
+	/* unfinished cuetimes */
+	WEBVTT_UNFINISHED_CUETIMES,
+	/* valid-looking cuesetting with no keyword */
+	WEBVTT_MISSING_CUESETTING_KEYWORD,
 	/* 'vertical' setting already exists for this cue. */
 	WEBVTT_VERTICAL_ALREADY_SET,
 	/* Bad 'vertical' value */

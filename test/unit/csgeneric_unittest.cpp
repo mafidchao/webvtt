@@ -1,6 +1,6 @@
 #include "cue_testfixture"
 class CueSetting : public CueTest { };
-
+#if 0
 /**
  * Verifies that the parser correctly parses a combination of 2 cue settings of different types, 
  * delimited by U+0009 (tab)
@@ -152,7 +152,7 @@ TEST_F(CueSetting,DelimiterMixed)
  * or U+0009 CHARACTER TABULATION (tab) characters. Each component must not be included more than 
  * once per WebVTT cue settings string.
  */
-TEST_F(CueSetting,DISABLED_SameCueSetting)
+TEST_F(CueSetting,SameCueSetting)
 {
 	loadVtt( "cue-settings/2-same-settings.vtt" );
 	const Error& err = getError( 0 );
@@ -176,14 +176,15 @@ TEST_F(CueSetting,DISABLED_SameCueSetting)
  * or U+0009 CHARACTER TABULATION (tab) characters. Each component must not be included more than 
  * once per WebVTT cue settings string.
  */
-TEST_F(CueSetting,DISABLED_BadDelimiter)
+ #endif
+TEST_F(CueSetting,BadDelimiter)
 {
 	loadVtt( "cue-settings/bad-delimiter.vtt" );
 	const Error& err = getError( 0 );
 	/**
 	 * We're expecting a WEBVTT_EXPECTED_WHITESPACE error on the 36th column of the 3rd line
 	 */
-	ASSERT_EQ( WEBVTT_EXPECTED_WHITESPACE, err.error() );
+	ASSERT_EQ( WEBVTT_INVALID_CUESETTING_DELIMITER, err.error() );
 	ASSERT_EQ( 3, err.line() );
 	ASSERT_EQ( 36, err.column() );
 }
@@ -199,14 +200,14 @@ TEST_F(CueSetting,DISABLED_BadDelimiter)
  * or U+0009 CHARACTER TABULATION (tab) characters. Each component must not be included more than 
  * once per WebVTT cue settings string.
  */
-TEST_F(CueSetting,DISABLED_BadDelimiter2)
+TEST_F(CueSetting,BadDelimiter2)
 {
 	loadVtt( "cue-settings/bad-delimiter2.vtt" );
 	const Error& err = getError( 0 );
 	/**
 	 * We're expecting a WEBVTT_EXPECTED_WHITESPACE error on the 24th column of the 3rd line
 	 */
-	ASSERT_EQ( WEBVTT_EXPECTED_WHITESPACE, err.error() );
+	ASSERT_EQ( WEBVTT_INVALID_CUESETTING_DELIMITER, err.error() );
 	ASSERT_EQ( 3, err.line() );
 	ASSERT_EQ( 24, err.column() );
 }
@@ -222,7 +223,7 @@ TEST_F(CueSetting,DISABLED_BadDelimiter2)
  * or U+0009 CHARACTER TABULATION (tab) characters. Each component must not be included more than 
  * once per WebVTT cue settings string.
  */
-TEST_F(CueSetting,DISABLED_NoDelimiter)
+TEST_F(CueSetting,NoDelimiter)
 {
 	loadVtt( "cue-settings/no-delimiter.vtt" );
 	const Error& err = getError( 0 );

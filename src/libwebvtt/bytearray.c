@@ -29,6 +29,39 @@ webvtt_create_bytearray( webvtt_uint32 alloc, webvtt_bytearray *pba )
 	return WEBVTT_SUCCESS;
 }
 
+WEBVTT_INTERN webvtt_status
+webvtt_create_bytearray_nt( const webvtt_byte *text, webvtt_uint32 alloc, webvtt_bytearray *pba )
+{
+	webvtt_uint n = 0;
+	webvtt_status status;
+	webvtt_bytearray s;
+	webvtt_byte b;
+	if( !pba )
+	{
+		return WEBVTT_INVALID_PARAM;
+	}
+	s = (webvtt_bytearray)webvtt_alloc0( sizeof(struct webvtt_bytearray_t) + (alloc*sizeof(webvtt_byte)) );
+	if( !s )
+	{
+		return WEBVTT_OUT_OF_MEMORY;
+	}
+	s->alloc = alloc;
+	s->length = 0;
+	s->text = s->array;
+	s->text[0] = 0;
+
+	while( (alloc--) && (b = text[n++]) )
+	{
+		if( WEBVTT_FAILED( status = webvtt_bytearray_putc( &s, b ) ) )
+		{
+			webvtt_delete_bytearray( &s );
+			return status;
+		}
+	}
+	*pba = s;
+	return WEBVTT_SUCCESS;
+}
+
 /**
  * Delete bytearray
  */
@@ -71,7 +104,7 @@ grow( webvtt_bytearray *pba, webvtt_uint need )
 	{
 		return WEBVTT_OUT_OF_MEMORY;
 	}
-	new_ba->alloc = (grow - sizeof(*ba)) / sizeof(webvtt_byte);
+	new_ba->alloc = (n - sizeof(*ba)) / sizeof(webvtt_byte);
 	new_ba->length = ba->length;
 	new_ba->text = new_ba->array;
 	memcpy( new_ba->text, ba->text, sizeof(webvtt_byte) * ba->length );
@@ -83,24 +116,34 @@ grow( webvtt_bytearray *pba, webvtt_uint need )
 
 WEBVTT_INTERN int
 webvtt_bytearray_getline( webvtt_bytearray *pba, const webvtt_byte *buffer,
-	webvtt_uint *pos, webvtt_uint len, int *truncate )
+	webvtt_uint *pos, webvtt_uint len, int *truncate, webvtt_bool finish )
 {
 	int ret = 0;
 	webvtt_bytearray ba = *pba;
 	const webvtt_byte *s = buffer + *pos;
 	const webvtt_byte *p = s;
 	const webvtt_byte *n = buffer + len;
+	if( !ba )
+	{
+		if(WEBVTT_FAILED(webvtt_create_bytearray( 0x100, pba )))
+		{
+			return -1;
+		}
+		ba = *pba;
+	}
+
 	while( p < n && *p != CR && *p != LF ) 
 	{
 		++p;
 	}
-	if( p < n )
+
+	if( p < n || finish )
 	{
 		ret = 1; /* indicate that we found EOL */
 	}
 	len = (webvtt_uint)( p - s );
 	*pos += len;
-	if( ba->length + len >= ba->alloc )
+	if( ba->length + len + 1 >= ba->alloc )
 	{
 		if( truncate && ba->alloc >= WEBVTT_MAX_LINE )
 		{

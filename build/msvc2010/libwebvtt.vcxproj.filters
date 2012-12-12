@@ -54,10 +54,20 @@
     <ClInclude Include="..\..\include\webvtt\string.h">
       <Filter>include\webvtt</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\libwebvtt\bytearray_internal.h" />
-    <ClInclude Include="..\..\src\libwebvtt\cuetext_internal.h" />
-    <ClInclude Include="..\..\src\libwebvtt\cue_internal.h" />
-    <ClInclude Include="..\..\src\libwebvtt\parser_internal.h" />
-    <ClInclude Include="..\..\src\libwebvtt\string_internal.h" />
+    <ClInclude Include="..\..\src\libwebvtt\bytearray_internal.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\libwebvtt\string_internal.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\libwebvtt\cue_internal.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\libwebvtt\cuetext_internal.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\libwebvtt\parser_internal.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

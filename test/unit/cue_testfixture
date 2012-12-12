@@ -21,37 +21,84 @@ protected:
 	  }
     }
   }
-  void loadVtt( const char *fileName, uint expectedNumberOfCues )
+  
+  /**
+   * Added functions for ASSERT-ing timestamp equality in an easier way.
+   */
+  void assertEquals( const Timestamp &ts, int hours, int minutes, int seconds, int millis )
+  {
+    ASSERT_EQ( hours, ts.hours() );
+    ASSERT_EQ( minutes, ts.minutes() );
+    ASSERT_EQ( seconds, ts.seconds() );
+
+    /* hack to avoid rounding error... */
+    ASSERT_TRUE( millis == ts.milliseconds() || millis == ts.milliseconds() + 1 );
+  }
+  
+  inline void assertEquals( const Timestamp &ts, int minutes, int seconds, int millis )
+  {
+    return assertEquals( ts, 0, minutes, seconds, millis );
+  }
+  
+  inline void assertEquals( const Error &err, webvtt_error code, WebVTT::uint line, WebVTT::uint column )
+  {
+    ASSERT_EQ( code, err.error() );
+    ASSERT_EQ( line, err.line() );
+    ASSERT_EQ( column, err.column() );
+  }
+  
+  void loadVtt( const char *fileName, WebVTT::uint expectedNumberOfCues )
   {
      parser = new ItemStorageParser( fileName );
      ASSERT_TRUE( parser->parse() ) << "parser.parse() failed";
      ASSERT_EQ( expectedNumberOfCues, parser->cueCount() ) << "webvtt file contained different number of cues than expected, once parsed.";
   }
-  
+
+  void loadVtt( const char *fileName, bool expectedParseSuccessful, WebVTT::uint expectedNumberOfCues )
+  {
+     parser = new ItemStorageParser( fileName );
+     ASSERT_EQ( expectedParseSuccessful, parser->parse() ) << "parser.parse() failed";
+     ASSERT_EQ( expectedNumberOfCues, parser->cueCount() ) << "webvtt file contained different number of cues than expected, once parsed.";
+  }
+
   void loadVtt( const char *fileName )
   {
      parser = new ItemStorageParser( fileName );
      ASSERT_TRUE( parser->parse() ) << "parser.parse() failed";
   }
 
-  uint cueCount() const
+  WebVTT::uint cueCount() const
   {
     return parser->cueCount();
   }
   
-  uint errorCount() const
+  WebVTT::uint errorCount() const
   {
     return parser->errorCount();
   }
   
-  const Cue& getCue( uint index )
+  const WebVTT::Cue& getCue( WebVTT::uint index )
   {
-    return parser->getCue( index );
+    try
+    {
+      return parser->getCue( index );
+    }
+    catch(std::exception e)
+    {
+      throw e;
+    }
   }
 
-  const Error& getError( uint index )
+  const Error& getError( WebVTT::uint index )
   {
-    return parser->getError( index );
+    try
+    {
+      return parser->getError( index );
+    }
+    catch( std::exception e )
+    {
+      throw e;
+    }
   }
 
 private:

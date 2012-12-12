@@ -164,17 +164,16 @@ TEST_F(CueSettingPosition,TripleDigitPercentageLowBoundary)
  * 3. One or more ASCII digits.
  * 4. A U+0025 PERCENT SIGN character (%).
  */
-TEST_F(CueSettingPosition,DISABLED_NoDelimiter)
+TEST_F(CueSettingPosition,NoDelimiter)
 {
-	loadVtt( "cue-settings/position/no-delimiter.vtt" );
+	loadVtt( "cue-settings/position/no-delimiter.vtt", 1 );
 	const Error& err = getError( 0 );
 	/**
-	 * We're expecting a WEBVTT_INVALID_CUESETTING error on the 25th column of the 3rd line
-	 * We can probably make this smarter, like WEBVTT_EXPECTED_CUESETTING_DELIMITER or something
+	 * We're expecting a WEBVTT_MISSING_CUESETTING_DELIMITER error on the 33rd column of the 3rd line
 	 */
-	ASSERT_EQ( WEBVTT_INVALID_CUESETTING, err.error() );
+	ASSERT_EQ( WEBVTT_MISSING_CUESETTING_DELIMITER, err.error() );
 	ASSERT_EQ( 3, err.line() );
-	ASSERT_EQ( 25, err.column() );
+	ASSERT_EQ( 33, err.column() );
 }
 
 /**
@@ -187,15 +186,14 @@ TEST_F(CueSettingPosition,DISABLED_NoDelimiter)
  * 3. One or more ASCII digits.
  * 4. A U+0025 PERCENT SIGN character (%).
  */
-TEST_F(CueSettingPosition,DISABLED_NoKeyword)
+TEST_F(CueSettingPosition,NoKeyword)
 {
-	loadVtt( "cue-settings/position/no-keyword.vtt" );
+	loadVtt( "cue-settings/position/no-keyword.vtt", 1 );
 	const Error& err = getError( 0 );
 	/**
-	 * We're expecting a WEBVTT_INVALID_CUESETTING error on the 25th column of the 3rd line
-	 * We can probably make this smarter, like WEBVTT_EXPECTED_CUESETTING_KEY or something
+	 * We're expecting a WEBVTT_MISSING_CUESETTING_KEYWORD error on the 25th column of the 3rd line
 	 */
-	ASSERT_EQ( WEBVTT_INVALID_CUESETTING, err.error() );
+	ASSERT_EQ( WEBVTT_MISSING_CUESETTING_KEYWORD, err.error() );
 	ASSERT_EQ( 3, err.line() );
 	ASSERT_EQ( 25, err.column() );
 }
@@ -210,9 +208,9 @@ TEST_F(CueSettingPosition,DISABLED_NoKeyword)
  * 3. One or more ASCII digits.
  * 4. A U+0025 PERCENT SIGN character (%).
  */
-TEST_F(CueSettingPosition,DISABLED_NoPercentSign)
+TEST_F(CueSettingPosition,NoPercentSign)
 {
-	loadVtt( "cue-settings/position/no-percent-sign.vtt" );
+	loadVtt( "cue-settings/position/no-percent-sign.vtt", 1 );
 	const Error& err = getError( 0 );
 	/**
 	 * We're expecting a WEBVTT_POSITION_BAD_VALUE error on the 34th column of the 3rd line
@@ -234,17 +232,16 @@ TEST_F(CueSettingPosition,DISABLED_NoPercentSign)
  * 3. One or more ASCII digits.
  * 4. A U+0025 PERCENT SIGN character (%).
  */
-TEST_F(CueSettingPosition,DISABLED_BadDelimiter)
+TEST_F(CueSettingPosition,BadDelimiter)
 {
-	loadVtt( "cue-settings/position/bad-delimiter.vtt" );
+	loadVtt( "cue-settings/position/bad-delimiter.vtt", 1 );
 	const Error& err = getError( 0 );
 	/**
-	 * We're expecting a WEBVTT_INVALID_CUESETTING error on the 25th column of the 3rd line
-	 * We can probably make this smarter, like WEBVTT_EXPECTED_CUESETTING_DELIMITER or something
+	 * We're expecting a WEBVTT_INVALID_CUESETTING_DELIMITER error on the 33rd column of the 3rd line
 	 */
-	ASSERT_EQ( WEBVTT_INVALID_CUESETTING, err.error() );
+	ASSERT_EQ( WEBVTT_INVALID_CUESETTING_DELIMITER, err.error() );
 	ASSERT_EQ( 3, err.line() );
-	ASSERT_EQ( 25, err.column() );
+	ASSERT_EQ( 33, err.column() );
 }
 
 /**
@@ -258,7 +255,7 @@ TEST_F(CueSettingPosition,DISABLED_BadDelimiter)
  * 3. One or more ASCII digits.
  * 4. A U+0025 PERCENT SIGN character (%).
  */
-TEST_F(CueSettingPosition,DISABLED_AsciiDigitBeyondHighBoundary)
+TEST_F(CueSettingPosition,AsciiDigitBeyondHighBoundary)
 {
 	loadVtt( "cue-settings/position/above-0x39.vtt" );
 	const Error& err = getError( 0 );
@@ -281,7 +278,7 @@ TEST_F(CueSettingPosition,DISABLED_AsciiDigitBeyondHighBoundary)
  * 3. One or more ASCII digits.
  * 4. A U+0025 PERCENT SIGN character (%).
  */
-TEST_F(CueSettingPosition,DISABLED_AsciiDigitBeyondLowBoundary)
+TEST_F(CueSettingPosition,AsciiDigitBeyondLowBoundary)
 {
 	loadVtt( "cue-settings/position/below-0x30.vtt" );
 	const Error& err = getError( 0 );

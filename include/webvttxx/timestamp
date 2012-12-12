@@ -2,7 +2,6 @@
 #	define __WEBVTTXX_TIMESTAMP__
 
 #	include <webvtt/cue.h>
-#	include <math.h>
 #	include "base"
 
 namespace WebVTT
@@ -13,25 +12,19 @@ class Timestamp
 public:
 	enum
 	{
-		SecondsPerHour = 3600,
-		MinutesPerHour = 60,
-		SecondsPerMinute = 60,
-		MillisPerSecond = 1000
+		MillisPerHour = 3600000,
+		MillisPerMinute = 60000,
+		MillisPerSecond = 1000,
 	};
-	Timestamp() : ts(0.0) {}
+	Timestamp() : ts(0xFFFFFFFFFFFFFFFF) {}
 	Timestamp(webvtt_timestamp time) : ts(time) {}
 
 	inline webvtt_timestamp value() const { return ts; }
 
-	inline double toHours() const { return (ts / SecondsPerHour); }
-	inline double toMinutes() const { return (ts / SecondsPerMinute); }
-	inline double toSeconds() const { return ts; }
-	inline double toMilliseconds() const { return ts * MillisPerSecond; }
-
-	inline uint64 hours() const { return uint64( toHours() ); }
-	inline uint64 minutes() const { return uint64( ::fmod( ts, SecondsPerHour) / SecondsPerMinute ); }
-	inline uint64 seconds() const { return uint64( ::fmod( ts, SecondsPerMinute ) ); }
-	inline uint64 milliseconds() const { return uint64( ::fmod( ts * MillisPerSecond, MillisPerSecond ) ); }
+	inline uint64 hours() const { return ts / MillisPerHour; }
+	inline uint64 minutes() const { return ( ts % MillisPerHour ) / MillisPerMinute; }
+	inline uint64 seconds() const { return ( ts % MillisPerMinute ) / MillisPerSecond; }
+	inline uint64 milliseconds() const { return ts % MillisPerSecond; }
 
 private:
 	webvtt_timestamp ts;

@@ -24,6 +24,7 @@ FileParser::~FileParser()
 bool
 FileParser::parse()
 {
+	bool final = false;
 	::webvtt_status status;
 	char buffer[0x1000];
 	if( !reader.good() )
@@ -35,10 +36,10 @@ FileParser::parse()
 	{
 		reader.read( buffer, sizeof buffer );
 		uint len = (uint)reader.gcount();
-		status = parseChunk( buffer, len );
-	} while( reader.eof() == false && !WEBVTT_FAILED(status) );
+		final = reader.eof();
+		status = parseChunk( buffer, len, final );
+	} while( !final && !WEBVTT_FAILED(status) );
 
-	status = finishParsing();
 	return status == WEBVTT_SUCCESS;
 }
 

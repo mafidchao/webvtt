@@ -23,29 +23,18 @@ parse_fh(FILE *fh, webvtt_parser vtt)
 	/**
 	 * Try to parse the file.
 	 */
+	int finished;
 	webvtt_status result;
 	do
 	{
 		char buffer[0x1000];
 		webvtt_uint n_read = (webvtt_uint)fread( buffer, 1, sizeof(buffer), fh );
-		if( !n_read && feof( fh ) ) 
-			break; /* Read the file successfully */
-		result = webvtt_parse_chunk( vtt, buffer, n_read );
-			
-		if( result == WEBVTT_PARSE_ERROR )
+		finished = feof( fh );
+		if( WEBVTT_FAILED(result = webvtt_parse_chunk( vtt, buffer, n_read, finished )) )
 		{
-			/**
-			 * TODO:
-			 * Acquire some detailed information from the parser (Line number in input file,
-			 * column number, specific error
-			 */
 			return 1;
 		}
-	} while( result == WEBVTT_SUCCESS );
-	if( webvtt_finish_parsing( vtt ) == WEBVTT_PARSE_ERROR )
-	{
-		return 1;
-	}
+	} while( !finished && result == WEBVTT_SUCCESS );
 	return 0;
 }
 
