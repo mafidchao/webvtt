@@ -39,6 +39,12 @@ CUEIDS_TESTS = \
   cilanguage_unittest \
   cilineendings_unittest
 
+CUEIDS_TESTS = \
+  ciarrow_unittest \
+  cigeneral_unittest \
+  cilanguage_unittest \
+  cilineendings_unittest
+
 PAYLOAD_TESTS = \
   plboldtag_unittest \
   plclasstag_unittest \
@@ -96,6 +102,12 @@ csalign_unittest_SOURCES = csalign_unittest.cpp
 
 # Cue Times tests
 cuetimes_unittest_SOURCES = cuetimes_unittest.cpp
+
+# Cue Ids Tests
+ciarrow_unittest_SOURCES = ciarrow_unittest.cpp
+cigeneral_unittest_SOURCES = cigeneral_unittest.cpp
+cilanguage_unittest_SOURCES = cilanguage_unittest.cpp
+cilineendings_unittest_SOURCES = cilineendings_unittest.cpp
 
 # Cue Ids Tests
 ciarrow_unittest_SOURCES = ciarrow_unittest.cpp
