@@ -68,7 +68,6 @@ typedef struct webvtt_state
 		webvtt_leaf_node *lf;
 		webvtt_internal_node *in;
 		webvtt_uint value;
-		void *pointer;
 	} v;
 } webvtt_state;
 

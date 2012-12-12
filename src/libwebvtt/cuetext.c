@@ -706,7 +706,7 @@ webvtt_cue_text_tokenizer( webvtt_wchar_ptr *position_pptr, webvtt_cue_text_toke
  * Currently line and len are not being kept track of.
  * Don't think pnode_length is needed as nodes track there list count internally.
  */
-WEBVTT_EXPORT webvtt_status
+WEBVTT_INTERN webvtt_status
 webvtt_parse_cuetext( webvtt_cue cue )
 {
 

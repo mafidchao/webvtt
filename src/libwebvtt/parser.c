@@ -142,15 +142,57 @@ finish_cue( webvtt_parser self, webvtt_cue *cue )
 	}
 }
 
+/**
+ * This routine tries to clean up the stack
+ * for us, to prevent leaks.
+ *
+ * It should also help find errors in stack management.
+ */
+WEBVTT_INTERN void
+cleanup_stack( webvtt_parser self )
+{
+	webvtt_state *st = self->top;
+	while( st >= self->stack )
+	{
+		switch( st->type )
+		{
+			case V_CUE: webvtt_release_cue( &st->v.cue ); break;
+			case V_TEXT: webvtt_delete_bytearray( &st->v.text ); break;
+			/**
+			 * TODO: Clean up cuetext nodes as well.
+			 * Eventually the cuetext parser will probably be making use
+			 * of this stack, and will need to manage it well also.
+			 */
+		}
+		st->type = V_NONE;
+		st->line = st->column = st->v.value = st->token = 0;
+		if( st > self->stack )
+		{
+			--self->top;
+		}
+		--st;
+	}
+	if( self->stack != self->astack )
+	{
+		/**
+		 * If the stack is dynamically allocated (probably not),
+		 * then point it to the statically allocated one (and zeromem it),
+		 * then finally delete the old dynamically allocated stack
+		 */
+		webvtt_state *pst = self->stack;
+		memset( self->astack, 0, sizeof(self->astack) );
+		self->stack = self->astack;
+		self->stack_alloc = sizeof(self->astack) / sizeof(*(self->astack));
+		webvtt_free( pst );
+	}
+}
+
 WEBVTT_EXPORT void
 webvtt_delete_parser( webvtt_parser self )
 {
 	if( self )
 	{
-		if( self->stack != self->astack )
-		{
-			webvtt_free( self->stack );
-		}
+		cleanup_stack( self );
 
 		if( self->line_buffer )
 		{
@@ -264,7 +306,7 @@ do_push( webvtt_parser self, webvtt_uint token, webvtt_uint back, webvtt_uint st
 	self->top->line = line;
 	self->top->back = back;
 	self->top->column = column;
-	self->top->v.pointer = data;
+	self->top->v.cue = (webvtt_cue)data;
 	return WEBVTT_SUCCESS;
 }
 static WEBVTT_INTERN int
@@ -760,6 +802,9 @@ _next:
 			{
 				if( v < 0 )
 				{
+					webvtt_delete_bytearray( &SP->v.text );
+					SP->type = V_NONE;
+					POP();
 					ERROR(WEBVTT_ALLOCATION_FAILED);
 					status = WEBVTT_OUT_OF_MEMORY;
 					goto _finish;
@@ -1008,6 +1053,7 @@ _recheck:
 					}
 					else
 					{
+						webvtt_delete_bytearray( &text );
 						cue->flags |= CUE_HAVE_CUEPARAMS;
 						*mode = M_CUETEXT;
 						goto _finish;
@@ -1078,6 +1124,10 @@ _recheck:
 
 
 _finish:
+	if( status == WEBVTT_OUT_OF_MEMORY )
+	{
+		cleanup_stack( self );
+	}
 	*ppos = pos;
 	return status;
 }
