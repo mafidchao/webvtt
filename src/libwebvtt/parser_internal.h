@@ -36,24 +36,35 @@ webvtt_token_t
 	SEPARATOR, /* '-->' */
 	TIMESTAMP,
 	PERCENTAGE, /* '\d+%' */
-	COLON /* ':' */
+	COLON, /* ':' */
 };
 
-/**
- * Flags indicating which settings have been read
- */
-#define READ_VERTICAL (1<<0)
-#define READ_SIZE (1<<1)
-#define READ_POSITION (1<<2)
-#define READ_LINE (1<<3)
-#define READ_ALIGN (1<<4)
+
+
+typedef enum
+{
+	V_NONE,
+	V_POINTER,
+	V_INTEGER,
+	V_CUE,
+	V_TEXT,
+	V_LNODE,
+	V_INODE,
+	V_TOKEN,
+} webvtt_state_value_type;
 
 typedef struct webvtt_state
 {
 	webvtt_uint state;
+	webvtt_token token;
+	webvtt_state_value_type type;
+	webvtt_uint back;
+	webvtt_uint line;
+	webvtt_uint column;
 	union
 	{
 		webvtt_cue cue;
+		webvtt_bytearray text;
 		webvtt_leaf_node *lf;
 		webvtt_internal_node *in;
 		webvtt_uint value;
@@ -77,21 +88,11 @@ webvtt_parser_t
 	 */
 	webvtt_uint mode;
 
-	/**
-	 * I'm not sure 'finish' is actually needed at all.
-	 */
-	webvtt_bool finish;
-	webvtt_uint flags;
-
 	webvtt_state *top; /* Top parse state */
 	webvtt_state astack[0x100];
 	webvtt_state *stack; /* dynamically allocated stack, if 'astack' fills up */
 	webvtt_uint stack_alloc; /* item capacity in 'stack' */
-
-	/**
-	 * Current cue
-	 */
-	webvtt_cue cue;
+	webvtt_bool popped;
 
 	/**
 	 * line
@@ -109,6 +110,7 @@ webvtt_parser_t
 };
 
 WEBVTT_INTERN webvtt_token webvtt_lex( webvtt_parser self, const webvtt_byte *buffer, webvtt_uint *pos, webvtt_uint length, int finish );
+WEBVTT_INTERN webvtt_status webvtt_lex_word( webvtt_parser self, webvtt_bytearray *pba, const webvtt_byte *buffer, webvtt_uint *pos, webvtt_uint length, int finish );
 
 #define BAD_TIMESTAMP(ts) ( ( ts ) == 0xFFFFFFFFFFFFFFFF )
 

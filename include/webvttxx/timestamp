@@ -16,7 +16,7 @@ public:
 		MillisPerMinute = 60000,
 		MillisPerSecond = 1000,
 	};
-	Timestamp() : ts(0.0) {}
+	Timestamp() : ts(0xFFFFFFFFFFFFFFFF) {}
 	Timestamp(webvtt_timestamp time) : ts(time) {}
 
 	inline webvtt_timestamp value() const { return ts; }

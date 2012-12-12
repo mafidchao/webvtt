@@ -29,6 +29,9 @@ webvtt_error_t
 	WEBVTT_EXPECTED_TIMESTAMP,
 	/* Missing timestamp separator */
 	WEBVTT_MISSING_CUETIME_SEPARATOR,
+	/* Were expecting a separator, but got some garbage that we can't
+	   recover from instead. */
+	WEBVTT_EXPECTED_CUETIME_SEPARATOR,
 	/* Missing cuesetting delimiter */
 	WEBVTT_MISSING_CUESETTING_DELIMITER,
 	/* Invalid cuesetting delimiter */
@@ -37,6 +40,8 @@ webvtt_error_t
 	WEBVTT_INVALID_ENDTIME,
 	/* Invalid cue-setting */
 	WEBVTT_INVALID_CUESETTING,
+	/* unfinished cuetimes */
+	WEBVTT_UNFINISHED_CUETIMES,
 	/* valid-looking cuesetting with no keyword */
 	WEBVTT_MISSING_CUESETTING_KEYWORD,
 	/* 'vertical' setting already exists for this cue. */

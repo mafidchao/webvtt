@@ -154,7 +154,8 @@ webvtt_cue_t
 	 * Do not touch, okay?
 	 */
 	struct webvtt_refcount_t refs;
-	
+	webvtt_uint flags;
+
 	/**
 	 * PUBLIC:
 	 */

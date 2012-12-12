@@ -445,7 +445,7 @@ TEST_F(CueSettingLine,BadValue)
  */
 TEST_F(CueSettingLine,BadValueSuffix)
 {
-	loadVtt( "cue-settings/line/bad-value-suffix.vtt" );
+	loadVtt( "cue-settings/line/bad-value-suffix.vtt", 1 );
 	const Error& err = getError( 0 );
 
 	/**
@@ -472,7 +472,7 @@ TEST_F(CueSettingLine,BadValueSuffix)
  */
 TEST_F(CueSettingLine,WhitespaceDelimiter)
 {
-	loadVtt( "cue-settings/line/bad-whitespace-delimiter.vtt" );
+	loadVtt( "cue-settings/line/bad-whitespace-delimiter.vtt", 1 );
 	const Error& err = getError( 0 );
 
 	/**
@@ -496,7 +496,7 @@ TEST_F(CueSettingLine,WhitespaceDelimiter)
  */
 TEST_F(CueSettingLine,BadWhitespaceBeforeDelimiter)
 {
-	loadVtt( "cue-settings/line/bad-whitespace-before-delimiter.vtt" );
+	loadVtt( "cue-settings/line/bad-whitespace-before-delimiter.vtt", 1 );
 	const Error& err = getError( 0 );
 
 	/**
@@ -520,7 +520,7 @@ TEST_F(CueSettingLine,BadWhitespaceBeforeDelimiter)
  */
 TEST_F(CueSettingLine,BadWhitespaceAfterDelimiter)
 {
-	loadVtt( "cue-settings/line/bad-whitespace-after-delimiter.vtt" );
+	loadVtt( "cue-settings/line/bad-whitespace-after-delimiter.vtt", 1 );
 	const Error& err = getError( 0 );
 
 	/**

@@ -53,7 +53,14 @@ protected:
      ASSERT_TRUE( parser->parse() ) << "parser.parse() failed";
      ASSERT_EQ( expectedNumberOfCues, parser->cueCount() ) << "webvtt file contained different number of cues than expected, once parsed.";
   }
-  
+
+  void loadVtt( const char *fileName, bool expectedParseSuccessful, WebVTT::uint expectedNumberOfCues )
+  {
+     parser = new ItemStorageParser( fileName );
+     ASSERT_EQ( expectedParseSuccessful, parser->parse() ) << "parser.parse() failed";
+     ASSERT_EQ( expectedNumberOfCues, parser->cueCount() ) << "webvtt file contained different number of cues than expected, once parsed.";
+  }
+
   void loadVtt( const char *fileName )
   {
      parser = new ItemStorageParser( fileName );
