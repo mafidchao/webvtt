@@ -18,7 +18,7 @@ TEST_F(CueIdLineEndings,MissingBetweenSignatureAndId)
 
   ASSERT_EQ( WEBVTT_EXPECTED_EOL, err.error() );
   ASSERT_EQ( 2, err.line() );
-  ASSERT_EQ( 2, err.column() );
+  ASSERT_EQ( 1, err.column() );
 }
 
 /**
@@ -38,7 +38,7 @@ TEST_F(CueIdLineEndings,TwoBetweenIdAndTimestamp)
 
   ASSERT_EQ( WEBVTT_CUE_INCOMPLETE, err.error() );
   ASSERT_EQ( 4, err.line() );
-  ASSERT_EQ( 0, err.column() );
+  ASSERT_EQ( 1, err.column() );
 }
 
 /**
@@ -80,7 +80,7 @@ TEST_F(CueIdLineEndings,LongStringLF)
 
   ASSERT_EQ( WEBVTT_CUE_INCOMPLETE, err.error() );
   ASSERT_EQ( 4, err.line() );
-  ASSERT_EQ( 0, err.column() );
+  ASSERT_EQ( 1, err.column() );
 }
 
 /**
@@ -102,5 +102,5 @@ TEST_F(CueIdLineEndings,LongStringCRLF)
 
   ASSERT_EQ( WEBVTT_CUE_INCOMPLETE, err.error() );
   ASSERT_EQ( 4, err.line() );
-  ASSERT_EQ( 0, err.column() );
+  ASSERT_EQ( 1, err.column() );
 }
