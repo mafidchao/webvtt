@@ -1169,17 +1169,20 @@ read_cuetext( webvtt_parser self, const webvtt_byte *b, webvtt_uint *ppos, webvt
 			}
 			webvtt_bytearray_putc( &self->line_buffer, ASCII_LF );
 
-			if( b[pos] == ASCII_CR )
+			if( pos < len )
 			{
-				if( len - pos >= 2 && b[pos+1] == ASCII_LF )
+				if( b[pos] == ASCII_CR )
+				{
+					if( len - pos >= 2 && b[pos+1] == ASCII_LF )
+					{
+						++pos;
+					}
+					++pos;
+				}
+				else
 				{
 					++pos;
 				}
-				++pos;
-			}
-			else
-			{
-				++pos;
 			}
 		}
 	} while( pos < len && !finished );

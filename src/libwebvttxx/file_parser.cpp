@@ -24,7 +24,7 @@ FileParser::~FileParser()
 bool
 FileParser::parse()
 {
-	bool final;
+	bool final = false;
 	::webvtt_status status;
 	char buffer[0x1000];
 	if( !reader.good() )
