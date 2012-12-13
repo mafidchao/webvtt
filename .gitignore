@@ -9,6 +9,7 @@
 *.dylib
 *.dll
 *.so
+*.ipch
 Makefile
 Makefile.in
 aclocal.m4
