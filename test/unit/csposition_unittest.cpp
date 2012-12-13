@@ -4,12 +4,10 @@ class CueSettingPosition : public CueTest { };
 /**
  * Successfully parse a properly formatted single digit percentage 'position:5%'
  *
- * http://dev.w3.org/html5/webvtt/#webvtt-text-position-cue-setting (11/21/2012):
- * A WebVTT text position cue setting consists of the following components, in the order given:
- * 1. The string "position".
- * 2. A U+003A COLON character (:).
- * 3. One or more ASCII digits.
- * 4. A U+0025 PERCENT SIGN character (%).
+ * From http://dev.w3.org/html5/webvtt/#parse-the-webvtt-settings (11/28/2012):
+ * If name is a case-sensitive match for "position"
+ * 5. Ignoring the trailing percent sign, interpret value as an integer, and let number be that number.
+ * 7. Let cue's text track cue text position be number.
  */
 TEST_F(CueSettingPosition,SingleDigitPercentage)
 {
@@ -21,12 +19,10 @@ TEST_F(CueSettingPosition,SingleDigitPercentage)
 /**
  * Successfully parse a properly formatted single digit percentage 'position:9%'
  *
- * http://dev.w3.org/html5/webvtt/#webvtt-text-position-cue-setting (11/21/2012):
- * A WebVTT text position cue setting consists of the following components, in the order given:
- * 1. The string "position".
- * 2. A U+003A COLON character (:).
- * 3. One or more ASCII digits.
- * 4. A U+0025 PERCENT SIGN character (%).
+ * From http://dev.w3.org/html5/webvtt/#parse-the-webvtt-settings (11/28/2012):
+ * If name is a case-sensitive match for "position"
+ * 5. Ignoring the trailing percent sign, interpret value as an integer, and let number be that number.
+ * 7. Let cue's text track cue text position be number.
  */
 TEST_F(CueSettingPosition,SingleDigitPercentageHighBoundary)
 {
@@ -38,12 +34,10 @@ TEST_F(CueSettingPosition,SingleDigitPercentageHighBoundary)
 /**
  * Successfully parse a properly formatted single digit percentage 'position:0%'
  *
- * http://dev.w3.org/html5/webvtt/#webvtt-text-position-cue-setting (11/21/2012):
- * A WebVTT text position cue setting consists of the following components, in the order given:
- * 1. The string "position".
- * 2. A U+003A COLON character (:).
- * 3. One or more ASCII digits.
- * 4. A U+0025 PERCENT SIGN character (%).
+ * From http://dev.w3.org/html5/webvtt/#parse-the-webvtt-settings (11/28/2012):
+ * If name is a case-sensitive match for "position"
+ * 5. Ignoring the trailing percent sign, interpret value as an integer, and let number be that number.
+ * 7. Let cue's text track cue text position be number.
  */
 TEST_F(CueSettingPosition,SingleDigitPercentageLowBoundary)
 {
@@ -55,12 +49,10 @@ TEST_F(CueSettingPosition,SingleDigitPercentageLowBoundary)
 /**
  * Successfully parse a properly formatted double digit percentage 'position:50%'
  *
- * http://dev.w3.org/html5/webvtt/#webvtt-text-position-cue-setting (11/21/2012):
- * A WebVTT text position cue setting consists of the following components, in the order given:
- * 1. The string "position".
- * 2. A U+003A COLON character (:).
- * 3. One or more ASCII digits.
- * 4. A U+0025 PERCENT SIGN character (%).
+ * From http://dev.w3.org/html5/webvtt/#parse-the-webvtt-settings (11/28/2012):
+ * If name is a case-sensitive match for "position"
+ * 5. Ignoring the trailing percent sign, interpret value as an integer, and let number be that number.
+ * 7. Let cue's text track cue text position be number.
  */
 TEST_F(CueSettingPosition,DoubleDigitPercentage)
 {
@@ -72,12 +64,10 @@ TEST_F(CueSettingPosition,DoubleDigitPercentage)
 /**
  * Successfully parse a properly formatted double digit percentage 'position:99%'
  *
- * http://dev.w3.org/html5/webvtt/#webvtt-text-position-cue-setting (11/21/2012):
- * A WebVTT text position cue setting consists of the following components, in the order given:
- * 1. The string "position".
- * 2. A U+003A COLON character (:).
- * 3. One or more ASCII digits.
- * 4. A U+0025 PERCENT SIGN character (%).
+ * From http://dev.w3.org/html5/webvtt/#parse-the-webvtt-settings (11/28/2012):
+ * If name is a case-sensitive match for "position"
+ * 5. Ignoring the trailing percent sign, interpret value as an integer, and let number be that number.
+ * 7. Let cue's text track cue text position be number.
  */
 TEST_F(CueSettingPosition,DoubleDigitPercentageHighBoundary)
 {
@@ -89,85 +79,79 @@ TEST_F(CueSettingPosition,DoubleDigitPercentageHighBoundary)
 /**
  * Successfully parse a properly formatted double digit percentage 'position:00%'
  *
- * http://dev.w3.org/html5/webvtt/#webvtt-text-position-cue-setting (11/21/2012):
- * A WebVTT text position cue setting consists of the following components, in the order given:
- * 1. The string "position".
- * 2. A U+003A COLON character (:).
- * 3. One or more ASCII digits.
- * 4. A U+0025 PERCENT SIGN character (%).
+ * From http://dev.w3.org/html5/webvtt/#parse-the-webvtt-settings (11/28/2012):
+ * If name is a case-sensitive match for "position"
+ * 5. Ignoring the trailing percent sign, interpret value as an integer, and let number be that number.
+ * 7. Let cue's text track cue text position be number.
  */
 TEST_F(CueSettingPosition,DoubleDigitPercentageLowBoundary)
 {
 	loadVtt( "cue-settings/position/double-digit-pct-low-boundary.vtt", 1 );
 	ASSERT_EQ( 0, errorCount() ) << "This file should contain no errors.";
-	ASSERT_EQ( 00, getCue( 0 ).textPositionPercentage() );
+	ASSERT_EQ( 0, getCue( 0 ).textPositionPercentage() );
 }
 
 /**
  * Successfully parse a properly formatted triple digit percentage 'position:555%'
  *
- * http://dev.w3.org/html5/webvtt/#webvtt-text-position-cue-setting (11/21/2012):
- * A WebVTT text position cue setting consists of the following components, in the order given:
- * 1. The string "position".
- * 2. A U+003A COLON character (:).
- * 3. One or more ASCII digits.
- * 4. A U+0025 PERCENT SIGN character (%).
+ * From http://dev.w3.org/html5/webvtt/#parse-the-webvtt-settings (11/28/2012):
+ * If name is a case-sensitive match for "position"
+ * 5. Ignoring the trailing percent sign, interpret value as an integer, and let number be that number.
+ * 7. Let cue's text track cue text position be number.
  */
 TEST_F(CueSettingPosition,TripleDigitPercentage)
 {
 	loadVtt( "cue-settings/position/triple-digit-pct.vtt", 1 );
 	ASSERT_EQ( 0, errorCount() ) << "This file should contain no errors.";
-	ASSERT_EQ( 555, getCue( 0 ).textPositionPercentage() );
+	ASSERT_EQ( 55, getCue( 0 ).textPositionPercentage() );
 }
 
 /**
  * Successfully parse a properly formatted triple digit percentage 'position:999%'
  *
- * http://dev.w3.org/html5/webvtt/#webvtt-text-position-cue-setting (11/21/2012):
- * A WebVTT text position cue setting consists of the following components, in the order given:
- * 1. The string "position".
- * 2. A U+003A COLON character (:).
- * 3. One or more ASCII digits.
- * 4. A U+0025 PERCENT SIGN character (%).
+ * From http://dev.w3.org/html5/webvtt/#parse-the-webvtt-settings (11/28/2012):
+ * If name is a case-sensitive match for "position"
+ * 5. Ignoring the trailing percent sign, interpret value as an integer, and let number be that number.
+ * 7. Let cue's text track cue text position be number.
  */
 TEST_F(CueSettingPosition,TripleDigitPercentageHighBoundary)
 {
 	loadVtt( "cue-settings/position/triple-digit-pct-high-boundary.vtt", 1 );
 	ASSERT_EQ( 0, errorCount() ) << "This file should contain no errors.";
-	ASSERT_EQ( 999, getCue( 0 ).textPositionPercentage() );
+	ASSERT_EQ( 100, getCue( 0 ).textPositionPercentage() );
 }
 
 /**
  * Successfully parse a properly formatted triple digit percentage 'position:000%'
  *
- * http://dev.w3.org/html5/webvtt/#webvtt-text-position-cue-setting (11/21/2012):
- * A WebVTT text position cue setting consists of the following components, in the order given:
- * 1. The string "position".
- * 2. A U+003A COLON character (:).
- * 3. One or more ASCII digits.
- * 4. A U+0025 PERCENT SIGN character (%).
+ * From http://dev.w3.org/html5/webvtt/#parse-the-webvtt-settings (11/28/2012):
+ * If name is a case-sensitive match for "position"
+ * 5. Ignoring the trailing percent sign, interpret value as an integer, and let number be that number.
+ * 7. Let cue's text track cue text position be number.
  */
 TEST_F(CueSettingPosition,TripleDigitPercentageLowBoundary)
 {
 	loadVtt( "cue-settings/position/double-digit-pct-low-boundary.vtt", 1 );
 	ASSERT_EQ( 0, errorCount() ) << "This file should contain no errors.";
-	ASSERT_EQ( 000, getCue( 0 ).textPositionPercentage() );
+	ASSERT_EQ( 0, getCue( 0 ).textPositionPercentage() );
 }
 
 /**
- * Test that we consider it an error if the key:value delimiter U+003A COLON is omitted.
+ * Test that the parser requires a colon.
  *
- * http://dev.w3.org/html5/webvtt/#webvtt-text-position-cue-setting (11/21/2012):
- * A WebVTT text position cue setting consists of the following components, in the order given:
- * 1. The string "position".
- * 2. A U+003A COLON character (:).
- * 3. One or more ASCII digits.
- * 4. A U+0025 PERCENT SIGN character (%).
+ * http://dev.w3.org/html5/webvtt/#parse-the-webvtt-settings (11/28/2012):
+ * 1. If setting does not contain a U+003A COLON character (:), or if the first U+003A COLON character (:) in setting is either the first or last character of setting, then jump to the step labeled next setting.
+ * 5. Next setting: Continue to the next token, if any.
  */
 TEST_F(CueSettingPosition,NoDelimiter)
 {
 	loadVtt( "cue-settings/position/no-delimiter.vtt", 1 );
 	const Error& err = getError( 0 );
+	/**
+	 * Position should be 50 because the malformed setting should be skipped
+     * and 50 is default.
+	 */
+	ASSERT_EQ( 50, getCue( 0 ).textPositionPercentage() );
 	/**
 	 * We're expecting a WEBVTT_MISSING_CUESETTING_DELIMITER error on the 33rd column of the 3rd line
 	 */
@@ -177,19 +161,21 @@ TEST_F(CueSettingPosition,NoDelimiter)
 }
 
 /**
- * Test that we consider it an error if we encounter a value without a 'position' key.
+ * Test that the parser does not allow a setting to start with a colon.
  *
- * http://dev.w3.org/html5/webvtt/#webvtt-text-position-cue-setting (11/21/2012):
- * A WebVTT text position cue setting consists of the following components, in the order given:
- * 1. The string "position".
- * 2. A U+003A COLON character (:).
- * 3. One or more ASCII digits.
- * 4. A U+0025 PERCENT SIGN character (%).
+ * http://dev.w3.org/html5/webvtt/#parse-the-webvtt-settings (11/28/2012):
+ * 1. If setting does not contain a U+003A COLON character (:), or if the first U+003A COLON character (:) in setting is either the first or last character of setting, then jump to the step labeled next setting.
+ * 5. Next setting: Continue to the next token, if any.
  */
 TEST_F(CueSettingPosition,NoKeyword)
 {
 	loadVtt( "cue-settings/position/no-keyword.vtt", 1 );
 	const Error& err = getError( 0 );
+	/**
+	 * Position should be 50 because the malformed setting should be skipped
+     * and 50 is default.
+	 */
+	ASSERT_EQ( 50, getCue( 0 ).textPositionPercentage() );
 	/**
 	 * We're expecting a WEBVTT_MISSING_CUESETTING_KEYWORD error on the 25th column of the 3rd line
 	 */
@@ -199,19 +185,46 @@ TEST_F(CueSettingPosition,NoKeyword)
 }
 
 /**
- * Test that we consider it an error if we encounter a value that is not a percentage
+ * Test that the parser does not allow a setting to end with a colon.
  *
- * http://dev.w3.org/html5/webvtt/#webvtt-text-position-cue-setting (11/21/2012):
- * A WebVTT text position cue setting consists of the following components, in the order given:
- * 1. The string "position".
- * 2. A U+003A COLON character (:).
- * 3. One or more ASCII digits.
- * 4. A U+0025 PERCENT SIGN character (%).
+ * http://dev.w3.org/html5/webvtt/#parse-the-webvtt-settings (11/28/2012):
+ * 1. If setting does not contain a U+003A COLON character (:), or if the first U+003A COLON character (:) in setting is either the first or last character of setting, then jump to the step labeled next setting.
+ * 5. Next setting: Continue to the next token, if any.
+ */
+TEST_F(CueSettingPosition,DISABLED_NoValue)
+{
+	loadVtt( "cue-settings/position/no-value.vtt", 1 );
+	const Error& err = getError( 0 );
+	/**
+	 * Position should be 50 because the malformed setting should be skipped
+     * and 50 is default.
+	 */
+	ASSERT_EQ( 50, getCue( 0 ).textPositionPercentage() );
+	/**
+	 * We're expecting a WEBVTT_POSITION_BAD_VALUE error on the 34th column of the 3rd line
+	 * We can probably make this smarter, like WEBVTT_EXPECTED_CUESETTING_VALUE or something
+	 */
+	ASSERT_EQ( WEBVTT_POSITION_BAD_VALUE, err.error() );
+	ASSERT_EQ( 3, err.line() );
+	ASSERT_EQ( 34, err.column() );
+}
+
+/**
+ * Test that a percent sign is required.
+ *
+ * From http://dev.w3.org/html5/webvtt/#parse-the-webvtt-settings (11/28/2012):
+ * If name is a case-sensitive match for "position"
+ * 3. If any character in value other than the last character is a U+0025 PERCENT SIGN character (%), then jump to the step labeled next setting.
  */
 TEST_F(CueSettingPosition,NoPercentSign)
 {
 	loadVtt( "cue-settings/position/no-percent-sign.vtt", 1 );
 	const Error& err = getError( 0 );
+	/**
+	 * Position should be 50 because the malformed setting should be skipped
+     * and 50 is default.
+	 */
+	ASSERT_EQ( 50, getCue( 0 ).textPositionPercentage() );
 	/**
 	 * We're expecting a WEBVTT_POSITION_BAD_VALUE error on the 34th column of the 3rd line
 	 * We can probably make this smarter, like WEBVTT_EXPECTED_PERCENTAGE or something
@@ -222,20 +235,21 @@ TEST_F(CueSettingPosition,NoPercentSign)
 }
 
 /**
- * Test that we consider it an error if we encounter a key:value pair where the delimiter is not
- * U+003A COLON
+ * Test that the parser requires a colon.
  *
- * http://dev.w3.org/html5/webvtt/#webvtt-text-position-cue-setting (11/21/2012):
- * A WebVTT text position cue setting consists of the following components, in the order given:
- * 1. The string "position".
- * 2. A U+003A COLON character (:).
- * 3. One or more ASCII digits.
- * 4. A U+0025 PERCENT SIGN character (%).
+ * http://dev.w3.org/html5/webvtt/#parse-the-webvtt-settings (11/28/2012):
+ * 1. If setting does not contain a U+003A COLON character (:), or if the first U+003A COLON character (:) in setting is either the first or last character of setting, then jump to the step labeled next setting.
+ * 5. Next setting: Continue to the next token, if any.
  */
 TEST_F(CueSettingPosition,BadDelimiter)
 {
 	loadVtt( "cue-settings/position/bad-delimiter.vtt", 1 );
 	const Error& err = getError( 0 );
+	/**
+	 * Position should be 50 because the malformed setting should be skipped
+     * and 50 is default.
+	 */
+	ASSERT_EQ( 50, getCue( 0 ).textPositionPercentage() );
 	/**
 	 * We're expecting a WEBVTT_INVALID_CUESETTING_DELIMITER error on the 33rd column of the 3rd line
 	 */
@@ -245,20 +259,50 @@ TEST_F(CueSettingPosition,BadDelimiter)
 }
 
 /**
- * Test that we consider it an error if we encounter a 'position' value which is outside of the ASCII
- * digit range (0x30-0x39) - In this case, fail on 0x3A (COLON)
+ * Test that the parser does not change position if the keyword matches nothing.
  *
- * http://dev.w3.org/html5/webvtt/#webvtt-text-position-cue-setting (11/21/2012):
- * A WebVTT text position cue setting consists of the following components, in the order given:
- * 1. The string "position".
- * 2. A U+003A COLON character (:).
- * 3. One or more ASCII digits.
- * 4. A U+0025 PERCENT SIGN character (%).
+ * http://dev.w3.org/html5/webvtt/#parse-the-webvtt-settings (11/27/2012):
+ * 4. Run the appropriate substeps that apply for the value of name, as follows:
+ * If name is a case-sensitive match for "vertical" ...
+ * If name is a case-sensitive match for "line" ...
+ * If name is a case-sensitive match for "position" ...
+ * If name is a case-sensitive match for "size" ...
+ * If name is a case-sensitive match for "align" ...
+ * 5. Next setting: Continue to the next token, if any.
+ */
+TEST_F(CueSettingPosition,DISABLED_BadKeyword)
+{
+	loadVtt( "cue-settings/position/bad-keyword.vtt", 1 );
+	const Error& err = getError( 0 );
+	/**
+	 * Position should be 50 because the malformed setting should be skipped
+     * and 50 is default.
+	 */
+	ASSERT_EQ( 50, getCue( 0 ).textPositionPercentage() );
+	/**
+	 * We're expecting a WEBVTT_INVALID_CUESETTING error on the 25th column of the 3rd line
+	 */
+	ASSERT_EQ( WEBVTT_INVALID_CUESETTING, err.error() );
+	ASSERT_EQ( 3, err.line() );
+	ASSERT_EQ( 25, err.column() );
+}
+
+/**
+ * Test that a percent sign is required.
+ *
+ * From http://dev.w3.org/html5/webvtt/#parse-the-webvtt-settings (11/28/2012):
+ * If name is a case-sensitive match for "position"
+ * 1. If value contains any characters other than U+0025 PERCENT SIGN characters (%) and ASCII digits, then jump to the step labeled next setting.
  */
 TEST_F(CueSettingPosition,AsciiDigitBeyondHighBoundary)
 {
-	loadVtt( "cue-settings/position/above-0x39.vtt" );
+	loadVtt( "cue-settings/position/above-0x39.vtt", 1 );
 	const Error& err = getError( 0 );
+	/**
+	 * Position should be 50 because the malformed setting should be skipped
+     * and 50 is default.
+	 */
+	ASSERT_EQ( 50, getCue( 0 ).textPositionPercentage() );
 	/**
 	 * We're expecting a WEBVTT_POSITION_BAD_VALUE error on the 34th column of the 3rd line
 	 */
@@ -268,24 +312,102 @@ TEST_F(CueSettingPosition,AsciiDigitBeyondHighBoundary)
 }
 
 /**
- * Test that we consider it an error if we encounter a 'position' value which is outside of the ASCII
- * digit range (0x30-0x39) - In this case, fail on 0x2F (FORWARD SLASH)
+ * Test that a percent sign is required.
  *
- * http://dev.w3.org/html5/webvtt/#webvtt-text-position-cue-setting (11/21/2012):
- * A WebVTT text position cue setting consists of the following components, in the order given:
- * 1. The string "position".
- * 2. A U+003A COLON character (:).
- * 3. One or more ASCII digits.
- * 4. A U+0025 PERCENT SIGN character (%).
+ * From http://dev.w3.org/html5/webvtt/#parse-the-webvtt-settings (11/28/2012):
+ * If name is a case-sensitive match for "position"
+ * 1. If value contains any characters other than U+0025 PERCENT SIGN characters (%) and ASCII digits, then jump to the step labeled next setting.
  */
 TEST_F(CueSettingPosition,AsciiDigitBeyondLowBoundary)
 {
-	loadVtt( "cue-settings/position/below-0x30.vtt" );
+	loadVtt( "cue-settings/position/below-0x30.vtt", 1 );
 	const Error& err = getError( 0 );
+	/**
+	 * Position should be 50 because the malformed setting should be skipped
+     * and 50 is default.
+	 */
+	ASSERT_EQ( 50, getCue( 0 ).textPositionPercentage() );
 	/**
 	 * We're expecting a WEBVTT_POSITION_BAD_VALUE error on the 34th column of the 3rd line
 	 */
 	ASSERT_EQ( WEBVTT_POSITION_BAD_VALUE, err.error() );
 	ASSERT_EQ( 3, err.line() );
 	ASSERT_EQ( 34, err.column() );
+}
+
+/**
+ * Test that negative values are not allowed.
+ *
+ * http://dev.w3.org/html5/webvtt/#parse-the-webvtt-settings (11/28/2012):
+ * If name is a case-sensitive match for "position"
+ *	6. If number is not in the range 0 <= number <= 100, then jump to the step labeled next setting.
+ */
+TEST_F(CueSettingPosition,DISABLED_PercentNegative)
+{
+	loadVtt( "cue-settings/position/bad-pct-negative.vtt", 1 );
+	const Error& err = getError( 0 );
+	/**
+	 * Position should be 50 because the malformed setting should be skipped
+     * and 50 is default.
+	 */
+	ASSERT_EQ( 50, getCue( 0 ).textPositionPercentage() );
+	/**
+	 * We're expecting a WEBVTT_POSITION_BAD_VALUE error on the 34th column of the 3rd line
+	 */
+	ASSERT_EQ( WEBVTT_POSITION_BAD_VALUE, err.error() );
+	ASSERT_EQ( 3, err.line() );
+	ASSERT_EQ( 34, err.column() );
+}
+
+/**
+ * Test that values over 100 are not allowed.
+ *
+ * http://dev.w3.org/html5/webvtt/#parse-the-webvtt-settings (11/28/2012):
+ * If name is a case-sensitive match for "position"
+ *	6. If number is not in the range 0 <= number <= 100, then jump to the step labeled next setting.
+ */
+TEST_F(CueSettingPosition,DISABLED_PercentOver100)
+{
+	loadVtt( "cue-settings/position/bad-pct-over-100.vtt", 1 );
+	const Error& err = getError( 0 );
+	/**
+	 * Position should be 50 because the malformed setting should be skipped
+     * and 50 is default.
+	 */
+	ASSERT_EQ( 50, getCue( 0 ).textPositionPercentage() );
+	/**
+	 * We're expecting a WEBVTT_POSITION_BAD_VALUE error on the 34th column of the 3rd line
+	 */
+	ASSERT_EQ( WEBVTT_POSITION_BAD_VALUE, err.error() );
+	ASSERT_EQ( 3, err.line() );
+	ASSERT_EQ( 34, err.column() );
+}
+
+/**
+ * Test that the keyword is case-sensitive.
+ *
+ * http://dev.w3.org/html5/webvtt/#parse-the-webvtt-settings (11/28/2012):
+ * 4. Run the appropriate substeps that apply for the value of name, as follows:
+ * If name is a case-sensitive match for "vertical" ...
+ * If name is a case-sensitive match for "line" ...
+ * If name is a case-sensitive match for "position" ...
+ * If name is a case-sensitive match for "size" ...
+ * If name is a case-sensitive match for "align" ...
+ * 5. Next setting: Continue to the next token, if any.
+ */
+TEST_F(CueSettingPosition,DISABLED_UppercaseKeyword)
+{
+	loadVtt( "cue-settings/position/uppercase-keyword.vtt", 1 );
+	const Error& err = getError( 0 );
+	/**
+	 * Position should be 50 because the malformed setting should be skipped
+     * and 50 is default.
+	 */
+	ASSERT_EQ( 50, getCue( 0 ).textPositionPercentage() );
+	/**
+	 * We're expecting a WEBVTT_INVALID_CUESETTING error on the 25th column of the 3rd line
+	 */
+	ASSERT_EQ( WEBVTT_INVALID_CUESETTING, err.error() );
+	ASSERT_EQ( 3, err.line() );
+	ASSERT_EQ( 25, err.column() );
 }

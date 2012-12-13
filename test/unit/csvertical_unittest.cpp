@@ -7,14 +7,14 @@ class CueSettingVertical : public CueTest { };
  *
  * This cue should have a Vertical orientation with direction RightToLeft
  *
- * From http://dev.w3.org/html5/webvtt/#webvtt-vertical-text-cue-setting (09/28/2012):
- *	1. The string "vertical".
- *	2. A U+003A COLON character (:).
- *	3. One of the following strings: "rl", "lr". 
+ * From http://dev.w3.org/html5/webvtt/#parse-the-webvtt-settings (11/28/2012):
+ *	If name is a case-sensitive match for "vertical"
+ *	1. If value is a case-sensitive match for the string "rl", then let cue's text track cue writing direction be vertical growing left.
  */
 TEST_F(CueSettingVertical,RL)
 {
 	loadVtt( "cue-settings/vertical/rl.vtt", 1 );
+    ASSERT_EQ( 0, errorCount() ) << "This file should contain no errors.";
 	ASSERT_TRUE( getCue( 0 ).isVerticalRightToLeft() );
 }
 
@@ -22,31 +22,40 @@ TEST_F(CueSettingVertical,RL)
  * Verifies that the parser correctly parses a "vertical" key, followed by U+003A ':',
  * followed by 'lr' (indicating that the text be positioned vertically, and grows towards the right)
  *
- * This cue should have a Vertical orientation with direction LeftToRight
+ * This cue should have a Vertical orientation with direction RightToLeft
  *
- * From http://dev.w3.org/html5/webvtt/#webvtt-vertical-text-cue-setting (09/28/2012):
- *	1. The string "vertical".
- *	2. A U+003A COLON character (:).
- *	3. One of the following strings: "rl", "lr". 
+ * From http://dev.w3.org/html5/webvtt/#parse-the-webvtt-settings (11/28/2012):
+ *	If name is a case-sensitive match for "vertical"
+ *	2. Otherwise, if value is a case-sensitive match for the string "lr", then let cue's text track cue writing direction be vertical growing right.
  */
 TEST_F(CueSettingVertical,LR)
 {
 	loadVtt( "cue-settings/vertical/lr.vtt", 1 );
+    ASSERT_EQ( 0, errorCount() ) << "This file should contain no errors.";
 	ASSERT_TRUE( getCue( 0 ).isVerticalLeftToRight() );
 }
 
 /**
- * Test if parser fails when an unknown keyword is used for the otherwise correct 'vertical' cue setting.
+ * Test that the parser does not change vertical if the keyword matches nothing.
  *
- * From http://dev.w3.org/html5/webvtt/#webvtt-vertical-text-cue-setting (09/28/2012):
- *	1. The string "vertical".
- *	2. A U+003A COLON character (:).
- *	3. One of the following strings: "rl", "lr". 
+ * http://dev.w3.org/html5/webvtt/#parse-the-webvtt-settings (11/28/2012):
+ * 4. Run the appropriate substeps that apply for the value of name, as follows:
+ * If name is a case-sensitive match for "vertical" ...
+ * If name is a case-sensitive match for "line" ...
+ * If name is a case-sensitive match for "position" ...
+ * If name is a case-sensitive match for "size" ...
+ * If name is a case-sensitive match for "align" ...
+ * 5. Next setting: Continue to the next token, if any.
  */
-TEST_F(CueSettingVertical,BadKeyword)
+TEST_F(CueSettingVertical,DISABLED_BadKeyword)
 {
 	loadVtt( "cue-settings/vertical/bad-keyword.vtt", 1 );
 	const Error& err = getError( 0 );
+	/**
+	 * Writing direction should be horizontal because the malformed setting should be skipped
+     * because horiztonal is default.
+	 */
+	ASSERT_EQ( 50, getCue( 0 ).isHorizontal() );
 	/**
 	 * We're expecting a WEBVTT_INVALID_CUESETTING error on the 25th column of the 3rd line
 	 */
@@ -56,39 +65,48 @@ TEST_F(CueSettingVertical,BadKeyword)
 }
 
 /**
- * Test if parser fails when an incorrect setting delimiter is used for the otherwise correct cue setting.
+ * Test that the parser requires a colon.
  *
- * From http://dev.w3.org/html5/webvtt/#webvtt-vertical-text-cue-setting (09/28/2012):
- *	1. The string "vertical".
- *	2. A U+003A COLON character (:).
- *	3. One of the following strings: "rl", "lr". 
+ * http://dev.w3.org/html5/webvtt/#parse-the-webvtt-settings (11/28/2012):
+ * 1. If setting does not contain a U+003A COLON character (:), or if the first U+003A COLON character (:) in setting is either the first or last character of setting, then jump to the step labeled next setting.
+ * 5. Next setting: Continue to the next token, if any.
  */
-TEST_F(CueSettingVertical,BadDelimiter)
+TEST_F(CueSettingVertical,DISABLED_BadDelimiter)
 {
 	loadVtt ( "cue-settings/vertical/bad-delimiter.vtt", 1 );
 	const Error& err = getError( 0 );
-
+	/**
+	 * Writing direction should be horizontal because the malformed setting should be skipped
+     * because horiztonal is default.
+	 */
+	ASSERT_EQ( 50, getCue( 0 ).isHorizontal() );
 	/**
 	 * We're expecting a WEBVTT_INVALID_CUESETTING_DELIMITER error on the 33rd column of the 3rd line
 	 */
 	ASSERT_EQ(WEBVTT_INVALID_CUESETTING_DELIMITER,err.error());
 	ASSERT_EQ(3,err.line());
-	ASSERT_EQ(33,err.column());
+	ASSERT_EQ(25,err.column());
 }
 
 /**
- * Test if parser fails when an unknown value is used for an otherwise correct 'vertical' cue setting.
+ * Test what happens when there isn't a matching value for the setting vertical.
  *
- * From http://dev.w3.org/html5/webvtt/#webvtt-vertical-text-cue-setting (09/28/2012):
- *	1. The string "vertical".
- *	2. A U+003A COLON character (:).
- *	3. One of the following strings: "rl", "lr". 
+ * http://dev.w3.org/html5/webvtt/#parse-the-webvtt-settings (11/27/2012):
+ * 4. Run the appropriate substeps that apply for the value of name, as follows:
+ * If name is a case-sensitive match for "vertical"
+ * 1. If value is a case-sensitive match for the string "rl", ...
+ * 2. Otherwise, if value is a case-sensitive match for the string "lr", ...
+ * 5. Next setting: Continue to the next token, if any.
  */
-TEST_F(CueSettingVertical,BadValue)
+TEST_F(CueSettingVertical,DISABLED_BadValue)
 {
 	loadVtt( "cue-settings/vertical/bad-value.vtt", 1 );
 	const Error& err = getError( 0 );
-
+	/**
+	 * Writing direction should be horizontal because the malformed setting should be skipped
+     * because horiztonal is default.
+	 */
+	ASSERT_EQ( 50, getCue( 0 ).isHorizontal() );
 	/**
 	 * We're expecting a WEBVTT_VERTICAL_BAD_VALUE error on the 34th column of the 3rd line
 	 */
@@ -98,39 +116,176 @@ TEST_F(CueSettingVertical,BadValue)
 }
 
 /**
- * Test if parser fails when the key/value delimiter is preceded by whitespace.
+ * Test that the parser does not allow a setting to start with a colon
+ * and that it requires a colon in the other setting.
  *
- * From http://dev.w3.org/html5/webvtt/#webvtt-vertical-text-cue-setting (09/28/2012):
- *	1. The string "vertical".
- *	2. A U+003A COLON character (:).
- *	3. One of the following strings: "rl", "lr". 
+ * http://dev.w3.org/html5/webvtt/#parse-the-webvtt-settings (11/27/2012):
+ * 1. If setting does not contain a U+003A COLON character (:), or if the first U+003A COLON character (:) in setting is either the first or last character of setting, then jump to the step labeled next setting.
+ * 5. Next setting: Continue to the next token, if any.
  */
-TEST_F(CueSettingVertical,BadWhitespaceBeforeDelimiter)
+TEST_F(CueSettingVertical,DISABLED_BadWhitespaceBeforeDelimiter)
 {
 	loadVtt( "cue-settings/vertical/bad-whitespace-before-delimiter.vtt", 1 );
 	const Error& err = getError( 0 );
-
+	/**
+	 * Writing direction should be horizontal because the malformed setting should be skipped
+     * because horiztonal is default.
+	 */
+	ASSERT_EQ( 50, getCue( 0 ).isHorizontal() );
 	/**
 	 * We're expecting a WEBVTT_UNEXPECTED_WHITESPACE error on the 33rd column of the 3rd line
 	 */
 	ASSERT_EQ( WEBVTT_UNEXPECTED_WHITESPACE, err.error() );
 	ASSERT_EQ( 3, err.line() );
-	ASSERT_EQ( 33, err.column() );
+	ASSERT_EQ( 25, err.column() );
 }
 
 /**
- * Test if parser fails when the key/value delimiter is followed by whitespace.
+ * Test that the parser does not allow a setting to end with a colon
+ * and that it requires a colon in the other setting.
  *
- * From http://dev.w3.org/html5/webvtt/#webvtt-vertical-text-cue-setting (09/28/2012):
- *	1. The string "vertical".
- *	2. A U+003A COLON character (:).
- *	3. One of the following strings: "rl", "lr". 
+ * http://dev.w3.org/html5/webvtt/#parse-the-webvtt-settings (11/27/2012):
+ * 1. If setting does not contain a U+003A COLON character (:), or if the first U+003A COLON character (:) in setting is either the first or last character of setting, then jump to the step labeled next setting.
+ * 5. Next setting: Continue to the next token, if any.
  */
-TEST_F(CueSettingVertical,BadWhitespaceAfterDelimiter)
+TEST_F(CueSettingVertical,DISABLED_BadWhitespaceAfterDelimiter)
 {
 	loadVtt( "cue-settings/vertical/bad-whitespace-after-delimiter.vtt", 1 );
 	const Error& err = getError( 0 );
+	/**
+	 * Writing direction should be horizontal because the malformed setting should be skipped
+     * because horiztonal is default.
+	 */
+	ASSERT_EQ( 50, getCue( 0 ).isHorizontal() );
+	/**
+	 * We're expecting a WEBVTT_VERTICAL_BAD_VALUE error on the 34th column of the 3rd line
+	 * This should really be changed to a different error, like WEBVTT_UNEXPECTED_WHITESPACE, or something
+	 */
+	ASSERT_EQ( WEBVTT_VERTICAL_BAD_VALUE, err.error() );
+	ASSERT_EQ( 3, err.line() );
+	ASSERT_EQ( 34, err.column() );
+}
 
+/**
+ * Test that the parser does not allow a setting to start with a colon.
+ *
+ * http://dev.w3.org/html5/webvtt/#parse-the-webvtt-settings (11/28/2012):
+ * 1. If setting does not contain a U+003A COLON character (:), or if the first U+003A COLON character (:) in setting is either the first or last character of setting, then jump to the step labeled next setting.
+ * 5. Next setting: Continue to the next token, if any.
+ */
+TEST_F(CueSettingVertical,DISABLED_NoKeyword)
+{
+	loadVtt( "cue-settings/vertical/no-keyword.vtt", 1 );
+	const Error& err = getError( 0 );
+	/**
+	 * Writing direction should be horizontal because the malformed setting should be skipped
+     * because horiztonal is default.
+	 */
+	ASSERT_EQ( 50, getCue( 0 ).isHorizontal() );
+	/**
+	 * We're expecting a WEBVTT_INVALID_CUESETTING error on the 25th column of the 3rd line
+	 */
+	ASSERT_EQ( WEBVTT_INVALID_CUESETTING, err.error() );
+	ASSERT_EQ( 3, err.line() );
+	ASSERT_EQ( 25, err.column() );
+}
+
+/**
+ * Test that the parser does not allow a setting to end with a colon.
+ *
+ * http://dev.w3.org/html5/webvtt/#parse-the-webvtt-settings (11/28/2012):
+ * 1. If setting does not contain a U+003A COLON character (:), or if the first U+003A COLON character (:) in setting is either the first or last character of setting, then jump to the step labeled next setting.
+ * 5. Next setting: Continue to the next token, if any.
+ */
+TEST_F(CueSettingVertical,DISABLED_NoValue)
+{
+	loadVtt( "cue-settings/vertical/no-value.vtt", 1 );
+	const Error& err = getError( 0 );
+	/**
+	 * Writing direction should be horizontal because the malformed setting should be skipped
+     * because horiztonal is default.
+	 */
+	ASSERT_EQ( 50, getCue( 0 ).isHorizontal() );
+	/**
+	 * We're expecting a WEBVTT_VERTICAL_BAD_VALUE error on the 34th column of the 3rd line
+	 */
+	ASSERT_EQ( WEBVTT_VERTICAL_BAD_VALUE, err.error() );
+	ASSERT_EQ( 3, err.line() );
+	ASSERT_EQ( 34, err.column() );
+}
+
+/**
+ * Test that the parser requires a colon.
+ *
+ * http://dev.w3.org/html5/webvtt/#parse-the-webvtt-settings (11/28/2012):
+ * 1. If setting does not contain a U+003A COLON character (:), or if the first U+003A COLON character (:) in setting is either the first or last character of setting, then jump to the step labeled next setting.
+ * 5. Next setting: Continue to the next token, if any.
+ */
+TEST_F(CueSettingVertical,DISABLED_NoDelimiter)
+{
+	loadVtt( "cue-settings/vertical/no-delimiter.vtt", 1 );
+	const Error& err = getError( 0 );
+	/**
+	 * Writing direction should be horizontal because the malformed setting should be skipped
+     * because horiztonal is default.
+	 */
+	ASSERT_EQ( 50, getCue( 0 ).isHorizontal() );
+	/**
+	 * We're expecting a WEBVTT_INVALID_CUESETTING error on the 25th column of the 3rd line
+	 */
+	ASSERT_EQ( WEBVTT_INVALID_CUESETTING, err.error() );
+	ASSERT_EQ( 3, err.line() );
+	ASSERT_EQ( 25, err.column() );
+}
+
+/**
+ * Test that the keyword is case-sensitive.
+ *
+ * http://dev.w3.org/html5/webvtt/#parse-the-webvtt-settings (11/28/2012):
+ * 4. Run the appropriate substeps that apply for the value of name, as follows:
+ * If name is a case-sensitive match for "vertical" ...
+ * If name is a case-sensitive match for "line" ...
+ * If name is a case-sensitive match for "position" ...
+ * If name is a case-sensitive match for "size" ...
+ * If name is a case-sensitive match for "align" ...
+ * 5. Next setting: Continue to the next token, if any.
+ */
+TEST_F(CueSettingVertical,DISABLED_UppercaseKeyword)
+{
+	loadVtt( "cue-settings/vertical/uppercase-keyword.vtt", 1 );
+	const Error& err = getError( 0 );
+	/**
+	 * Writing direction should be horizontal because the malformed setting should be skipped
+     * because horiztonal is default.
+	 */
+	ASSERT_EQ( 50, getCue( 0 ).isHorizontal() );
+	/**
+	 * We're expecting a WEBVTT_INVALID_CUESETTING error on the 25th column of the 3rd line
+	 */
+	ASSERT_EQ( WEBVTT_INVALID_CUESETTING, err.error() );
+	ASSERT_EQ( 3, err.line() );
+	ASSERT_EQ( 25, err.column() );
+}
+
+/**
+ * Test that that value is case-sensitive.
+ *
+ * http://dev.w3.org/html5/webvtt/#parse-the-webvtt-settings (11/28/2012):
+ * 4. Run the appropriate substeps that apply for the value of name, as follows:
+ * If name is a case-sensitive match for "vertical"
+ * 1. If value is a case-sensitive match for the string "rl", ...
+ * 2. Otherwise, if value is a case-sensitive match for the string "lr", ...
+ * 5. Next setting: Continue to the next token, if any.
+ */
+TEST_F(CueSettingVertical,DISABLED_UppercaseValue)
+{
+	loadVtt( "cue-settings/vertical/uppercase-value.vtt", 1 );
+	const Error& err = getError( 0 );
+	/**
+	 * Writing direction should be horizontal because the malformed setting should be skipped
+     * because horiztonal is default.
+	 */
+	ASSERT_EQ( 50, getCue( 0 ).isHorizontal() );
 	/**
 	 * We're expecting a WEBVTT_UNEXPECTED_WHITESPACE error on the 34th column of the 3rd line
 	 */
