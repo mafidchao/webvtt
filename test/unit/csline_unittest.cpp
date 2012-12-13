@@ -2,380 +2,487 @@
 class CueSettingLine : public CueTest { };
 
 /**
- * Verifies that the parser correctly parses a single "line" setting with U+003A ':', 
- * U+002D '-', followed by 1 or more ASCII digits (U+0030-U+0039 '0'-'9') each positioned correctly.
+ * Test a two digit non-percentage value for setting line.
  *
- * testing multiple digits at the center of the range
+ * From http://dev.w3.org/html5/webvtt/#parse-the-webvtt-settings (11/27/2012):
+ * If name is a case-sensitive match for "line"
+ *	6. Ignoring the trailing percent sign, if any, interpret value as a (potentially signed) integer, and let number be that number.
+ * 8. Let cue's text track cue line position be number.
+ * 9. If the last character in value is a U+0025 PERCENT SIGN character (%), then let cue's text track cue snap-to-lines flag be false. Otherwise, let it be true.
+ */
+TEST_F(CueSettingLine,ManyDigit)
+{
+	loadVtt( "cue-settings/line/many-digit.vtt", 1 );
+    ASSERT_EQ( 0, errorCount() ) << "This file should contain no errors.";
+	ASSERT_EQ( 12345, getCue( 0 ).lineNumber() );
+    ASSERT_TRUE( getCue( 0 ).snapToLines() );
+}
+
+/**
+ * Test a two digit non-percentage value for setting line.
  *
- * From http://dev.w3.org/html5/webvtt/#webvtt-line-position-cue-setting (09/28/2012):
- *	1. The string "line".
- *	2. A U+003A COLON character (:).
- *	3.
- *		To represent a line number
- *		1. Optionally a U+002D HYPHEN-MINUS character (-).
- *		2. One or more characters in the range U+0030 DIGIT ZERO (0) to U+0039 DIGIT NINE (9).
+ * From http://dev.w3.org/html5/webvtt/#parse-the-webvtt-settings (11/27/2012):
+ * If name is a case-sensitive match for "line"
+ *	6. Ignoring the trailing percent sign, if any, interpret value as a (potentially signed) integer, and let number be that number.
+ * 8. Let cue's text track cue line position be number.
+ * 9. If the last character in value is a U+0025 PERCENT SIGN character (%), then let cue's text track cue snap-to-lines flag be false. Otherwise, let it be true.
+ */
+TEST_F(CueSettingLine,ManyDigitHighBoundary)
+{
+	loadVtt( "cue-settings/line/many-digit-high-boundary.vtt", 1 );
+   ASSERT_EQ( 0, errorCount() ) << "This file should contain no errors.";
+	ASSERT_EQ( 32767, getCue( 0 ).lineNumber() );
+   ASSERT_TRUE( getCue( 0 ).snapToLines() );
+}
+
+/**
+ * Test a two digit non-percentage value for setting line.
+ *
+ * From http://dev.w3.org/html5/webvtt/#parse-the-webvtt-settings (11/27/2012):
+ * If name is a case-sensitive match for "line"
+ *	6. Ignoring the trailing percent sign, if any, interpret value as a (potentially signed) integer, and let number be that number.
+ * 8. Let cue's text track cue line position be number.
+ * 9. If the last character in value is a U+0025 PERCENT SIGN character (%), then let cue's text track cue snap-to-lines flag be false. Otherwise, let it be true.
+ */
+TEST_F(CueSettingLine,DISABLED_ManyDigitLowBoundary)
+{
+	loadVtt( "cue-settings/line/many-digit-low-boundary.vtt", 1 );
+    ASSERT_EQ( 0, errorCount() ) << "This file should contain no errors.";
+	ASSERT_EQ( 0, getCue( 0 ).lineNumber() );
+    ASSERT_TRUE( getCue( 0 ).snapToLines() );
+}
+
+/**
+ * Test a negative two digit non-percentage value for setting line.
+ *
+ * From http://dev.w3.org/html5/webvtt/#parse-the-webvtt-settings (11/27/2012):
+ * If name is a case-sensitive match for "line"
+ *	6. Ignoring the trailing percent sign, if any, interpret value as a (potentially signed) integer, and let number be that number.
+ * 8. Let cue's text track cue line position be number.
+ * 9. If the last character in value is a U+0025 PERCENT SIGN character (%), then let cue's text track cue snap-to-lines flag be false. Otherwise, let it be true.
+ */
+TEST_F(CueSettingLine,ManyDigitNegative)
+{
+	loadVtt( "cue-settings/line/many-digit-negative.vtt", 1 );
+   ASSERT_EQ( 0, errorCount() ) << "This file should contain no errors.";
+	ASSERT_EQ( -12345, getCue( 0 ).lineNumber() );
+   ASSERT_TRUE( getCue( 0 ).snapToLines() );
+}
+
+/**
+ * Test a negative two digit non-percentage value for setting line.
+ *
+ * From http://dev.w3.org/html5/webvtt/#parse-the-webvtt-settings (11/27/2012):
+ * If name is a case-sensitive match for "line"
+ *	6. Ignoring the trailing percent sign, if any, interpret value as a (potentially signed) integer, and let number be that number.
+ * 8. Let cue's text track cue line position be number.
+ * 9. If the last character in value is a U+0025 PERCENT SIGN character (%), then let cue's text track cue snap-to-lines flag be false. Otherwise, let it be true.
+ */
+TEST_F(CueSettingLine,ManyDigitNegativeHighBoundary)
+{
+	loadVtt( "cue-settings/line/many-digit-negative-high-boundary.vtt", 1 );
+   ASSERT_EQ( 0, errorCount() ) << "This file should contain no errors.";
+	ASSERT_EQ( -32767, getCue( 0 ).lineNumber() );
+   ASSERT_TRUE( getCue( 0 ).snapToLines() );
+}
+
+/**
+ * Test a negative two digit non-percentage value for setting line.
+ *
+ * From http://dev.w3.org/html5/webvtt/#parse-the-webvtt-settings (11/27/2012):
+ * If name is a case-sensitive match for "line"
+ *	6. Ignoring the trailing percent sign, if any, interpret value as a (potentially signed) integer, and let number be that number.
+ * 8. Let cue's text track cue line position be number.
+ * 9. If the last character in value is a U+0025 PERCENT SIGN character (%), then let cue's text track cue snap-to-lines flag be false. Otherwise, let it be true.
+ */
+TEST_F(CueSettingLine,ManyDigitNegativeLowBoundary)
+{
+	loadVtt( "cue-settings/line/many-digit-negative-low-boundary.vtt", 1 );
+   ASSERT_EQ( 0, errorCount() ) << "This file should contain no errors.";
+	ASSERT_EQ( 0, getCue( 0 ).lineNumber() );
+   ASSERT_TRUE( getCue( 0 ).snapToLines() );
+}
+
+/**
+ * Test a two digit percentage value for setting line.
+ *
+ * From http://dev.w3.org/html5/webvtt/#parse-the-webvtt-settings (11/27/2012):
+ * If name is a case-sensitive match for "line"
+ *	6. Ignoring the trailing percent sign, if any, interpret value as a (potentially signed) integer, and let number be that number.
+ * 8. Let cue's text track cue line position be number.
+ * 9. If the last character in value is a U+0025 PERCENT SIGN character (%), then let cue's text track cue snap-to-lines flag be false. Otherwise, let it be true.
+ */
+TEST_F(CueSettingLine,DISABLED_ManyDigitPercentage)
+{
+	loadVtt( "cue-settings/line/many-digit-pct.vtt", 1 );
+   ASSERT_EQ( 0, errorCount() ) << "This file should contain no errors.";
+	ASSERT_EQ( 55, getCue( 0 ).relativeLinePositionPercentage() );
+   ASSERT_FALSE( getCue( 0 ).snapToLines() );
+}
+
+/**
+ * Test a two digit percentage value for setting line.
+ *
+ * From http://dev.w3.org/html5/webvtt/#parse-the-webvtt-settings (11/27/2012):
+ * If name is a case-sensitive match for "line"
+ *	6. Ignoring the trailing percent sign, if any, interpret value as a (potentially signed) integer, and let number be that number.
+ * 8. Let cue's text track cue line position be number.
+ * 9. If the last character in value is a U+0025 PERCENT SIGN character (%), then let cue's text track cue snap-to-lines flag be false. Otherwise, let it be true.
+ */
+TEST_F(CueSettingLine,DISABLED_ManyDigitPercentageHighBoundary)
+{
+	loadVtt( "cue-settings/line/many-digit-pct-high-boundary.vtt", 1 );
+   ASSERT_EQ( 0, errorCount() ) << "This file should contain no errors.";
+	ASSERT_EQ( 100, getCue( 0 ).relativeLinePositionPercentage() );
+   ASSERT_FALSE( getCue( 0 ).snapToLines() );
+}
+
+/**
+ * Test a two digit percentage value for setting line.
+ *
+ * From http://dev.w3.org/html5/webvtt/#parse-the-webvtt-settings (11/27/2012):
+ * If name is a case-sensitive match for "line"
+ *	6. Ignoring the trailing percent sign, if any, interpret value as a (potentially signed) integer, and let number be that number.
+ * 8. Let cue's text track cue line position be number.
+ * 9. If the last character in value is a U+0025 PERCENT SIGN character (%), then let cue's text track cue snap-to-lines flag be false. Otherwise, let it be true.
+ */
+TEST_F(CueSettingLine,DISABLED_ManyDigitPercentageLowBoundary)
+{
+	loadVtt( "cue-settings/line/many-digit-pct-low-boundary.vtt", 1 );
+   ASSERT_EQ( 0, errorCount() ) << "This file should contain no errors.";
+	ASSERT_EQ( 0, getCue( 0 ).relativeLinePositionPercentage() );
+   ASSERT_FALSE( getCue( 0 ).snapToLines() );
+}
+
+/**
+ * Test a two digit non-percentage value for setting line.
+ *
+ * From http://dev.w3.org/html5/webvtt/#parse-the-webvtt-settings (11/27/2012):
+ * If name is a case-sensitive match for "line"
+ *	6. Ignoring the trailing percent sign, if any, interpret value as a (potentially signed) integer, and let number be that number.
+ * 8. Let cue's text track cue line position be number.
+ * 9. If the last character in value is a U+0025 PERCENT SIGN character (%), then let cue's text track cue snap-to-lines flag be false. Otherwise, let it be true.
  */
 TEST_F(CueSettingLine,DoubleDigit)
 {
 	loadVtt( "cue-settings/line/double-digit.vtt", 1 );
+   ASSERT_EQ( 0, errorCount() ) << "This file should contain no errors.";
 	ASSERT_EQ( 54, getCue( 0 ).lineNumber() );
+   ASSERT_TRUE( getCue( 0 ).snapToLines() );
 }
 
 /**
- * Verifies that the parser correctly parses a single "line" setting with U+003A ':', 
- * U+002D '-', followed by 1 or more ASCII digits (U+0030-U+0039 '0'-'9') each positioned correctly.
+ * Test a two digit non-percentage value for setting line.
  *
- * testing multiple digits at the upper boundary of the range
- *
- * From http://dev.w3.org/html5/webvtt/#webvtt-line-position-cue-setting (09/28/2012):
- *	1. The string "line".
- *	2. A U+003A COLON character (:).
- *	3.
- *		To represent a line number
- *		1. Optionally a U+002D HYPHEN-MINUS character (-).
- *		2. One or more characters in the range U+0030 DIGIT ZERO (0) to U+0039 DIGIT NINE (9).
+ * From http://dev.w3.org/html5/webvtt/#parse-the-webvtt-settings (11/27/2012):
+ * If name is a case-sensitive match for "line"
+ *	6. Ignoring the trailing percent sign, if any, interpret value as a (potentially signed) integer, and let number be that number.
+ * 8. Let cue's text track cue line position be number.
+ * 9. If the last character in value is a U+0025 PERCENT SIGN character (%), then let cue's text track cue snap-to-lines flag be false. Otherwise, let it be true.
  */
 TEST_F(CueSettingLine,DoubleDigitHighBoundary)
 {
 	loadVtt( "cue-settings/line/double-digit-high-boundary.vtt", 1 );
+   ASSERT_EQ( 0, errorCount() ) << "This file should contain no errors.";
 	ASSERT_EQ( 99, getCue( 0 ).lineNumber() );
+   ASSERT_TRUE( getCue( 0 ).snapToLines() );
 }
 
 /**
- * Verifies that the parser correctly parses a single "line" setting with U+003A ':', 
- * U+002D '-', followed by 1 or more ASCII digits (U+0030-U+0039 '0'-'9') each positioned correctly.
+ * Test a two digit non-percentage value for setting line.
  *
- * testing multiple digits at the lower boundary of the range
- *
- * From http://dev.w3.org/html5/webvtt/#webvtt-line-position-cue-setting (09/28/2012):
- *	1. The string "line".
- *	2. A U+003A COLON character (:).
- *	3.
- *		To represent a line number
- *		1. Optionally a U+002D HYPHEN-MINUS character (-).
- *		2. One or more characters in the range U+0030 DIGIT ZERO (0) to U+0039 DIGIT NINE (9).
+ * From http://dev.w3.org/html5/webvtt/#parse-the-webvtt-settings (11/27/2012):
+ * If name is a case-sensitive match for "line"
+ *	6. Ignoring the trailing percent sign, if any, interpret value as a (potentially signed) integer, and let number be that number.
+ * 8. Let cue's text track cue line position be number.
+ * 9. If the last character in value is a U+0025 PERCENT SIGN character (%), then let cue's text track cue snap-to-lines flag be false. Otherwise, let it be true.
  */
 TEST_F(CueSettingLine,DoubleDigitLowBoundary)
 {
 	loadVtt( "cue-settings/line/double-digit-low-boundary.vtt", 1 );
+   ASSERT_EQ( 0, errorCount() ) << "This file should contain no errors.";
 	ASSERT_EQ( 0, getCue( 0 ).lineNumber() );
+   ASSERT_TRUE( getCue( 0 ).snapToLines() );
 }
 
 /**
- * Verifies that the parser correctly parses a single "line" setting with U+003A ':', 
- * followed by 1 or more ASCII digits (U+0030-U+0039 '0'-'9'), each positioned correctly.
+ * Test a negative two digit non-percentage value for setting line.
  *
- * testing multiple digits at the center of the range, negated
- *
- * From http://dev.w3.org/html5/webvtt/#webvtt-line-position-cue-setting (09/28/2012):
- *	1. The string "line".
- *	2. A U+003A COLON character (:).
- *	3.
- *		To represent a line number
- *		1. Optionally a U+002D HYPHEN-MINUS character (-).
- *		2. One or more characters in the range U+0030 DIGIT ZERO (0) to U+0039 DIGIT NINE (9).
+ * From http://dev.w3.org/html5/webvtt/#parse-the-webvtt-settings (11/27/2012):
+ * If name is a case-sensitive match for "line"
+ *	6. Ignoring the trailing percent sign, if any, interpret value as a (potentially signed) integer, and let number be that number.
+ * 8. Let cue's text track cue line position be number.
+ * 9. If the last character in value is a U+0025 PERCENT SIGN character (%), then let cue's text track cue snap-to-lines flag be false. Otherwise, let it be true.
  */
 TEST_F(CueSettingLine,DoubleDigitNegative)
 {
 	loadVtt( "cue-settings/line/double-digit-negative.vtt", 1 );
+   ASSERT_EQ( 0, errorCount() ) << "This file should contain no errors.";
 	ASSERT_EQ( -54, getCue( 0 ).lineNumber() );
+   ASSERT_TRUE( getCue( 0 ).snapToLines() );
 }
 
 /**
- * Verifies that the parser correctly parses a single "line" setting with U+003A ':', 
- * followed by 1 or more ASCII digits (U+0030-U+0039 '0'-'9'), each positioned correctly.
+ * Test a negative two digit non-percentage value for setting line.
  *
- * testing multiple digits at the upper boundary of the range, negated
- *
- * From http://dev.w3.org/html5/webvtt/#webvtt-line-position-cue-setting (09/28/2012):
- *	1. The string "line".
- *	2. A U+003A COLON character (:).
- *	3.
- *		To represent a line number
- *		1. Optionally a U+002D HYPHEN-MINUS character (-).
- *		2. One or more characters in the range U+0030 DIGIT ZERO (0) to U+0039 DIGIT NINE (9).
+ * From http://dev.w3.org/html5/webvtt/#parse-the-webvtt-settings (11/27/2012):
+ * If name is a case-sensitive match for "line"
+ *	6. Ignoring the trailing percent sign, if any, interpret value as a (potentially signed) integer, and let number be that number.
+ * 8. Let cue's text track cue line position be number.
+ * 9. If the last character in value is a U+0025 PERCENT SIGN character (%), then let cue's text track cue snap-to-lines flag be false. Otherwise, let it be true.
  */
 TEST_F(CueSettingLine,DoubleDigitNegativeHighBoundary)
 {
 	loadVtt( "cue-settings/line/double-digit-negative-high-boundary.vtt", 1 );
+   ASSERT_EQ( 0, errorCount() ) << "This file should contain no errors.";
 	ASSERT_EQ( -99, getCue( 0 ).lineNumber() );
+   ASSERT_TRUE( getCue( 0 ).snapToLines() );
 }
 
 /**
- * Verifies that the parser correctly parses a single "line" setting with U+003A ':', 
- * followed by 1 or more ASCII digits (U+0030-U+0039 '0'-'9'), each positioned correctly.
+ * Test a negative two digit non-percentage value for setting line.
  *
- * testing multiple digits at the lower boundary of the range, negated
- *
- * From http://dev.w3.org/html5/webvtt/#webvtt-line-position-cue-setting (09/28/2012):
- *	1. The string "line".
- *	2. A U+003A COLON character (:).
- *	3.
- *		To represent a line number
- *		1. Optionally a U+002D HYPHEN-MINUS character (-).
- *		2. One or more characters in the range U+0030 DIGIT ZERO (0) to U+0039 DIGIT NINE (9).
+ * From http://dev.w3.org/html5/webvtt/#parse-the-webvtt-settings (11/27/2012):
+ * If name is a case-sensitive match for "line"
+ *	6. Ignoring the trailing percent sign, if any, interpret value as a (potentially signed) integer, and let number be that number.
+ * 8. Let cue's text track cue line position be number.
+ * 9. If the last character in value is a U+0025 PERCENT SIGN character (%), then let cue's text track cue snap-to-lines flag be false. Otherwise, let it be true.
  */
 TEST_F(CueSettingLine,DoubleDigitNegativeLowBoundary)
 {
 	loadVtt( "cue-settings/line/double-digit-negative-low-boundary.vtt", 1 );
-	ASSERT_EQ( -00, getCue( 0 ).lineNumber() );
+   ASSERT_EQ( 0, errorCount() ) << "This file should contain no errors.";
+	ASSERT_EQ( 0, getCue( 0 ).lineNumber() );
+   ASSERT_TRUE( getCue( 0 ).snapToLines() );
 }
 
 /**
- * Verifies that the parser correctly parses a single "line" setting with U+003A ':', 
- * 1 or more ASCII digits (U+0030-U+0039 '0'-'9') followed by U+0025 '%', each positioned correctly.
+ * Test a two digit percentage value for setting line.
  *
- * the digit characters are in the middle of the allowed digit characters range.
- *
- * From http://dev.w3.org/html5/webvtt/#webvtt-line-position-cue-setting (09/28/2012):
- *	1. The string "line".
- *	2. A U+003A COLON character (:).
- *	3.
- *		To represent a specific position relative to the video frame
- *		1. One or more characters in the range U+0030 DIGIT ZERO (0) to U+0039 DIGIT NINE (9).
- *		2. A U+0025 PERCENT SIGN character (%).
+ * From http://dev.w3.org/html5/webvtt/#parse-the-webvtt-settings (11/27/2012):
+ * If name is a case-sensitive match for "line"
+ *	6. Ignoring the trailing percent sign, if any, interpret value as a (potentially signed) integer, and let number be that number.
+ * 8. Let cue's text track cue line position be number.
+ * 9. If the last character in value is a U+0025 PERCENT SIGN character (%), then let cue's text track cue snap-to-lines flag be false. Otherwise, let it be true.
  */
-TEST_F(CueSettingLine,DoubleDigitPercentage)
+TEST_F(CueSettingLine,DISABLED_DoubleDigitPercentage)
 {
 	loadVtt( "cue-settings/line/double-digit-pct.vtt", 1 );
+   ASSERT_EQ( 0, errorCount() ) << "This file should contain no errors.";
 	ASSERT_EQ( 54, getCue( 0 ).relativeLinePositionPercentage() );
+   ASSERT_FALSE( getCue( 0 ).snapToLines() );
 }
 
 /**
- * Verifies that the parser correctly parses a single "line" setting with U+003A ':', 
- * 1 or more ASCII digits (U+0030-U+0039 '0'-'9') followed by U+0025 '%', each positioned correctly.
+ * Test a two digit percentage value for setting line.
  *
- * the digit characters are at the upper edge of the allowed digit characters range.
- *
- * From http://dev.w3.org/html5/webvtt/#webvtt-line-position-cue-setting (09/28/2012):
- *	1. The string "line".
- *	2. A U+003A COLON character (:).
- *	3.
- *		To represent a specific position relative to the video frame
- *		1. One or more characters in the range U+0030 DIGIT ZERO (0) to U+0039 DIGIT NINE (9).
- *		2. A U+0025 PERCENT SIGN character (%).
+ * From http://dev.w3.org/html5/webvtt/#parse-the-webvtt-settings (11/27/2012):
+ * If name is a case-sensitive match for "line"
+ *	6. Ignoring the trailing percent sign, if any, interpret value as a (potentially signed) integer, and let number be that number.
+ * 8. Let cue's text track cue line position be number.
+ * 9. If the last character in value is a U+0025 PERCENT SIGN character (%), then let cue's text track cue snap-to-lines flag be false. Otherwise, let it be true.
  */
-TEST_F(CueSettingLine,DoubleDigitPercentageHighBoundary)
+TEST_F(CueSettingLine,DISABLED_DoubleDigitPercentageHighBoundary)
 {
 	loadVtt( "cue-settings/line/double-digit-pct-high-boundary.vtt", 1 );
+   ASSERT_EQ( 0, errorCount() ) << "This file should contain no errors.";
 	ASSERT_EQ( 99, getCue( 0 ).relativeLinePositionPercentage() );
+   ASSERT_FALSE( getCue( 0 ).snapToLines() );
 }
 
 /**
- * Verifies that the parser correctly parses a single "line" setting with U+003A ':', 
- * 1 or more ASCII digits (U+0030-U+0039 '0'-'9') followed by U+0025 '%', each positioned correctly.
+ * Test a two digit percentage value for setting line.
  *
- * the digit characters are at the lower edge of the allowed digit characters range.
- *
- * From http://dev.w3.org/html5/webvtt/#webvtt-line-position-cue-setting (09/28/2012):
- *	1. The string "line".
- *	2. A U+003A COLON character (:).
- *	3.
- *		To represent a specific position relative to the video frame
- *		1. One or more characters in the range U+0030 DIGIT ZERO (0) to U+0039 DIGIT NINE (9).
- *		2. A U+0025 PERCENT SIGN character (%).
+ * From http://dev.w3.org/html5/webvtt/#parse-the-webvtt-settings (11/27/2012):
+ * If name is a case-sensitive match for "line"
+ *	6. Ignoring the trailing percent sign, if any, interpret value as a (potentially signed) integer, and let number be that number.
+ * 8. Let cue's text track cue line position be number.
+ * 9. If the last character in value is a U+0025 PERCENT SIGN character (%), then let cue's text track cue snap-to-lines flag be false. Otherwise, let it be true.
  */
-TEST_F(CueSettingLine,DoubleDigitPercentageLowBoundary)
+TEST_F(CueSettingLine,DISABLED_DoubleDigitPercentageLowBoundary)
 {
 	loadVtt( "cue-settings/line/double-digit-pct-low-boundary.vtt", 1 );
+   ASSERT_EQ( 0, errorCount() ) << "This file should contain no errors.";
 	ASSERT_EQ( 0, getCue( 0 ).relativeLinePositionPercentage() );
+   ASSERT_FALSE( getCue( 0 ).snapToLines() );
 }
 
 /**
- * Verifies that the parser correctly parses a single "line" setting with U+003A ':', 
- * U+002D '-', followed by 1 or more ASCII digits (U+0030-U+0039 '0'-'9') each positioned correctly.
+ * Test a single digit non-percentage value for setting line.
  *
- * testing single digit at the center of the range
- *
- * From http://dev.w3.org/html5/webvtt/#webvtt-line-position-cue-setting (09/28/2012):
- *	1. The string "line".
- *	2. A U+003A COLON character (:).
- *	3.
- *		To represent a line number
- *		1. Optionally a U+002D HYPHEN-MINUS character (-).
- *		2. One or more characters in the range U+0030 DIGIT ZERO (0) to U+0039 DIGIT NINE (9).
+ * From http://dev.w3.org/html5/webvtt/#parse-the-webvtt-settings (11/27/2012):
+ * If name is a case-sensitive match for "line"
+ *	6. Ignoring the trailing percent sign, if any, interpret value as a (potentially signed) integer, and let number be that number.
+ * 8. Let cue's text track cue line position be number.
+ * 9. If the last character in value is a U+0025 PERCENT SIGN character (%), then let cue's text track cue snap-to-lines flag be false. Otherwise, let it be true.
  */
 TEST_F(CueSettingLine,SingleDigit)
 {
 	loadVtt( "cue-settings/line/single-digit.vtt", 1 );
+   ASSERT_EQ( 0, errorCount() ) << "This file should contain no errors.";
 	ASSERT_EQ( 5, getCue( 0 ).lineNumber() );
+   ASSERT_TRUE( getCue( 0 ).snapToLines() );
 }
 
 /**
- * Verifies that the parser correctly parses a single "line" setting with U+003A ':', 
- * U+002D '-', followed by 1 or more ASCII digits (U+0030-U+0039 '0'-'9') each positioned correctly.
+ * Test a single digit non-percentage value for setting line.
  *
- * testing single digit at the upper boundary of the range
- *
- * From http://dev.w3.org/html5/webvtt/#webvtt-line-position-cue-setting (09/28/2012):
- *	1. The string "line".
- *	2. A U+003A COLON character (:).
- *	3.
- *		To represent a line number
- *		1. Optionally a U+002D HYPHEN-MINUS character (-).
- *		2. One or more characters in the range U+0030 DIGIT ZERO (0) to U+0039 DIGIT NINE (9).
+ * From http://dev.w3.org/html5/webvtt/#parse-the-webvtt-settings (11/27/2012):
+ * If name is a case-sensitive match for "line"
+ *	6. Ignoring the trailing percent sign, if any, interpret value as a (potentially signed) integer, and let number be that number.
+ * 8. Let cue's text track cue line position be number.
+ * 9. If the last character in value is a U+0025 PERCENT SIGN character (%), then let cue's text track cue snap-to-lines flag be false. Otherwise, let it be true.
  */
 TEST_F(CueSettingLine,SingleDigitHighBoundary)
 {
 	loadVtt( "cue-settings/line/single-digit-high-boundary.vtt", 1 );
+   ASSERT_EQ( 0, errorCount() ) << "This file should contain no errors.";
 	ASSERT_EQ( 9, getCue( 0 ).lineNumber() );
+   ASSERT_TRUE( getCue( 0 ).snapToLines() );
 }
 
 /**
- * Verifies that the parser correctly parses a single "line" setting with U+003A ':', 
- * U+002D '-', followed by 1 or more ASCII digits (U+0030-U+0039 '0'-'9') each positioned correctly.
+ * Test a single digit non-percentage value for setting line.
  *
- * testing single digit at the lower boundary of the range
- *
- * From http://dev.w3.org/html5/webvtt/#webvtt-line-position-cue-setting (09/28/2012):
- *	1. The string "line".
- *	2. A U+003A COLON character (:).
- *	3.
- *		To represent a line number
- *		1. Optionally a U+002D HYPHEN-MINUS character (-).
- *		2. One or more characters in the range U+0030 DIGIT ZERO (0) to U+0039 DIGIT NINE (9).
+ * From http://dev.w3.org/html5/webvtt/#parse-the-webvtt-settings (11/27/2012):
+ * If name is a case-sensitive match for "line"
+ *	6. Ignoring the trailing percent sign, if any, interpret value as a (potentially signed) integer, and let number be that number.
+ * 8. Let cue's text track cue line position be number.
+ * 9. If the last character in value is a U+0025 PERCENT SIGN character (%), then let cue's text track cue snap-to-lines flag be false. Otherwise, let it be true.
  */
 TEST_F(CueSettingLine,SingleDigitLowBoundary)
 {
 	loadVtt( "cue-settings/line/single-digit-low-boundary.vtt", 1 );
+   ASSERT_EQ( 0, errorCount() ) << "This file should contain no errors.";
 	ASSERT_EQ( 0, getCue( 0 ).lineNumber() );
+   ASSERT_TRUE( getCue( 0 ).snapToLines() );
 }
 
 /**
- * Verifies that the parser correctly parses a single "line" setting with U+003A ':', 
- * followed by 1 or more ASCII digits (U+0030-U+0039 '0'-'9'), each positioned correctly.
+ * Test a negative single digit non-percentage value for setting line.
  *
- * testing single digit at the center boundary of the range, negated
- *
- * From http://dev.w3.org/html5/webvtt/#webvtt-line-position-cue-setting (09/28/2012):
- *	1. The string "line".
- *	2. A U+003A COLON character (:).
- *	3.
- *		To represent a line number
- *		1. Optionally a U+002D HYPHEN-MINUS character (-).
- *		2. One or more characters in the range U+0030 DIGIT ZERO (0) to U+0039 DIGIT NINE (9).
+ * From http://dev.w3.org/html5/webvtt/#parse-the-webvtt-settings (11/27/2012):
+ * If name is a case-sensitive match for "line"
+ *	6. Ignoring the trailing percent sign, if any, interpret value as a (potentially signed) integer, and let number be that number.
+ * 8. Let cue's text track cue line position be number.
+ * 9. If the last character in value is a U+0025 PERCENT SIGN character (%), then let cue's text track cue snap-to-lines flag be false. Otherwise, let it be true.
  */
 TEST_F(CueSettingLine,SingleDigitNegative)
 {
 	loadVtt( "cue-settings/line/single-digit-negative.vtt", 1 );
+   ASSERT_EQ( 0, errorCount() ) << "This file should contain no errors.";
 	ASSERT_EQ( -5, getCue( 0 ).lineNumber() );
+   ASSERT_TRUE( getCue( 0 ).snapToLines() );
 }
 
 /**
- * Verifies that the parser correctly parses a single "line" setting with U+003A ':', 
- * followed by 1 or more ASCII digits (U+0030-U+0039 '0'-'9'), each positioned correctly.
+ * Test a negative single digit non-percentage value for setting line.
  *
- * testing single digit at the upper boundary of the range, negated
- *
- * From http://dev.w3.org/html5/webvtt/#webvtt-line-position-cue-setting (09/28/2012):
- *	1. The string "line".
- *	2. A U+003A COLON character (:).
- *	3.
- *		To represent a line number
- *		1. Optionally a U+002D HYPHEN-MINUS character (-).
- *		2. One or more characters in the range U+0030 DIGIT ZERO (0) to U+0039 DIGIT NINE (9).
+ * From http://dev.w3.org/html5/webvtt/#parse-the-webvtt-settings (11/27/2012):
+ * If name is a case-sensitive match for "line"
+ *	6. Ignoring the trailing percent sign, if any, interpret value as a (potentially signed) integer, and let number be that number.
+ * 8. Let cue's text track cue line position be number.
+ * 9. If the last character in value is a U+0025 PERCENT SIGN character (%), then let cue's text track cue snap-to-lines flag be false. Otherwise, let it be true.
  */
 TEST_F(CueSettingLine,SingleDigitNegativeHighBoundary)
 {
 	loadVtt( "cue-settings/line/single-digit-negative-high-boundary.vtt", 1 );
+   ASSERT_EQ( 0, errorCount() ) << "This file should contain no errors.";
 	ASSERT_EQ( -9, getCue( 0 ).lineNumber() );
+   ASSERT_TRUE( getCue( 0 ).snapToLines() );
 }
 
 /**
- * Verifies that the parser correctly parses a single "line" setting with U+003A ':', 
- * followed by 1 or more ASCII digits (U+0030-U+0039 '0'-'9'), each positioned correctly.
+ * Test a negative single digit non-percentage value for setting line.
  *
- * testing single digit at the lower boundary of the range, negated
- *
- * From http://dev.w3.org/html5/webvtt/#webvtt-line-position-cue-setting (09/28/2012):
- *	1. The string "line".
- *	2. A U+003A COLON character (:).
- *	3.
- *		To represent a line number
- *		1. Optionally a U+002D HYPHEN-MINUS character (-).
- *		2. One or more characters in the range U+0030 DIGIT ZERO (0) to U+0039 DIGIT NINE (9).
+ * From http://dev.w3.org/html5/webvtt/#parse-the-webvtt-settings (11/27/2012):
+ * If name is a case-sensitive match for "line"
+ *	6. Ignoring the trailing percent sign, if any, interpret value as a (potentially signed) integer, and let number be that number.
+ * 8. Let cue's text track cue line position be number.
+ * 9. If the last character in value is a U+0025 PERCENT SIGN character (%), then let cue's text track cue snap-to-lines flag be false. Otherwise, let it be true.
  */
 TEST_F(CueSettingLine,SingleDigitNegativeLowBoundary)
 {
 	loadVtt( "cue-settings/line/single-digit-negative-low-boundary.vtt", 1 );
-	ASSERT_EQ( -0, getCue( 0 ).lineNumber() );
+   ASSERT_EQ( 0, errorCount() ) << "This file should contain no errors.";
+	ASSERT_EQ( 0, getCue( 0 ).lineNumber() );
+   ASSERT_TRUE( getCue( 0 ).snapToLines() );
 }
 
 /**
- * Verifies that the parser correctly parses a single "line" setting with U+003A ':', 
- * 1 ASCII digits (U+0030-U+0039 '0'-'9') followed by U+0025 '%', each positioned correctly.
+ * Test a single digit percentage value for setting line.
  *
- * the digit character is in the middle of the allowed digit characters range.
- *
- * From http://dev.w3.org/html5/webvtt/#webvtt-line-position-cue-setting (09/28/2012):
- *	1. The string "line".
- *	2. A U+003A COLON character (:).
- *	3.
- *		To represent a specific position relative to the video frame
- *		1. One or more characters in the range U+0030 DIGIT ZERO (0) to U+0039 DIGIT NINE (9).
- *		2. A U+0025 PERCENT SIGN character (%).
+ * From http://dev.w3.org/html5/webvtt/#parse-the-webvtt-settings (11/27/2012):
+ * If name is a case-sensitive match for "line"
+ *	6. Ignoring the trailing percent sign, if any, interpret value as a (potentially signed) integer, and let number be that number.
+ * 8. Let cue's text track cue line position be number.
+ * 9. If the last character in value is a U+0025 PERCENT SIGN character (%), then let cue's text track cue snap-to-lines flag be false. Otherwise, let it be true.
  */
-TEST_F(CueSettingLine,SingleDigitPercentage)
+TEST_F(CueSettingLine,DISABLED_SingleDigitPercentage)
 {
 	loadVtt( "cue-settings/line/single-digit-pct.vtt", 1 );
+   ASSERT_EQ( 0, errorCount() ) << "This file should contain no errors.";
 	ASSERT_EQ( 5, getCue( 0 ).relativeLinePositionPercentage() );
+   ASSERT_FALSE( getCue( 0 ).snapToLines() );
 }
 
 /**
- * Verifies that the parser correctly parses a single "line" setting with U+003A ':', 
- * 1 ASCII digits (U+0030-U+0039 '0'-'9') followed by U+0025 '%', each positioned correctly.
+ * Test a single digit percentage value for setting line.
  *
- * the digit character is at the upper edge of the allowed digit characters range.
- *
- * From http://dev.w3.org/html5/webvtt/#webvtt-line-position-cue-setting (09/28/2012):
- *	1. The string "line".
- *	2. A U+003A COLON character (:).
- *	3.
- *		To represent a specific position relative to the video frame
- *		1. One or more characters in the range U+0030 DIGIT ZERO (0) to U+0039 DIGIT NINE (9).
- *		2. A U+0025 PERCENT SIGN character (%).
+ * From http://dev.w3.org/html5/webvtt/#parse-the-webvtt-settings (11/27/2012):
+ * If name is a case-sensitive match for "line"
+ *	6. Ignoring the trailing percent sign, if any, interpret value as a (potentially signed) integer, and let number be that number.
+ * 8. Let cue's text track cue line position be number.
+ * 9. If the last character in value is a U+0025 PERCENT SIGN character (%), then let cue's text track cue snap-to-lines flag be false. Otherwise, let it be true.
  */
-TEST_F(CueSettingLine,SingleDigitPercentageHighBoundary)
+TEST_F(CueSettingLine,DISABLED_SingleDigitPercentageHighBoundary)
 {
 	loadVtt( "cue-settings/line/single-digit-pct-high-boundary.vtt", 1 );
+   ASSERT_EQ( 0, errorCount() ) << "This file should contain no errors.";
 	ASSERT_EQ( 9, getCue( 0 ).relativeLinePositionPercentage() );
+   ASSERT_FALSE( getCue( 0 ).snapToLines() );
 }
 
 /**
- * Verifies that the parser correctly parses a single "line" setting with U+003A ':', 
- * 1 ASCII digits (U+0030-U+0039 '0'-'9') followed by U+0025 '%', each positioned correctly.
+ * Test a single digit percentage value for setting line.
  *
- * the digit character is at the lower edge of the allowed digit characters range.
- *
- * From http://dev.w3.org/html5/webvtt/#webvtt-line-position-cue-setting (09/28/2012):
- *	1. The string "line".
- *	2. A U+003A COLON character (:).
- *	3.
- *		To represent a specific position relative to the video frame
- *		1. One or more characters in the range U+0030 DIGIT ZERO (0) to U+0039 DIGIT NINE (9).
- *		2. A U+0025 PERCENT SIGN character (%).
+ * From http://dev.w3.org/html5/webvtt/#parse-the-webvtt-settings (11/27/2012):
+ * If name is a case-sensitive match for "line"
+ *	6. Ignoring the trailing percent sign, if any, interpret value as a (potentially signed) integer, and let number be that number.
+ * 8. Let cue's text track cue line position be number.
+ * 9. If the last character in value is a U+0025 PERCENT SIGN character (%), then let cue's text track cue snap-to-lines flag be false. Otherwise, let it be true.
  */
-TEST_F(CueSettingLine,SingleDigitPercentageLowBoundary)
+TEST_F(CueSettingLine,DISABLED_SingleDigitPercentageLowBoundary)
 {
 	loadVtt( "cue-settings/line/single-digit-pct-low-boundary.vtt", 1 );
+    ASSERT_EQ( 0, errorCount() ) << "This file should contain no errors.";
 	ASSERT_EQ( 0, getCue( 0 ).relativeLinePositionPercentage() );
+    ASSERT_FALSE( getCue( 0 ).snapToLines() );
 }
 
 /**
- * Test if parser fails when an unknown keyword is used for the otherwise correct 'line' cue setting.
+ * Test that the parser does not change line if the keyword matches nothing.
  *
- * From http://dev.w3.org/html5/webvtt/#webvtt-line-position-cue-setting (09/28/2012):
- *	1. The string "line".
- *	2. A U+003A COLON character (:).
- *	3.
- *		To represent a specific position relative to the video frame
- *		1. One or more characters in the range U+0030 DIGIT ZERO (0) to U+0039 DIGIT NINE (9).
- *		2. A U+0025 PERCENT SIGN character (%).
+ * http://dev.w3.org/html5/webvtt/#parse-the-webvtt-settings (11/27/2012):
+ * 4. Run the appropriate substeps that apply for the value of name, as follows:
+ * If name is a case-sensitive match for "vertical" ...
+ * If name is a case-sensitive match for "line" ...
+ * If name is a case-sensitive match for "position" ...
+ * If name is a case-sensitive match for "size" ...
+ * If name is a case-sensitive match for "align" ...
+ * 5. Next setting: Continue to the next token, if any.
  */
-TEST_F(CueSettingLine,BadKeyword)
+TEST_F(CueSettingLine,DISABLED_BadKeyword)
 {
 	loadVtt( "cue-settings/line/bad-keyword.vtt", 1 );
 	const Error& err = getError( 0 );
+	/**
+	 * Line should be "auto" and snap-to-lines should be true
+     * because the malformed setting should be skipped
+     * and "auto" and true are default.
+	 */
+    ASSERT_TRUE( getCue( 0 ).isLinePositionAuto() );
+	ASSERT_FALSE( getCue( 0 ).snapToLines() );
 	/**
 	 * We're expecting a WEBVTT_INVALID_CUESETTING error on the 25th column of the 3rd line
 	 */
@@ -385,20 +492,76 @@ TEST_F(CueSettingLine,BadKeyword)
 }
 
 /**
- * Test if parser fails when the key/value delimiter is incorrect for an otherwise correct 'line' cue setting.
+ * Test that the parser does not allow a setting to start with a colon.
  *
- * From http://dev.w3.org/html5/webvtt/#webvtt-line-position-cue-setting (09/28/2012):
- *	1. The string "line".
- *	2. A U+003A COLON character (:).
- *	3.
- *		To represent a specific position relative to the video frame
- *		1. One or more characters in the range U+0030 DIGIT ZERO (0) to U+0039 DIGIT NINE (9).
- *		2. A U+0025 PERCENT SIGN character (%).
+ * http://dev.w3.org/html5/webvtt/#parse-the-webvtt-settings (11/27/2012):
+ * 1. If setting does not contain a U+003A COLON character (:), or if the first U+003A COLON character (:) in setting is either the first or last character of setting, then jump to the step labeled next setting.
+ * 5. Next setting: Continue to the next token, if any.
  */
-TEST_F(CueSettingLine,BadDelimiter)
+TEST_F(CueSettingLine,DISABLED_NoKeyword)
+{
+	loadVtt( "cue-settings/line/no-keyword.vtt", 1 );
+	const Error& err = getError( 0 );
+	/**
+	 * Line should be "auto" and snap-to-lines should be true
+     * because the malformed setting should be skipped
+     * and "auto" and true are default.
+	 */
+	ASSERT_TRUE( getCue( 0 ).isLinePositionAuto() );
+	ASSERT_FALSE( getCue( 0 ).snapToLines() );
+	/**
+	 * We're expecting a WEBVTT_INVALID_CUESETTING error on the 25th column of the 3rd line
+	 * We could return a smarter error, after a little bit of refactoring, perhaps.
+	 */
+	ASSERT_EQ( WEBVTT_INVALID_CUESETTING, err.error() );
+	ASSERT_EQ( 3, err.line() );
+	ASSERT_EQ( 25, err.column() );
+}
+
+/**
+ * Test that the parser requires a colon.
+ *
+ * http://dev.w3.org/html5/webvtt/#parse-the-webvtt-settings (11/27/2012):
+ * 1. If setting does not contain a U+003A COLON character (:), or if the first U+003A COLON character (:) in setting is either the first or last character of setting, then jump to the step labeled next setting.
+ * 5. Next setting: Continue to the next token, if any.
+ */
+TEST_F(CueSettingLine,DISABLED_NoDelimiter)
+{
+	loadVtt( "cue-settings/line/no-delimiter.vtt", 1 );
+	const Error& err = getError( 0 );
+	/**
+	 * Line should be "auto" and snap-to-lines should be true
+     * because the malformed setting should be skipped
+     * and "auto" and true are default.
+	 */
+	ASSERT_TRUE( getCue( 0 ).isLinePositionAuto() );
+	ASSERT_FALSE( getCue( 0 ).snapToLines() );
+	/**
+	 * We're expecting a WEBVTT_INVALID_CUESETTING error on the 25th column of the 3rd line
+	 */
+	ASSERT_EQ( WEBVTT_INVALID_CUESETTING, err.error() );
+	ASSERT_EQ( 3, err.line() );
+	ASSERT_EQ( 25, err.column() );
+}
+
+/**
+ * Test that the parser requires a colon.
+ *
+ * http://dev.w3.org/html5/webvtt/#parse-the-webvtt-settings (11/27/2012):
+ * 1. If setting does not contain a U+003A COLON character (:), or if the first U+003A COLON character (:) in setting is either the first or last character of setting, then jump to the step labeled next setting.
+ * 5. Next setting: Continue to the next token, if any.
+ */
+TEST_F(CueSettingLine,DISABLED_BadDelimiter)
 {
 	loadVtt( "cue-settings/line/bad-delimiter.vtt", 1 );
 	const Error& err = getError( 0 );
+	/**
+	 * Line should be "auto" and snap-to-lines should be true
+     * because the malformed setting should be skipped
+     * and "auto" and true are default.
+	 */
+	ASSERT_TRUE( getCue( 0 ).isLinePositionAuto() );
+	ASSERT_FALSE( getCue( 0 ).snapToLines() );
 	/**
 	 * We're expecting a WEBVTT_INVALID_CUESETTING_DELIMITER error on the 29th column of the 3rd line
 	 */
@@ -408,22 +571,22 @@ TEST_F(CueSettingLine,BadDelimiter)
 }
 
 /**
- * Test if parser fails when the 'line' setting value (for a percentage value) does not contain a numeric
- * percentage made up of characters in the U+0030 - U+0039 range.
+ * Test what happens when the line value contains a character it should not.
  *
- * From http://dev.w3.org/html5/webvtt/#webvtt-line-position-cue-setting (09/28/2012):
- *	1. The string "line".
- *	2. A U+003A COLON character (:).
- *	3.
- *		To represent a specific position relative to the video frame
- *		1. One or more characters in the range U+0030 DIGIT ZERO (0) to U+0039 DIGIT NINE (9).
- *		2. A U+0025 PERCENT SIGN character (%).
+ * http://dev.w3.org/html5/webvtt/#parse-the-webvtt-settings (11/27/2012):
+ *	1. If value contains any characters other than U+002D HYPHEN-MINUS characters (-), U+0025 PERCENT SIGN characters (%), and ASCII digits, then jump to the step labeled next setting.
  */
-TEST_F(CueSettingLine,BadValue)
+TEST_F(CueSettingLine,DISABLED_BadValue)
 {
 	loadVtt( "cue-settings/line/bad-value.vtt", 1 );
 	const Error& err = getError( 0 );
-
+	/**
+	 * Line should be "auto" and snap-to-lines should be true
+     * because the malformed setting should be skipped
+     * and "auto" and true are default.
+	 */
+	ASSERT_TRUE( getCue( 0 ).isLinePositionAuto() );
+	ASSERT_FALSE( getCue( 0 ).snapToLines() );
 	/**
 	 * We're expecting a WEBVTT_LINE_BAD_VALUE error on the 30th column of the 3rd line
 	 */
@@ -433,21 +596,48 @@ TEST_F(CueSettingLine,BadValue)
 }
 
 /**
- * Test if parser fails when the 'line' setting value has an incorrect character
+ * Test that the parser does not allow a setting to end with a colon.
  *
- * From http://dev.w3.org/html5/webvtt/#webvtt-line-position-cue-setting (09/28/2012):
- *	1. The string "line".
- *	2. A U+003A COLON character (:).
- *	3.
- *		To represent a specific position relative to the video frame
- *		1. One or more characters in the range U+0030 DIGIT ZERO (0) to U+0039 DIGIT NINE (9).
- *		2. A U+0025 PERCENT SIGN character (%).
+ * http://dev.w3.org/html5/webvtt/#parse-the-webvtt-settings (11/27/2012):
+ * 1. If setting does not contain a U+003A COLON character (:), or if the first U+003A COLON character (:) in setting is either the first or last character of setting, then jump to the step labeled next setting.
+ * 5. Next setting: Continue to the next token, if any.
  */
-TEST_F(CueSettingLine,BadValueSuffix)
+TEST_F(CueSettingLine,DISABLED_NoValue)
+{
+	loadVtt( "cue-settings/line/no-value.vtt", 1 );
+	const Error& err = getError( 0 );
+	/**
+	 * Line should be "auto" and snap-to-lines should be true
+     * because the malformed setting should be skipped
+     * and "auto" and true are default.
+	 */
+	ASSERT_TRUE( getCue( 0 ).isLinePositionAuto() );
+	ASSERT_FALSE( getCue( 0 ).snapToLines() );
+	/**
+	 * We're expecting a WEBVTT_LINE_BAD_VALUE error on the 30th column of the 3rd line
+	 */
+	ASSERT_EQ( WEBVTT_LINE_BAD_VALUE, err.error() );
+	ASSERT_EQ( 3, err.line() );
+	ASSERT_EQ( 30, err.column() );
+}
+
+/**
+ * Test what happens when the line value contains a character it should not.
+ *
+ * http://dev.w3.org/html5/webvtt/#parse-the-webvtt-settings (11/27/2012):
+ *	1. If value contains any characters other than U+002D HYPHEN-MINUS characters (-), U+0025 PERCENT SIGN characters (%), and ASCII digits, then jump to the step labeled next setting.
+ */
+TEST_F(CueSettingLine,DISABLED_BadValueSuffix)
 {
 	loadVtt( "cue-settings/line/bad-value-suffix.vtt", 1 );
 	const Error& err = getError( 0 );
-
+	/**
+	 * Line should be "auto" and snap-to-lines should be true
+     * because the malformed setting should be skipped
+     * and "auto" and true are default.
+	 */
+	ASSERT_TRUE( getCue( 0 ).isLinePositionAuto() );
+	ASSERT_FALSE( getCue( 0 ).snapToLines() );
 	/**
 	 * We're expecting a WEBVTT_INVALID_CUESETTING_DELIMITER error on the 32nd column of the 3rd line
 	 *
@@ -460,21 +650,23 @@ TEST_F(CueSettingLine,BadValueSuffix)
 }
 
 /**
- * Test if parser fails when the key/value delimiter is not present
+ * Test that the parser requires a colon in each of the two settings.
  *
- * From http://dev.w3.org/html5/webvtt/#webvtt-line-position-cue-setting (09/28/2012):
- *	1. The string "line".
- *	2. A U+003A COLON character (:).
- *	3.
- *		To represent a specific position relative to the video frame
- *		1. One or more characters in the range U+0030 DIGIT ZERO (0) to U+0039 DIGIT NINE (9).
- *		2. A U+0025 PERCENT SIGN character (%).
+ * http://dev.w3.org/html5/webvtt/#parse-the-webvtt-settings (11/27/2012):
+ * 1. If setting does not contain a U+003A COLON character (:), or if the first U+003A COLON character (:) in setting is either the first or last character of setting, then jump to the step labeled next setting.
+ * 5. Next setting: Continue to the next token, if any.
  */
-TEST_F(CueSettingLine,WhitespaceDelimiter)
+TEST_F(CueSettingLine,DISABLED_WhitespaceDelimiter)
 {
 	loadVtt( "cue-settings/line/bad-whitespace-delimiter.vtt", 1 );
 	const Error& err = getError( 0 );
-
+	/**
+	 * Line should be "auto" and snap-to-lines should be true
+     * because the malformed setting should be skipped
+     * and "auto" and true are default.
+	 */
+	ASSERT_TRUE( getCue( 0 ).isLinePositionAuto() );
+	ASSERT_FALSE( getCue( 0 ).snapToLines() );
 	/**
 	 * We're expecting a WEBVTT_MISSING_CUESETTING_DELIMITER error on the 29th column of the 3rd line
 	 */
@@ -484,21 +676,24 @@ TEST_F(CueSettingLine,WhitespaceDelimiter)
 }
 
 /**
- * Test if parser fails when the key/value delimiter is preceded by whitespace.
+ * Test that the parser does not allow a setting to start with a colon
+ * and that it requires a colon in the other setting.
  *
- * From http://dev.w3.org/html5/webvtt/#webvtt-line-position-cue-setting (09/28/2012):
- *	1. The string "line".
- *	2. A U+003A COLON character (:).
- *	3.
- *		To represent a specific position relative to the video frame
- *		1. One or more characters in the range U+0030 DIGIT ZERO (0) to U+0039 DIGIT NINE (9).
- *		2. A U+0025 PERCENT SIGN character (%).
+ * http://dev.w3.org/html5/webvtt/#parse-the-webvtt-settings (11/27/2012):
+ * 1. If setting does not contain a U+003A COLON character (:), or if the first U+003A COLON character (:) in setting is either the first or last character of setting, then jump to the step labeled next setting.
+ * 5. Next setting: Continue to the next token, if any.
  */
-TEST_F(CueSettingLine,BadWhitespaceBeforeDelimiter)
+TEST_F(CueSettingLine,DISABLED_BadWhitespaceBeforeDelimiter)
 {
 	loadVtt( "cue-settings/line/bad-whitespace-before-delimiter.vtt", 1 );
 	const Error& err = getError( 0 );
-
+	/**
+	 * Line should be "auto" and snap-to-lines should be true
+     * because the malformed setting should be skipped
+     * and "auto" and true are default.
+	 */
+	ASSERT_TRUE( getCue( 0 ).isLinePositionAuto() );
+	ASSERT_FALSE( getCue( 0 ).snapToLines() );
 	/**
 	 * We're expecting a WEBVTT_UNEXPECTED_WHITESPACE error on the 29th column of the 3rd line
 	 */
@@ -508,25 +703,111 @@ TEST_F(CueSettingLine,BadWhitespaceBeforeDelimiter)
 }
 
 /**
- * Test if parser fails when the key/value delimiter is next to a space.
+ * Test that the parser does not allow a setting to end with a colon
+ * and that it requires a colon in the other setting.
  *
- * From http://dev.w3.org/html5/webvtt/#webvtt-line-position-cue-setting (09/28/2012):
- *	1. The string "line".
- *	2. A U+003A COLON character (:).
- *	3.
- *		To represent a specific position relative to the video frame
- *		1. One or more characters in the range U+0030 DIGIT ZERO (0) to U+0039 DIGIT NINE (9).
- *		2. A U+0025 PERCENT SIGN character (%).
+ * http://dev.w3.org/html5/webvtt/#parse-the-webvtt-settings (11/27/2012):
+ * 1. If setting does not contain a U+003A COLON character (:), or if the first U+003A COLON character (:) in setting is either the first or last character of setting, then jump to the step labeled next setting.
+ * 5. Next setting: Continue to the next token, if any.
  */
-TEST_F(CueSettingLine,BadWhitespaceAfterDelimiter)
+TEST_F(CueSettingLine,DISABLED_BadWhitespaceAfterDelimiter)
 {
 	loadVtt( "cue-settings/line/bad-whitespace-after-delimiter.vtt", 1 );
 	const Error& err = getError( 0 );
+	/**
+	 * Line should be "auto" and snap-to-lines should be true
+     * because the malformed settinga should be skipped
+     * and "auto" and true are default.
+	 */
+	ASSERT_TRUE( getCue( 0 ).isLinePositionAuto() );
+	ASSERT_FALSE( getCue( 0 ).snapToLines() );
+	/**
+	 * We're expecting a WEBVTT_LINE_BAD_VALUE error on the 30th column of the 3rd line
+	 */
+	ASSERT_EQ( WEBVTT_LINE_BAD_VALUE, err.error() );
+	ASSERT_EQ( 3, err.line() );
+	ASSERT_EQ( 30, err.column() );
+}
 
+/**
+ * Test that the keyword is case-sensitive.
+ *
+ * http://dev.w3.org/html5/webvtt/#parse-the-webvtt-settings (11/27/2012):
+ * 4. Run the appropriate substeps that apply for the value of name, as follows:
+ * If name is a case-sensitive match for "vertical" ...
+ * If name is a case-sensitive match for "line" ...
+ * If name is a case-sensitive match for "position" ...
+ * If name is a case-sensitive match for "size" ...
+ * If name is a case-sensitive match for "align" ...
+ * 5. Next setting: Continue to the next token, if any.
+ */
+TEST_F(CueSettingLine,DISABLED_UppercaseKeyword)
+{
+	loadVtt( "cue-settings/line/uppercase-keyword.vtt", 1 );
+	const Error& err = getError( 0 );
+	/**
+	 * Line should be "auto" and snap-to-lines should be true
+     * because the malformed settinga should be skipped
+     * and "auto" and true are default.
+	 */
+	ASSERT_TRUE( getCue( 0 ).isLinePositionAuto() );
+	ASSERT_FALSE( getCue( 0 ).snapToLines() );
+	/**
+	 * We're expecting a WEBVTT_INVALID_CUESETTING error on the 25th column of the 3rd line
+	 */
+	ASSERT_EQ( WEBVTT_INVALID_CUESETTING, err.error() );
+	ASSERT_EQ( 3, err.line() );
+	ASSERT_EQ( 25, err.column() );
+}
+
+/**
+ * Test that negative values are not allowed.
+ *
+ * http://dev.w3.org/html5/webvtt/#parse-the-webvtt-settings (11/28/2012):
+ * If name is a case-sensitive match for "line"
+ *	7. If the last character in value is a U+0025 PERCENT SIGN character (%), but number is not in the range 0 = number = 100, then jump to the step labeled next setting.
+ */
+TEST_F(CueSettingLine,DISABLED_PercentNegative)
+{
+	loadVtt( "cue-settings/line/bad-pct-negative.vtt", 1 );
+	const Error& err = getError( 0 );
+	/**
+	 * Line should be "auto" and snap-to-lines should be true
+     * because the malformed settinga should be skipped
+     * and "auto" and true are default.
+	 */
+	ASSERT_TRUE( getCue( 0 ).isLinePositionAuto() );
+	ASSERT_FALSE( getCue( 0 ).snapToLines() );
 	/**
 	 * We're expecting a WEBVTT_UNEXPECTED_WHITESPACE error on the 30th column of the 3rd line
 	 */
 	ASSERT_EQ( WEBVTT_UNEXPECTED_WHITESPACE, err.error() );
+	ASSERT_EQ( 3, err.line() );
+	ASSERT_EQ( 30, err.column() );
+}
+
+/**
+ * Test that values over 100 are not allowed.
+ *
+ * http://dev.w3.org/html5/webvtt/#parse-the-webvtt-settings (11/28/2012):
+ * If name is a case-sensitive match for "line"
+ *	7. If the last character in value is a U+0025 PERCENT SIGN character (%), but number is not in the range 0 = number = 100, then jump to the step labeled next setting.
+ */
+TEST_F(CueSettingLine,DISABLED_PercentOver100)
+{
+	loadVtt( "cue-settings/line/bad-pct-over-100.vtt", 1 );
+	const Error& err = getError( 0 );
+	/**
+	 * Line should be "auto" and snap-to-lines should be true
+     * because the malformed settinga should be skipped
+     * and "auto" and true are default.
+	 */
+	ASSERT_TRUE( getCue( 0 ).isLinePositionAuto() );
+	ASSERT_FALSE( getCue( 0 ).snapToLines() );
+	/**
+	 * We're expecting a WEBVTT_LINE_BAD_VALUE error on the 30th column of the 3rd line
+	 */
+	ASSERT_EQ( WEBVTT_LINE_BAD_VALUE, err.error() );
 	ASSERT_EQ( 3, err.line() );
 	ASSERT_EQ( 30, err.column() );
 }
