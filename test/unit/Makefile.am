@@ -39,12 +39,6 @@ CUEIDS_TESTS = \
   cilanguage_unittest \
   cilineendings_unittest
 
-CUEIDS_TESTS = \
-  ciarrow_unittest \
-  cigeneral_unittest \
-  cilanguage_unittest \
-  cilineendings_unittest
-
 PAYLOAD_TESTS = \
   plboldtag_unittest \
   plclasstag_unittest \
@@ -109,12 +103,6 @@ cigeneral_unittest_SOURCES = cigeneral_unittest.cpp
 cilanguage_unittest_SOURCES = cilanguage_unittest.cpp
 cilineendings_unittest_SOURCES = cilineendings_unittest.cpp
 
-# Cue Ids Tests
-ciarrow_unittest_SOURCES = ciarrow_unittest.cpp
-cigeneral_unittest_SOURCES = cigeneral_unittest.cpp
-cilanguage_unittest_SOURCES = cilanguage_unittest.cpp
-cilineendings_unittest_SOURCES = cilineendings_unittest.cpp
-
 #Payload Tests
 plboldtag_unittest_SOURCES = plboldtag_unittest.cpp
 plclasstag_unittest_SOURCES = plclasstag_unittest.cpp
@@ -126,4 +114,3 @@ pltimestamp_unittest_SOURCES = pltimestamp_unittest.cpp
 plunderlinetag_unittest_SOURCES = plunderlinetag_unittest.cpp
 plvoicetag_unittest_SOURCES = plvoicetag_unittest.cpp
 plrubytag_unittest_SOURCES = plrubytag_unittest.cpp
-
