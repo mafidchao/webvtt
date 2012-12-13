@@ -9,7 +9,8 @@ env:
   - BUILD_TYPE="Analysis clang scan-build (without --status-bugs)" ANALYSIS="scan-build" ANALYSIS_ARGS="-v -v -k" AC_OPTIONS=""
 
 before_install:
-  - sudo apt-get install valgrind clang
+  - sudo apt-get -qq update
+  - sudo apt-get -qq install valgrind clang
 
 script:
   - "./bootstrap.sh"
