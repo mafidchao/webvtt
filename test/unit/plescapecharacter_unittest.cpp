@@ -101,6 +101,95 @@ TEST_F(PayloadEscapeCharacter,DISABLED_MultilineMultipleEscapeCharacter)
 	ASSERT_EQ( UTF16_NO_BREAK_SPACE, node->content().text()[1] );
 }
 
+/*
+ * Verifies that multiple escape characters on multiple lines are parsed.
+ * From http://dev.w3.org/html5/webvtt/#webvtt-cue-text (11/27/2012)
+ *	Cue text text consists of one or more cue text components optionally separated by a single line terminator which can be: 
+ *		1. CR (U+000D)
+ *		2. LF (U+000A)
+ *		3. CRLF pair
+ */
+TEST_F(PayloadEscapeCharacter,DISABLED_MultilineMultipleEscapeCharacterCR)
+{
+	loadVtt( "payload/escape-character/multiline-multiple-escape-character-cr.vtt", 1 );
+
+	const TextNode *node = getHeadOfCue( 0 )->child( 0 )->toTextNode();
+	
+	ASSERT_EQ( UTF16_NO_BREAK_SPACE, node->content().text()[0] );
+	ASSERT_EQ( UTF16_NO_BREAK_SPACE, node->content().text()[1] );
+}
+
+/*
+ * Verifies that multiple escape characters on multiple lines are parsed.
+ * From http://dev.w3.org/html5/webvtt/#webvtt-cue-text (11/27/2012)
+ *	Cue text text consists of one or more cue text components optionally separated by a single line terminator which can be: 
+ *		1. CR (U+000D)
+ *		2. LF (U+000A)
+ *		3. CRLF pair
+ */
+TEST_F(PayloadEscapeCharacter,DISABLED_MultilineMultipleEscapeCharacterCRLF)
+{
+	loadVtt( "payload/escape-character/multiline-multiple-escape-character-crlf.vtt", 1 );
+
+	const TextNode *node = getHeadOfCue( 0 )->child( 0 )->toTextNode();
+	
+	ASSERT_EQ( UTF16_NO_BREAK_SPACE, node->content().text()[0] );
+	ASSERT_EQ( UTF16_NO_BREAK_SPACE, node->content().text()[1] );
+}
+
+/*
+ * Verifies that a file with a payload containing a newline in between two escape characters
+ * will finish the parsing attempt gracefully.
+ * From http://dev.w3.org/html5/webvtt/#parsing (12/10/2012):
+ *
+ * ...
+ * 50. Bad cue: Discard cue.
+ * 51. Bad cue loop: If position is past the end of input, then jump to the step labeled end. 
+ */
+TEST_F(PayloadEscapeCharacter,DISABLED_MultilineMultipleEscapeCharacterExtraNewline)
+{
+	loadVtt( "payload/escape-character/multiline-multiple-escape-character-extra-newline.vtt", 1 );
+
+	const TextNode *node = getHeadOfCue( 0 )->child( 0 )->toTextNode();
+	
+	ASSERT_EQ( UTF16_NO_BREAK_SPACE, node->content().text()[0] );	
+}
+
+/*
+ * Verifies that a file with a payload containing a newline in between two escape characters 
+ * will finish the parsing attempt gracefully.
+ * From http://dev.w3.org/html5/webvtt/#parsing (12/10/2012):
+ *
+ * ...
+ * 50. Bad cue: Discard cue.
+ * 51. Bad cue loop: If position is past the end of input, then jump to the step labeled end. 
+ */
+TEST_F(PayloadEscapeCharacter,DISABLED_MultilineMultipleEscapeCharacterExtraNewlineCR)
+{
+	loadVtt( "payload/escape-character/multiline-multiple-escape-character-extra-newline-cr.vtt", 1 );
+
+	const TextNode *node = getHeadOfCue( 0 )->child( 0 )->toTextNode();
+	
+	ASSERT_EQ( UTF16_NO_BREAK_SPACE, node->content().text()[0] );	
+}
+
+/*
+ * Verifies that a file with a payload containing a newline in between two escape characters
+ * will finish the parsing attempt gracefully.
+ * From http://dev.w3.org/html5/webvtt/#parsing (12/10/2012):
+ *
+ * ...
+ * 50. Bad cue: Discard cue.
+ * 51. Bad cue loop: If position is past the end of input, then jump to the step labeled end. 
+ */
+TEST_F(PayloadEscapeCharacter,DISABLED_MultilineMultipleEscapeCharacterExtraNewlineCRLF)
+{
+	loadVtt( "payload/escape-character/multiline-multiple-escape-character-extra-newline-crlf.vtt", 1 );
+
+	const TextNode *node = getHeadOfCue( 0 )->child( 0 )->toTextNode();
+	
+	ASSERT_EQ( UTF16_NO_BREAK_SPACE, node->content().text()[0] );	
+}
 
 /*
  * WebVTT Escape Character Specification being Tested:
