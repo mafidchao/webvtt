@@ -18,8 +18,7 @@ public:
 	virtual void parsedCue( Cue &cue ) = 0;
 
 protected:
-	::webvtt_status parseChunk( const void *chunk, webvtt_uint length );
-	::webvtt_status finishParsing();
+	::webvtt_status parseChunk( const void *chunk, webvtt_uint length, bool finalChunk );
 
 private:
 	static void WEBVTT_CALLBACK __parsedCue( void *userdata, webvtt_cue cue );

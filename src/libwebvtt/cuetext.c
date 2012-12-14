@@ -40,7 +40,7 @@ do \
 WEBVTT_INTERN webvtt_status
 webvtt_create_cue_text_token( webvtt_cue_text_token_ptr *token_pptr, void *concrete_token, webvtt_cue_text_token_type token_type )
 {
-	webvtt_cue_text_token_ptr temp_token_ptr = (webvtt_cue_text_token_ptr)malloc(sizeof(*temp_token_ptr));
+	webvtt_cue_text_token_ptr temp_token_ptr = (webvtt_cue_text_token_ptr)webvtt_alloc0(sizeof(*temp_token_ptr));
 
 	if( !temp_token_ptr )
 	{
@@ -58,7 +58,7 @@ WEBVTT_INTERN webvtt_status
 webvtt_create_cue_text_start_tag_token( webvtt_cue_text_token_ptr *token_pptr, webvtt_string tag_name, 
 	webvtt_string_list_ptr css_classes_ptr, webvtt_string annotation )
 {
-	webvtt_cue_text_start_tag_token_ptr start_token_ptr = (webvtt_cue_text_start_tag_token_ptr)malloc(sizeof(*start_token_ptr));
+	webvtt_cue_text_start_tag_token_ptr start_token_ptr = (webvtt_cue_text_start_tag_token_ptr)webvtt_alloc0(sizeof(*start_token_ptr));
 
 	if( !start_token_ptr )
 	{
@@ -74,7 +74,7 @@ webvtt_create_cue_text_start_tag_token( webvtt_cue_text_token_ptr *token_pptr, w
 WEBVTT_INTERN webvtt_status
 webvtt_create_cue_text_end_tag_token( webvtt_cue_text_token_ptr *token_pptr, webvtt_string tag_name )
 {
-	webvtt_cue_text_end_tag_token_ptr end_token_ptr = (webvtt_cue_text_end_tag_token_ptr)malloc(sizeof(*end_token_ptr));
+	webvtt_cue_text_end_tag_token_ptr end_token_ptr = (webvtt_cue_text_end_tag_token_ptr)webvtt_alloc0(sizeof(*end_token_ptr));
 
 	if( !end_token_ptr )
 	{
@@ -88,7 +88,7 @@ webvtt_create_cue_text_end_tag_token( webvtt_cue_text_token_ptr *token_pptr, web
 WEBVTT_INTERN webvtt_status 
 webvtt_create_cue_text_text_token( webvtt_cue_text_token_ptr *token_pptr, webvtt_string text )
 {
-	webvtt_cue_text_text_token_ptr text_token_ptr = (webvtt_cue_text_text_token_ptr)malloc(sizeof(*text_token_ptr));
+	webvtt_cue_text_text_token_ptr text_token_ptr = (webvtt_cue_text_text_token_ptr)webvtt_alloc0(sizeof(*text_token_ptr));
 
 	if( !text_token_ptr )
 	{
@@ -102,7 +102,7 @@ webvtt_create_cue_text_text_token( webvtt_cue_text_token_ptr *token_pptr, webvtt
 WEBVTT_INTERN webvtt_status
 webvtt_create_cue_text_time_stamp_token( webvtt_cue_text_token_ptr *token_pptr, webvtt_timestamp time_stamp )
 {
-	webvtt_cue_text_time_stamp_token_ptr time_stamp_token_ptr = (webvtt_cue_text_time_stamp_token_ptr)malloc(sizeof(*time_stamp_token_ptr));
+	webvtt_cue_text_time_stamp_token_ptr time_stamp_token_ptr = (webvtt_cue_text_time_stamp_token_ptr)webvtt_alloc0(sizeof(*time_stamp_token_ptr));
 
 	if( !time_stamp_token_ptr )
 	{
@@ -179,7 +179,7 @@ webvtt_delete_cue_text_token( webvtt_cue_text_token_ptr cue_text_token_ptr )
 			/* Not implemented because it does not use dynamic memory allocation. */
 			break;
 		}
-		free( cue_text_token_ptr );
+		webvtt_free( cue_text_token_ptr );
 	}
 }
 
@@ -706,7 +706,7 @@ webvtt_cue_text_tokenizer( webvtt_wchar_ptr *position_pptr, webvtt_cue_text_toke
  * Currently line and len are not being kept track of.
  * Don't think pnode_length is needed as nodes track there list count internally.
  */
-WEBVTT_EXPORT webvtt_status
+WEBVTT_INTERN webvtt_status
 webvtt_parse_cuetext( webvtt_cue cue )
 {
 

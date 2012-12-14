@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <string.h>
+#include "parser_internal.h"
 #include "cue_internal.h"
 
 WEBVTT_EXPORT webvtt_status
@@ -31,6 +32,8 @@ webvtt_create_cue( webvtt_cue *pcue )
 	webvtt_ref( &cue->refs );
 	webvtt_init_string( &cue->id );
 	webvtt_init_string( &cue->payload );
+	cue->from = 0xFFFFFFFFFFFFFFFF;
+	cue->until = 0xFFFFFFFFFFFFFFFF;
 	cue->snap_to_lines = 1;
 	cue->settings.position = 50;
 	cue->settings.size = 100;
@@ -76,6 +79,11 @@ webvtt_validate_cue( webvtt_cue cue )
 		/**
 		 * validate cue-times (Can't do checks against previously parsed cuetimes. That's the applications responsibility
 		 */
+		if( BAD_TIMESTAMP(cue->from) || BAD_TIMESTAMP(cue->until) )
+		{
+			goto error;
+		}
+		
 		if( cue->until <= cue->from )
 		{
 			goto error;

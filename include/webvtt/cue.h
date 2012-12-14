@@ -8,7 +8,7 @@ extern "C" {
 #endif
 
 typedef struct webvtt_cue_t *webvtt_cue;
-typedef double webvtt_timestamp_t, webvtt_timestamp;
+typedef webvtt_uint64 webvtt_timestamp_t, webvtt_timestamp;
 typedef struct webvtt_cue_settings_t webvtt_cue_settings;
 typedef struct webvtt_node_t webvtt_node, *webvtt_node_ptr;
 typedef struct webvtt_leaf_node_t webvtt_leaf_node, *webvtt_leaf_node_ptr;
@@ -154,7 +154,8 @@ webvtt_cue_t
 	 * Do not touch, okay?
 	 */
 	struct webvtt_refcount_t refs;
-	
+	webvtt_uint flags;
+
 	/**
 	 * PUBLIC:
 	 */
