@@ -167,9 +167,7 @@ TEST_F(FileStructure,BlankFile)
 TEST_F(FileStructure,BlankFileWithBOM)
 {
 	loadVtt( "filestructure/blank-file-with-bom.vtt", 0 );	
-	ASSERT_EQ( 1, errorCount() ) << "This file should contain 1 error: WEBVTT_MALFORMED_TAG.";
-	Error tmp = getError(0);
-	ASSERT_EQ( WEBVTT_MALFORMED_TAG, tmp.error());
+	ASSERT_EQ( 0, errorCount() ) << "This file should contain no errors.";
 }
 
 /*
