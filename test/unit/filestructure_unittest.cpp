@@ -296,7 +296,7 @@ TEST_F(FileStructure,DISABLED_BOMGarbageNoWebVTT)
  * 5. Zero or more WebVTT cues and/or WebVTT comments separated from each other by two or more WebVTT line terminators.
  * 6. Zero or more WebVTT line terminators.
  */
-TEST_F(FileStructure,ExtraNewlinesAfterCue)
+TEST_F(FileStructure,DISABLED_ExtraNewlinesAfterCue)
 {
 	loadVtt( "filestructure/extra-newlines-after-cue.vtt", 1 );
 	ASSERT_EQ( 0, errorCount() ) << "This file should contain no errors.";
